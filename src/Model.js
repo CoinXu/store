@@ -34,12 +34,12 @@ class Model extends Observable {
     const { actions } = this
     for (let key in origin) {
       if (!origin.hasOwnProperty(key)) continue
-      actions[key] = this.createAction(key)
+      actions[key] = this.createProxy(key)
     }
     return this
   }
   
-  createAction (key) {
+  createProxy (key) {
     return function () {
       const origin = Array.prototype.slice.call(arguments)
       const args = origin.concat(this.state, this.done)
