@@ -13,7 +13,7 @@
 
 # Store
 核心`store`只是一个调度器，其他功能以`middleware`的形式完成，`store`包含的方法如下
-+ use(mw) 添加middleware
++ use(mw) 添加middleware，执行顺序按添加顺序
 + dispatch(action) 派发命令
 + initialize([action]) 初始化时会发出一个初始化的action，各个middleware可以根据情况处理
 
