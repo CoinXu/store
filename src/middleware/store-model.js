@@ -4,6 +4,12 @@
 
 import Model from '../Model'
 
+/**
+ * <h2>管理model的中间件</h2>
+ * <p>这是目前唯一的一个中间件，model实现方法还在探索中。</p>
+ * @param mods
+ * @return {Function}
+ */
 function storeModelCreator (mods) {
   mods = mods
     .map(mod => Model.isModel(mod) ? mod : new Model(mod))
