@@ -3,7 +3,7 @@
  */
 
 import Observable from './Observable'
-import { isUndefined, isPureObject, isString, isFunction, assert } from './utils'
+import { isUndefined, isPureObject, isString, isFunction, assert } from './utils/utils'
 
 class Model extends Observable {
   /**
@@ -12,15 +12,15 @@ class Model extends Observable {
    */
   constructor (record) {
     super()
-    const { name, reducer, state, actions } = record
+    const { name, scheduler, state, actions } = record
     
-    assert(isString(name), 'name must a string')
-    assert(isFunction(reducer), 'reducer must a function')
-    assert(isPureObject(state), 'state must a pure object')
+    assert(isString(name), 'name must be a string')
+    assert(isFunction(scheduler), 'scheduler must be a function')
+    assert(isPureObject(state), 'state must be a pure object')
     
     this.actions = {}
     this.name = name
-    this.reducer = reducer
+    this.scheduler = scheduler
     this.state = state
     this.record = record
     
@@ -48,7 +48,7 @@ class Model extends Observable {
   }
   
   receiver (action) {
-    const next = this.reducer.call(this, this.state, action)
+    const next = this.scheduler.call(this, this.state, action)
     if (!isUndefined(next)) {
       this.done(next)
     }
@@ -56,14 +56,10 @@ class Model extends Observable {
   }
   
   done (state) {
-    assert(isPureObject(state), 'state must a pure object')
+    assert(isPureObject(state), 'state must be a pure object')
     
     this.state = Object.assign({}, this.state, state)
-    
-    this.onNext({
-      name: this.name,
-      state: this.state
-    })
+    this.onNext({ [this.name]: this.state })
     
     return this
   }

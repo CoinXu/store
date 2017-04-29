@@ -28,6 +28,7 @@ const isFunction = isType('Function')
 const isObject = isType('Object')
 const isUndefined = isType('Undefined')
 const isString = isType('String')
+const isArray = isType('Array')
 
 const getPrototypeOf = Object.getPrototypeOf || function (obj) {return obj.__proto__}
 
@@ -59,6 +60,7 @@ export {
   isObject,
   isString,
   isUndefined,
+  isArray,
   isPureObject,
   warning,
   assert

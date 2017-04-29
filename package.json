@@ -1,6 +1,7 @@
 {
-  "name": "application-name",
+  "name": "store",
   "version": "0.0.1",
+  "description": "state manager",
   "scripts": {
     "webpack": "./node_modules/.bin/webpack"
   },

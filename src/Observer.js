@@ -2,7 +2,7 @@
  * Created on 28/04/2017.
  */
 
-import { noop } from './utils'
+import { noop } from './utils/utils'
 
 class Observer {
   /**

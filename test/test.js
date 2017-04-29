@@ -3,13 +3,13 @@
  */
 
 import Store from '../src/Store'
+import storeModelCreator from '../src/middleware/store-model'
 
 const store = new Store()
-debugger
-store.store({
+const mw = storeModelCreator([{
   name: 'mod',
   state: { count: 0 },
-  reducer: function (state, action) {
+  scheduler: function (state, action) {
     switch (action.type) {
       case 'add':
         return this.actions.add()
@@ -27,8 +27,12 @@ store.store({
       done({ count: state.count - 1 })
     }
   }
-})
+}])
 
 window.store = store
 store.subscribe((next) => console.log(JSON.stringify(next)))
-store.dispatch({ type: 'add' })
+store.use(mw)
+store.use(function (action, state, next) {
+  next({ loading: new Date().getTime() % 2 === 0 })
+})
+store.initialize()
