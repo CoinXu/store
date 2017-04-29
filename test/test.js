@@ -6,6 +6,8 @@ import Store from '../src/Store'
 import storeModelCreator from '../src/middleware/store-model'
 
 const store = new Store()
+
+// 使用 store-model 中间件定义一个model
 const mw = storeModelCreator([{
   name: 'mod',
   state: { count: 0 },
@@ -31,7 +33,7 @@ const mw = storeModelCreator([{
   }
 }])
 
-window.store = store
+// 添加观察者
 store.subscribe((next) => console.log(JSON.stringify(next)))
 
 // 添加model
@@ -42,7 +44,6 @@ store.subscribe((next) => console.log(JSON.stringify(next)))
 // 要拿数据，调用 store.use(dataSource) 之后
 // store.dispatch({type: 'getDataSourceList'})
 // 即可
-
 store.use(mw)
 
 // 假设我们在fetch函数中添加了一个观察者
@@ -74,6 +75,8 @@ store.use(function (action, state, next) {
 })
 
 store.initialize()
+window.store = store
+
 
 // 尝试在console面板中调用
 // store.dispatch({type:'add'})
