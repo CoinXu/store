@@ -56,10 +56,11 @@ store.use(function (action, state, next) {
 // 不改变model，view中不处理数据
 // 还可以实现一份model对不同的view的定制
 store.use(function (action, state, next) {
+  
   const { count } = state.mod
   const viewModel = { tips: '' }
   
-  if (count > 10000) {
+  if (count > 2) {
     viewModel.tips = '骚年别玩了，手不累吗？'
   }
   
@@ -67,7 +68,9 @@ store.use(function (action, state, next) {
     viewModel.tips = '都为负了还按个啥！'
   }
   
-  next({ ...state, viewModel })
+  next({ viewModel })
 })
+
+debugger
 
 store.initialize()

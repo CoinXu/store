@@ -45,21 +45,16 @@ class Store extends Observable {
     assert(isPureObject(action), 'action must be a pure object')
     warning(isString(action.type), 'type of action must be a string')
     
-    let state = Object.assign({}, this.state)
-    let next = Object.assign({}, this.state)
+    const next = Object.assign({}, this.state)
     
-    // 只能返回新的数据
-    // 不能改变state
-    Object.freeze(state)
-    
-    const processor = (result) => next = Object.assign({}, next, result)
+    const processor = (result) => Object.assign(next, result)
     const complete = () => {
       this.state = next
       // TODO 异步队列执行
       this.onNext(next)
     }
     
-    compose(this.mw)(action, state, processor, complete)
+    compose(this.mw)(action, next, processor, complete)
     return this
   }
   
