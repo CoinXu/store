@@ -21,10 +21,12 @@ const mw = storeModelCreator([{
   },
   actions: {
     add: function (state) {
+      // 直接返回结果
       return { count: state.count + 1 }
     },
     reduce: function (state, done) {
-      done({ count: state.count - 1 })
+      // 异步返回结果
+      setTimeout(done, 300, { count: state.count - 1 })
     }
   }
 }])
