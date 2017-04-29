@@ -33,10 +33,7 @@ const mw = storeModelCreator([{
   }
 }])
 
-// 添加观察者
-store.subscribe((next) => console.log(JSON.stringify(next)))
-
-// 添加model
+// 添加model中间件
 // model中不会做太多的业务数据处理，保持比较纯粹的数据请求->处理失败或成功->通知观察者
 // 这样简单的逻辑
 // 至于为什么这样做，当然是为了model共用！
@@ -74,6 +71,10 @@ store.use(function (action, state, next) {
   next({ viewModel })
 })
 
+// 添加观察者
+store.subscribe((next) => console.log(JSON.stringify(next)))
+
+// 初始化
 store.initialize()
 window.store = store
 
