@@ -6,7 +6,10 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    test: './test/test.js'
+    test: './test/test.js',
+    // example
+    simple: './example/simple/view.js',
+    'multi-models': './example/multi-models/view.js'
   },
   output: {
     path: path.join(__dirname, './dist'),

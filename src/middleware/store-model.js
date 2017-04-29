@@ -11,28 +11,30 @@ import Model from './Model'
  * @return {Function}
  */
 function storeModelCreator (mods) {
+  
   mods = mods
     .map(mod => Model.isModel(mod) ? mod : new Model(mod))
-    .map(mod => mod.subscribe(onNext, onError))
+    .map(mod => mod.subscribe(observer))
   
-  const store = {
-    state: null,
-    next: null
-  }
+  const length = mods.length
+  let storeState, storeNext, count = 0, next = {}, temp = null
   
-  function onNext (state) {
-    if (store.next) {
-      store.next(Object.assign({}, store.state, state))
+  function observer (state) {
+    count = count + 1
+    Object.assign(next, state)
+    // 所有的model都done的时候再执行storeNext
+    if (count === length && storeNext) {
+      temp = Object.assign({}, next)
+      count = 0
+      next = {}
+      storeNext(temp)
+      temp = null
     }
   }
   
-  function onError (message) {
-    onNext({ message })
-  }
-  
   return function (action, state, next) {
-    store.state = state
-    store.next = next
+    storeState = state
+    storeNext = next
     mods.forEach(mod => mod.receiver(action))
   }
 }

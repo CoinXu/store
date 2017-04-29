@@ -2,31 +2,21 @@
  * Created on 28/04/2017.
  */
 
-import Observer from './Observer'
+import { assert, noop, isFunction } from './utils/utils'
 
 class Observable {
   constructor () {
-    this.observer = null
+    this.observer = noop
   }
   
   onNext (data) {
-    if (this.observer) {
-      this.observer.onNext(data)
-    }
+    this.observer(data)
     return this
   }
   
-  onError (message) {
-    if (this.observer) {
-      this.observer.onError(message)
-    }
-    return this
-  }
-  
-  subscribe (onNextOrObserver, onError) {
-    this.observer = Observer.isObserver(onNextOrObserver)
-      ? onNextOrObserver
-      : new Observer(onNextOrObserver, onError)
+  subscribe (observer) {
+    assert(isFunction(observer), 'observer must be a function')
+    this.observer = observer
     return this
   }
 }

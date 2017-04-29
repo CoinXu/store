@@ -4,7 +4,7 @@
  */
 
 import Observable from './Observable'
-import { warning, isPureObject, isString, isFunction, assert } from './utils/utils'
+import { warning, isPureObject, noop, assert, isString, isFunction } from './utils/utils'
 import compose  from './utils/compose'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
@@ -21,8 +21,6 @@ class Store extends Observable {
     super()
     this.mw = []
     this.state = {}
-    this.onError = this.onError.bind(this)
-    this.onNext = this.onNext.bind(this)
   }
   
   /**
@@ -74,6 +72,13 @@ class Store extends Observable {
     assert(isFunction(mw), 'Middleware must be composed of functions')
     this.mw.push(mw)
     return this
+  }
+  
+  /**
+   * @return {{}|*}
+   */
+  getState () {
+    return this.state
   }
 }
 

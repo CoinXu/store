@@ -63,7 +63,6 @@ class Model extends Observable {
     
     this.done = this.done.bind(this)
     this.receiver = this.receiver.bind(this)
-    
     this.proxy(actions)
   }
   
