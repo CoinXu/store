@@ -22,15 +22,15 @@ User <-> View <-> Store <-> Model
 
 
 # 需求
-+ 管理多个`model`
-+ 各`model`间可通信
-+ 使用行为(action)触发更新
-+ 更新时通知所有的`model`
-+ immutable data
-+ 异步支持
-+ 可观察
-+ 插件或中间件支持
-+ 异步更新，回调队列
++ [x] 管理多个`model`
++ [ ] 各`model`间可通信
++ [x] 使用行为(action)触发更新
++ [x] 更新时通知所有的`model`
++ [x] immutable data
++ [x] 异步支持
++ [x] 可观察
++ [x] 插件或中间件支持
++ [ ] 异步更新，回调队列
 
 # Store
 核心`store`只是一个调度器，其他功能以`middleware`的形式完成，`store`包含的方法如下
