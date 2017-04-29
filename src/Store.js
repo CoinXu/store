@@ -46,7 +46,6 @@ class Store extends Observable {
     warning(isString(action.type), 'type of action must be a string')
     
     const next = Object.assign({}, this.state)
-    
     const processor = (result) => Object.assign(next, result)
     const complete = () => {
       this.state = next
