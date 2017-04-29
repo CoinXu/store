@@ -10,7 +10,16 @@
 
 # 初始版本，啥都没有定，不要使用，上传只是为了代码备份
 
-# 主要目的，强制分离view与model
+# 主要目的
+1. 强制分离view与model
+2. model可复用，model与viewModel分离
+
+# 基本架构
+```bash
+User <-> View <-> Store <-> Model 
+```
+请注意，`View`跟`Model`没有直接关联
+
 
 # 需求
 + 管理多个`model`
