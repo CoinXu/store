@@ -73,6 +73,8 @@ store.use(function (action, state, next) {
   next({ viewModel })
 })
 
-debugger
-
 store.initialize()
+
+// 尝试在console面板中调用
+// store.dispatch({type:'add'})
+// store.dispatch({type:'reduce'})

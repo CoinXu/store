@@ -1,3 +1,13 @@
+# 跑demo
+```bash
+ yarn install
+ # 或
+ npm install
+ # 后
+ npm run webpack
+ # 之后在浏览器中打开 /test/test.html
+```
+
 # 初始版本，啥都没有定，不要使用，上传只是为了代码备份
 
 # 主要目的，强制分离view与model
@@ -43,3 +53,4 @@
 # Middleware List
 + store-model
   管理多个`model`
+ 
