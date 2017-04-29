@@ -65,7 +65,7 @@ store.use(function (action, state, next) {
   }
   
   if (count < 0) {
-    viewModel.tips = '都为负了还按个啥！'
+    viewModel.tips = '负数了，哥'
   }
   
   next({ viewModel })
