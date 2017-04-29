@@ -2,7 +2,7 @@
  * Created on 29/04/2017.
  */
 
-import Model from '../Model'
+import Model from './Model'
 
 /**
  * <h2>管理model的中间件</h2>
