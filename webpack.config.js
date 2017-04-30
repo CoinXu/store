@@ -9,11 +9,16 @@ module.exports = {
     test: './test/test.js',
     // example
     simple: './example/simple/view.js',
-    'multi-models': './example/multi-models/view.js'
+    'multi-models': './example/multi-models/view.js',
+    'with-react': './example/with-react/index.js'
   },
   output: {
     path: path.join(__dirname, './dist'),
     filename: '[name].js'
+  },
+  externals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM'
   },
   devtool: 'eval-source-map',
   module: {

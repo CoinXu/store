@@ -2,7 +2,7 @@
  * Created on 29/04/2017.
  */
 
-import { storeModelCreator, Store } from '../../index'
+import { storeModelCreator, Store } from '../../src'
 
 // 定义一个简单的model
 const mod = {
