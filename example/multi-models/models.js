@@ -26,6 +26,7 @@ const user = {
     },
     remove: function (name, state, done) {
       setTimeout(function () {
+        console.log('user.remove: name => %s', name)
         done({ list: state.list.filter(user => user.name !== name) })
       }, 3000)
     }
@@ -54,6 +55,7 @@ const school = {
       }, 2000)
     },
     remove: function (name, state, done) {
+      console.log('school.remove: name => %s', name)
       done({ list: state.list.filter(school => school.name !== name) })
     }
   }

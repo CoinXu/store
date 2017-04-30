@@ -21,7 +21,7 @@ const mod = {
 }
 
 const store = new Store()
-store.use(storeModelCreator([mod]))
+storeModelCreator([mod], store)
 store.initialize()
 
 export default store

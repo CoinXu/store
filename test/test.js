@@ -7,8 +7,18 @@ import storeModelCreator from '../src/middleware/store-model'
 
 const store = new Store()
 
+
 // 使用 store-model 中间件定义一个model
-const mw = storeModelCreator([{
+
+// 添加model中间件
+// model中不会做太多的业务数据处理，保持比较纯粹的数据请求->处理失败或成功->通知观察者
+// 这样简单的逻辑
+// 至于为什么这样做，当然是为了model共用！
+// 比如定义了数据源model之后，其他模块都不必再定义了
+// 要拿数据，调用 store.use(dataSource) 之后
+// store.dispatch({type: 'getDataSourceList'})
+// 即可
+storeModelCreator([{
   name: 'mod',
   state: { count: 0 },
   scheduler: function (state, action) {
@@ -31,17 +41,7 @@ const mw = storeModelCreator([{
       setTimeout(done, 300, { count: state.count - 1 })
     }
   }
-}])
-
-// 添加model中间件
-// model中不会做太多的业务数据处理，保持比较纯粹的数据请求->处理失败或成功->通知观察者
-// 这样简单的逻辑
-// 至于为什么这样做，当然是为了model共用！
-// 比如定义了数据源model之后，其他模块都不必再定义了
-// 要拿数据，调用 store.use(dataSource) 之后
-// store.dispatch({type: 'getDataSourceList'})
-// 即可
-store.use(mw)
+}], store)
 
 // 假设我们在fetch函数中添加了一个观察者
 // 每次发送请求的时候通知观察者

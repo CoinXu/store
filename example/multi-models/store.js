@@ -3,10 +3,9 @@
  */
 
 import { Store, storeModelCreator } from '../../index'
-import { school, user } from './models'
-debugger
+import { user, school } from './models'
 const store = new Store()
-storeModelCreator([school, user], store)
+storeModelCreator([user, school], store)
 store.initialize()
 
 export default store

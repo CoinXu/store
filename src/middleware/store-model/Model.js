@@ -14,7 +14,7 @@ import { isUndefined, isPureObject, isString, isFunction, assert } from '../../u
  */
 
 /**
- * @callback reducer
+ * @callback scheduler
  * @param {Object} state
  * @param {Object} action
  * @param {*}
@@ -25,7 +25,7 @@ import { isUndefined, isPureObject, isString, isFunction, assert } from '../../u
  * @property {String} name
  * @property {Object} state
  * @property {Object<String, action>} actions
- * @property {reducer} reducer
+ * @property {scheduler} scheduler
  */
 
 /**
@@ -35,32 +35,28 @@ import { isUndefined, isPureObject, isString, isFunction, assert } from '../../u
  * 2. state 尽可能纯粹，只是处理接口数据，不必处理成view渲染所需的数据，那是viewModel应该做的事
  * 3. 接口与model分离，请求接口应该放在一个resource中定义，在model中直接调用获得结果即可。
  * 4. 每一个action只做一件事
- * 5. reducer尽可能纯粹
+ * 5. scheduler尽可能纯粹
  * 6. 可观察
  * 7. 何时通知观察者可控
  */
 
 class Model {
   /**
-   * @param {Object} desc
-   * 创建实例时，会将desc中的actions中代理到`this.actions`中。
+   * @param {ModelDesc} desc
    * @constructor
    */
   constructor (desc) {
-    const { name, scheduler, state, actions } = desc
+    const { name, scheduler, state, actions = {} } = desc
     
     assert(isString(name), 'name must be a string')
     assert(isFunction(scheduler), 'scheduler must be a function')
     assert(isPureObject(state), 'state must be a pure object')
     
     this.actions = {}
+    this.origin = actions
     this.name = name
     this.scheduler = scheduler
     this.state = state
-    this.desc = desc
-    
-    this.done = this.done.bind(this)
-    this.receiver = this.receiver.bind(this)
   }
   
   /**
@@ -88,18 +84,26 @@ class Model {
    */
   createProxy (key, next) {
     return function () {
+      const action = this.origin[key]
+      
+      assert(isFunction(action), 'action muse be a function')
+      
       const origin = Array.prototype.slice.call(arguments)
       const args = origin.concat(this.state, next)
-      return this.desc.actions[key].apply(this, args)
+      
+      return action.apply(this, args)
     }.bind(this)
   }
   
   /**
-   * model是一个观察者，也可以被观察，所以需要一个接口来接收被观察时外部传入的参数。
-   * 在此处只接收外部传入的`action`即可。
-   * 得到`action`便开始调用`scheduler`调度处理程序。
-   * 如果`scheduler`返回不是`undefined`，那么会认为该次接收到的action已被完成处理。
-   * 将会自动调用`this.done`通知观察者。
+   * model需要一个接口来接收被观察时外部传入的参数。
+   * 在接收到新的`action`时，便会有新的`next`传入。
+   * 此时需要重新创建`actions`的代理。
+   * 之后开始调用`scheduler`调度处理程序。
+   *
+   * 如果`scheduler`返回不是`undefined`，
+   * 那么会认为该次接收到的action已被完成处理。
+   * 将会自动调用`next`通知`store`当前中间件已执行完成
    *
    * 再有，`scheduler` 运行在当前实例的作用域下。
    * 所以你完全可以通过`this`在`scheduler`中查看或使用当前实例中所有的属性。
@@ -113,11 +117,10 @@ class Model {
    * @return {Model}
    */
   receiver (action, storeState, next) {
-    this.proxy(this.desc.actions, (state) => this.done(state, next))
+    this.proxy(this.origin, (state) => this.done(state, next))
     const state = this.scheduler.call(this, this.state, action)
-    if (!isUndefined(state)) {
-      this.done(state, next)
-    }
+    if (!isUndefined(state)) this.done(state, next)
+    
     return this
   }
   

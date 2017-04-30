@@ -10,4 +10,4 @@ function render (state) {
 
 store.subscribe(render)
 
-setInterval(store.dispatch.bind(store), 200, { type: 'add' })
+setInterval(store.dispatch.bind(store), 100, { type: 'add' })
