@@ -23,14 +23,13 @@ User <-> View <-> Store <-> Model
 
 # 需求
 + [x] 管理多个`model`
-+ [ ] 各`model`间可通信 :pensive:
++ [ ] 各`model`间可建立通信管道 :pensive:
 + [x] 使用行为(action)触发更新
 + [x] 更新时通知所有的`model`
 + [x] immutable data
 + [x] 异步支持
 + [x] 可观察
 + [x] 插件或中间件支持
-+ [ ] 异步更新，回调队列 :pensive:
 
 # Store
 核心`store`只是一个调度器，其他功能以`middleware`的形式完成，`store`包含的方法如下
@@ -45,7 +44,6 @@ User <-> View <-> Store <-> Model
 + actions   行为
 + scheduler 接收到action时的调度器
 
-`model`是一个可观察的对象，也是一个观察者，可以接收`action`。
 当接收到`action`时，调用`scheduler`，其中由用户定义行为。
 可以在其中调用`actions`。
 
