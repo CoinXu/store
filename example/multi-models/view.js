@@ -28,7 +28,7 @@ function insert () {
     } else {
       store.dispatch({ type: 'add', name: 'No.' + count++ })
     }
-  }, 2000)
+  }, 1000)
 }
 
 function render (state) {
