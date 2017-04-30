@@ -47,7 +47,6 @@ class Store extends Observable {
     const processor = (result) => Object.assign(next, result)
     const complete = () => {
       this.state = next
-      // TODO 异步队列执行
       this.onNext(next)
     }
     
