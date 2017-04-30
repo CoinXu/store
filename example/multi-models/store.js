@@ -6,7 +6,7 @@ import { Store, storeModelCreator } from '../../index'
 import { school, user } from './models'
 debugger
 const store = new Store()
-store.use(storeModelCreator([school, user]))
+storeModelCreator([school, user], store)
 store.initialize()
 
 export default store

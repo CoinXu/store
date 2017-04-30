@@ -4,8 +4,7 @@
  * 该model定义连初版都算不上，待讨论修正，不要用于正式环境。
  */
 
-import Observable from '../Observable'
-import { isUndefined, isPureObject, isString, isFunction, assert } from '../utils/utils'
+import { isUndefined, isPureObject, isString, isFunction, assert } from '../../utils/utils'
 
 /**
  * @callback action
@@ -41,14 +40,13 @@ import { isUndefined, isPureObject, isString, isFunction, assert } from '../util
  * 7. 何时通知观察者可控
  */
 
-class Model extends Observable {
+class Model {
   /**
    * @param {Object} desc
    * 创建实例时，会将desc中的actions中代理到`this.actions`中。
    * @constructor
    */
   constructor (desc) {
-    super()
     const { name, scheduler, state, actions } = desc
     
     assert(isString(name), 'name must be a string')
@@ -63,34 +61,35 @@ class Model extends Observable {
     
     this.done = this.done.bind(this)
     this.receiver = this.receiver.bind(this)
-    this.proxy(actions)
   }
   
   /**
    * 代理actions。
    * 所定义的每个action都会被代理到`this.actions`上。
    * 并在调用的时候传入两个参数：state, done
-   * @param origin
+   * @param {Object} origin
+   * @param {Function} next
    * @return {Model}
    */
-  proxy (origin) {
+  proxy (origin, next) {
     const { actions } = this
     for (let key in origin) {
       if (!origin.hasOwnProperty(key)) continue
-      actions[key] = this.createProxy(key)
+      actions[key] = this.createProxy(key, next)
     }
     return this
   }
   
   /**
    * 创建代理
-   * @param key
+   * @param {string} key
+   * @param {Function} next
    * @return {function(this:Model)}
    */
-  createProxy (key) {
+  createProxy (key, next) {
     return function () {
       const origin = Array.prototype.slice.call(arguments)
-      const args = origin.concat(this.state, this.done)
+      const args = origin.concat(this.state, next)
       return this.desc.actions[key].apply(this, args)
     }.bind(this)
   }
@@ -109,12 +108,15 @@ class Model extends Observable {
    * this.actions.add()
    *
    * @param {object} action
+   * @param {object} storeState
+   * @param {Function} next
    * @return {Model}
    */
-  receiver (action) {
-    const next = this.scheduler.call(this, this.state, action)
-    if (!isUndefined(next)) {
-      this.done(next)
+  receiver (action, storeState, next) {
+    this.proxy(this.desc.actions, (state) => this.done(state, next))
+    const state = this.scheduler.call(this, this.state, action)
+    if (!isUndefined(state)) {
+      this.done(state, next)
     }
     return this
   }
@@ -125,13 +127,14 @@ class Model extends Observable {
    * 请注意，该函数只接收一个纯粹的`Object`对象。
    * 其他参数一律抛出错误。
    * @param {Object} state
+   * @param {Function} next
    * @return {Model}
    */
-  done (state) {
+  done (state, next) {
     assert(isPureObject(state), 'state must be a pure object')
     
-    this.state = Object.assign({}, this.state, state)
-    this.onNext({ [this.name]: this.state })
+    Object.assign(this.state, state)
+    next({ [this.name]: this.state })
     
     return this
   }

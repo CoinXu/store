@@ -25,7 +25,7 @@ const user = {
       return { list: list.concat(new_user) }
     },
     remove: function (name, state, done) {
-      setTimeout(done, 500, { list: state.list.filter(user => user.name !== name) })
+      setTimeout(done, 3000, { list: state.list.filter(user => user.name !== name) })
     }
   }
 }
@@ -46,10 +46,10 @@ const school = {
     }
   },
   actions: {
-    add: function (name, state) {
-      const { list } = state
-      const new_school = { name, age: 0 }
-      return { list: list.concat(new_school) }
+    add: function (name, state, done) {
+      setTimeout(function () {
+        done({ list: state.list.concat({ name, age: 0 }) })
+      }, 2000)
     },
     remove: function (name, state, done) {
       done({ list: state.list.filter(school => school.name !== name) })

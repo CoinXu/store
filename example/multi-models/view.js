@@ -8,10 +8,28 @@ const body = document.body
 let count = 0
 
 store.subscribe(render)
+insert()
 
-setInterval(function () {
-  store.dispatch({ type: 'add', name: 'No.' + count++ })
-}, 2000)
+function remove () {
+  const sid = setInterval(function () {
+    if (count < 0) {
+      clearInterval(sid)
+    } else {
+      store.dispatch({ type: 'remove', name: 'No.' + count-- })
+    }
+  }, 1000)
+}
+
+function insert () {
+  const sid = setInterval(function () {
+    if (count === 4) {
+      clearInterval(sid)
+      remove()
+    } else {
+      store.dispatch({ type: 'add', name: 'No.' + count++ })
+    }
+  }, 2000)
+}
 
 function render (state) {
   const { user, school } = state
