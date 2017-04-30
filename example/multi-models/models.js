@@ -25,7 +25,9 @@ const user = {
       return { list: list.concat(new_user) }
     },
     remove: function (name, state, done) {
-      setTimeout(done, 3000, { list: state.list.filter(user => user.name !== name) })
+      setTimeout(function () {
+        done({ list: state.list.filter(user => user.name !== name) })
+      }, 3000)
     }
   }
 }
