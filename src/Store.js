@@ -4,7 +4,7 @@
  */
 
 import Observable from './Observable'
-import { warning, isPureObject, noop, assert, isString, isFunction } from './utils/utils'
+import { warning, isPureObject, assert, isString, isFunction } from './utils/utils'
 import compose  from './utils/compose'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
