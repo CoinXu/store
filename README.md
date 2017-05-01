@@ -60,4 +60,7 @@ User <-> View <-> Store <-> Model
 # Middleware List
 + store-model
   管理多个`model`
+  
+# LICENSE
+[MIT](https://opensource.org/licenses/MIT)  
  

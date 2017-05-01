@@ -4,13 +4,16 @@
   "description": "state manager",
   "scripts": {
     "webpack": "./node_modules/.bin/webpack",
-    "build": "./node_modules/.bin/babel ./src --out-dir ./lib"
+    "build": "./node_modules/.bin/babel ./src --out-dir ./lib",
+    "test":"./node_modules/.bin/mocha ./__test__"
   },
   "main": "./lib",
   "dependencies": {
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "babel-register": "^6.24.1"
   },
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
@@ -22,6 +25,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-runtime": "^6.23.0",
+    "mocha": "^3.3.0",
     "webpack": "^2.4.1"
   }
 }
