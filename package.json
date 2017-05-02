@@ -5,16 +5,14 @@
   "scripts": {
     "webpack": "./node_modules/.bin/webpack",
     "build": "./node_modules/.bin/babel ./src --out-dir ./lib",
-    "test":"./node_modules/.bin/mocha ./__test__"
+    "test": "./node_modules/.bin/mocha ./__test__"
   },
   "main": "./lib",
-  "dependencies": {
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "babel-register": "^6.24.1"
-  },
   "license": "MIT",
   "devDependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "babel-register": "^6.24.1",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
