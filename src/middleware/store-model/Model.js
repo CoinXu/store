@@ -47,18 +47,18 @@ class Model {
    */
   constructor (desc) {
     const { name, scheduler, state, actions = {} } = desc
-    
+
     assert(isString(name), 'name must be a string')
     assert(isFunction(scheduler), 'scheduler must be a function')
     assert(isPureObject(state), 'state must be a pure object')
-    
+
     this.actions = {}
     this.origin = actions
     this.name = name
     this.scheduler = scheduler
     this.state = state
   }
-  
+
   /**
    * 代理actions。
    * 所定义的每个action都会被代理到`this.actions`上。
@@ -75,7 +75,7 @@ class Model {
     }
     return this
   }
-  
+
   /**
    * 创建代理
    * @param {string} key
@@ -85,16 +85,16 @@ class Model {
   createProxy (key, next) {
     return function () {
       const action = this.origin[key]
-      
+
       assert(isFunction(action), 'action muse be a function')
-      
+
       const origin = Array.prototype.slice.call(arguments)
       const args = origin.concat(this.state, next)
-      
+
       return action.apply(this, args)
     }.bind(this)
   }
-  
+
   /**
    * model需要一个接口来接收被观察时外部传入的参数。
    * 在接收到新的`action`时，便会有新的`next`传入。
@@ -117,13 +117,13 @@ class Model {
    * @return {Model}
    */
   receiver (action, storeState, next) {
+    // TODO 是否可以不用每次都创建代理？
     this.proxy(this.origin, (state) => this.done(state, next))
     const state = this.scheduler.call(this, this.state, action)
     if (!isUndefined(state)) this.done(state, next)
-    
     return this
   }
-  
+
   /**
    * 当处理完一个`action`时，该方法将会被调用。
    * 调用此方法时，将会通知观察者，并将当前的最终`state`传入观察者。
@@ -135,13 +135,13 @@ class Model {
    */
   done (state, next) {
     assert(isPureObject(state), 'state must be a pure object')
-    
+
     Object.assign(this.state, state)
-    next({ [this.name]: this.state })
-    
+    next({ [this.name]: Object.assign({}, this.state) })
+
     return this
   }
-  
+
   /**
    * 验证一个对象是否是Model的实例
    * @param ins
