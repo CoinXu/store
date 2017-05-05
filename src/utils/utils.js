@@ -2,20 +2,6 @@
  * Created on 28/04/2017.
  */
 
-/**
- * @param {Function} onError
- * @return {Function}
- */
-function createTryCatch (onError) {
-  return function (fn) {
-    try {
-      fn.apply(null, Array.prototype.slice.call(arguments, 1))
-    } catch (e) {
-      onError(e)
-    }
-  }
-}
-
 function noop () {}
 
 function isType (type) {
@@ -54,7 +40,6 @@ function assert (expected, message) {
 }
 
 export {
-  createTryCatch,
   noop,
   isFunction,
   isObject,

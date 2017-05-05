@@ -1,0 +1,9 @@
+dist
+example
+node_modules
+src
+.babelrc
+README.md
+webpack.config.js
+.gitignore
+yarn.*
