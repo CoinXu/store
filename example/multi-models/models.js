@@ -3,22 +3,8 @@
  */
 
 
-const user = {
-  name: 'user',
-  state: {
-    list: []
-  },
-  scheduler: function (state, action) {
-    switch (action.type) {
-      case 'add':
-        return this.actions.add(action.name)
-      case 'remove':
-        return this.actions.remove(action.name)
-      default:
-        return state
-    }
-  },
-  actions: {
+const actions = {
+  user: {
     add: function (name, state) {
       const { list } = state
       const new_user = { name, age: 0 }
@@ -29,6 +15,33 @@ const user = {
         done({ list: state.list.filter(user => user.name !== name) })
       }, 3000)
     }
+  },
+  school: {
+    add: function (name, state, done) {
+      setTimeout(function () {
+        done({ list: state.list.concat({ name, age: 0 }) })
+      }, 2000)
+    },
+    remove: function (name, state, done) {
+      done({ list: state.list.filter(school => school.name !== name) })
+    }
+  }
+}
+
+const user = {
+  name: 'user',
+  state: {
+    list: []
+  },
+  scheduler: function (state, action, done) {
+    switch (action.type) {
+      case 'add':
+        return actions.user.add(action.name)
+      case 'remove':
+        return actions.user.remove(action.name, state, done)
+      default:
+        return state
+    }
   }
 }
 
@@ -37,24 +50,14 @@ const school = {
   state: {
     list: []
   },
-  scheduler: function (state, action) {
+  scheduler: function (state, action, done) {
     switch (action.type) {
       case 'add':
-        return this.actions.add(action.name)
+        return action.school.add(action.name, state, done)
       case 'remove':
-        return this.actions.remove(action.name)
+        return action.school.remove(action.name, state, done)
       default:
         return state
-    }
-  },
-  actions: {
-    add: function (name, state, done) {
-      setTimeout(function () {
-        done({ list: state.list.concat({ name, age: 0 }) })
-      }, 2000)
-    },
-    remove: function (name, state, done) {
-      done({ list: state.list.filter(school => school.name !== name) })
     }
   }
 }

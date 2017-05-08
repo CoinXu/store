@@ -10,22 +10,22 @@ const Actions = {
   reduce: 'reduce'
 }
 
+const actions = {
+  add: function (state, done) {
+    setTimeout(done, 200, { count: state.count + 1 })
+  }
+}
 const mod = {
   name: 'mod',
   state: { count: 0 },
-  scheduler: function (state, action) {
+  scheduler: function (state, action, done) {
     switch (action.type) {
       case Actions.add:
-        return this.actions.add()
+        return actions.add(state, done)
       case Actions.reduce:
         return { count: state.count - 1 }
       default:
         return state
-    }
-  },
-  actions: {
-    add: function (state, done) {
-      setTimeout(done, 200, { count: state.count + 1 })
     }
   }
 }
@@ -37,31 +37,31 @@ const m1 = {
 }
 
 describe('storeModelCreator middleware', function () {
-  
+
   const store = new Store()
   storeModelCreator([mod], store)
   store.initialize()
-  
+
   it('Invoke add of actions when dispatch the add action', function (done) {
-    
+
     store.subscribe(function (state) {
       equal(state.mod.count, 1)
       done()
     })
-    
+
     store.dispatch({ type: Actions.add })
   })
-  
+
   it('Invoke reduce of actions when dispatch the reduce action', function (done) {
-    
+
     store.subscribe(function (state) {
       equal(state.mod.count, 0)
       done()
     })
-    
+
     store.dispatch({ type: Actions.reduce })
   })
-  
+
   it('Subscribe will Waiting for all model done', function () {
     storeModelCreator([m1], store)
     store.subscribe(function (state) {
@@ -71,5 +71,5 @@ describe('storeModelCreator middleware', function () {
     })
     store.dispatch({ type: Actions.add })
   })
-  
+
 })
