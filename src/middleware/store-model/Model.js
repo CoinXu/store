@@ -75,7 +75,7 @@ class Model {
   receiver (action, storeState, next) {
     const done = state => this.done(state, next)
     const state = this.scheduler.call(this, this.state, action, done)
-    if (!isUndefined(state)) done(state)
+    if (!isPureObject(state)) done(state)
     return this
   }
 
