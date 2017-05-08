@@ -31,7 +31,10 @@ export default {
       case Actions.update:
         return actions.update(action.key, action.value)
       case Actions.create:
-        return actions.create(state, done)
+        // async 方法返回一个Promise，不能直接return
+        // 所以需要 break
+        actions.create(state, done)
+        break
       default:
         return state
     }

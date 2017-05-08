@@ -6,8 +6,6 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    test: './test/test.js',
-    // example
     simple: './example/simple/view.js',
     'multi-models': './example/multi-models/view.js',
     'with-react': './example/with-react/index.js'

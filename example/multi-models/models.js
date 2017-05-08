@@ -36,7 +36,7 @@ const user = {
   scheduler: function (state, action, done) {
     switch (action.type) {
       case 'add':
-        return actions.user.add(action.name)
+        return actions.user.add(action.name, state)
       case 'remove':
         return actions.user.remove(action.name, state, done)
       default:
@@ -53,9 +53,9 @@ const school = {
   scheduler: function (state, action, done) {
     switch (action.type) {
       case 'add':
-        return action.school.add(action.name, state, done)
+        return actions.school.add(action.name, state, done)
       case 'remove':
-        return action.school.remove(action.name, state, done)
+        return actions.school.remove(action.name, state, done)
       default:
         return state
     }
