@@ -40,7 +40,12 @@ function assert (expected, message) {
 }
 
 function freeze (obj) {
-  try {Object.freeze(obj)} catch (e) {}
+  try {
+    Object.freeze(obj)
+  } catch (e) {
+
+  }
+  return obj
 }
 
 export {

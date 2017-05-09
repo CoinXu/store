@@ -12,7 +12,9 @@ const Actions = {
 
 const actions = {
   add: function (state, done) {
-    setTimeout(done, 200, { count: state.count + 1 })
+    setTimeout(function () {
+      done({ count: state.count + 1 })
+    }, 200)
   }
 }
 const mod = {
@@ -33,7 +35,9 @@ const mod = {
 const m1 = {
   name: 'm1',
   state: { count: 0 },
-  scheduler: function (state) {return { count: state.count + 1 }}
+  scheduler: function (state) {
+    return { count: state.count + 1 }
+  }
 }
 
 describe('storeModelCreator middleware', function () {

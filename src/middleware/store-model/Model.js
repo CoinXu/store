@@ -4,7 +4,7 @@
  * 该model定义连初版都算不上，待讨论修正，不要用于正式环境。
  */
 
-import { isUndefined, isPureObject, isString, isFunction, assert } from '../../utils/utils'
+import { isPureObject, isString, isFunction, assert } from '../../utils/utils'
 
 /**
  * @callback action
@@ -75,7 +75,7 @@ class Model {
   receiver (action, storeState, next) {
     const done = state => this.done(state, next)
     const state = this.scheduler.call(this, this.state, action, done)
-    if (!isPureObject(state)) done(state)
+    if (isPureObject(state)) done(state)
     return this
   }
 

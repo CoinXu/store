@@ -52,18 +52,14 @@ class Store extends Observable {
     warning(isString(action.type), 'type of action must be a string')
 
     const next = Object.assign({}, this.state)
+    const processor = result => Object.assign(next, result)
+    const end = () => {
+      this.state = freeze(Object.assign({}, next))
+      this.onNext(this.state)
+      if (isFunction(callback)) callback(this.state)
+    }
 
-    compose(this.mw)(
-      action, next,
-      result => Object.assign(next, result),
-      () => {
-        const state = Object.assign({}, next)
-        freeze(state)
-        this.state = state
-        this.onNext(state)
-        if (isFunction(callback)) callback(state)
-      }
-    )
+    compose(this.mw)(action, next, processor, end)
     return this
   }
 
