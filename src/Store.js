@@ -4,12 +4,10 @@
  */
 
 import Observable from './Observable'
-import { warning, isPureObject, assert, isString, isFunction } from './utils/utils'
+import { warning, isPureObject, assert, isString, isFunction, freeze } from './utils/utils'
 import compose  from './utils/compose'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
-
-
 
 /**
  * @callback StoreMiddleware
@@ -35,7 +33,7 @@ class Store extends Observable {
   /**
    * 初始化时，默认会发出一个初始化的action。
    * 当然用户也可指定。
-   * @param {Object} action
+   * @param {object} action
    */
   initialize (action = DefAction) {
     this.dispatch(action)
@@ -45,10 +43,11 @@ class Store extends Observable {
    * 派发一个行为。
    * 在此处会将所有的`middleware`执行一次。
    * 然后将得到的接果传给观察者。
-   * @param action
+   * @param {object} action
+   * @param {function} [callback]
    * @return {Store}
    */
-  dispatch (action) {
+  dispatch (action, callback) {
     assert(isPureObject(action), 'action must be a pure object')
     warning(isString(action.type), 'type of action must be a string')
 
@@ -58,8 +57,11 @@ class Store extends Observable {
       action, next,
       result => Object.assign(next, result),
       () => {
-        this.state = next
-        this.onNext(next)
+        const state = Object.assign({}, next)
+        freeze(state)
+        this.state = state
+        this.onNext(state)
+        if (isFunction(callback)) callback(state)
       }
     )
     return this
@@ -81,7 +83,7 @@ class Store extends Observable {
 
   /**
    * 获取当存储的 state
-   * @return {Object}
+   * @return {object}
    */
   getState () {
     return Object.assign({}, this.state)

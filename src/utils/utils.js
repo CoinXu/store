@@ -22,7 +22,7 @@ function isPureObject (v) {
   if (!isObject(v)) return false
   const prop = getPrototypeOf(v)
   if (prop === null) return true
-  
+
   const Ctor = prop.hasOwnProperty('constructor') && prop.constructor
   return isFunction(Ctor) && Ctor === Object
 }
@@ -39,6 +39,10 @@ function assert (expected, message) {
   }
 }
 
+function freeze (obj) {
+  try {Object.freeze(obj)} catch (e) {}
+}
+
 export {
   noop,
   isFunction,
@@ -48,5 +52,6 @@ export {
   isArray,
   isPureObject,
   warning,
-  assert
+  assert,
+  freeze
 }
