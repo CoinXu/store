@@ -21,6 +21,15 @@ class ViewModel extends Model {
     super(desc)
     this.store = store
   }
+
+  /**
+   * 验证传入对象是否是`ViewModel`的实例
+   * @param ins
+   * @return {boolean}
+   */
+  static isViewModel (ins) {
+    return ins instanceof ViewModel
+  }
 }
 
 export default ViewModel
