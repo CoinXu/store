@@ -86,5 +86,53 @@ describe('Store class', function () {
     store.dispatch({ type: '' })
   })
 
+  it('dispatch multi actions', function (done) {
+    const store = new Store({ count: 0 })
+
+    const actions = {
+      first: 'f',
+      second: 's',
+      third: 't'
+    }
+
+    store.use(function (action, state, next) {
+      switch (action.type) {
+        case actions.first:
+          return setTimeout(function () {next({ count: state.count + 1 })}, 100)
+        default:
+          return next({})
+      }
+    })
+
+    store.use(function (action, state, next) {
+      switch (action.type) {
+        case actions.second:
+          return setTimeout(function () {next({ count: state.count + 1 })}, 100)
+        default:
+          return next({})
+      }
+    })
+
+    store.use(function (action, state, next) {
+      switch (action.type) {
+        case actions.third:
+          return setTimeout(function () {next({ count: state.count + 1 })}, 100)
+        default:
+          return next({})
+      }
+    })
+
+    store.subscribe(state => {
+      equal(state.count, 3)
+      done()
+    })
+
+    store.dispatch([
+      { type: actions.first },
+      { type: actions.second },
+      { type: actions.third }
+    ])
+  })
+
 })
 

@@ -4,7 +4,11 @@
  */
 
 import Observable from './Observable'
-import { warning, isPureObject, assert, isString, isFunction, freeze } from './utils/utils'
+import {
+  warning, isPureObject, assert,
+  isString, isFunction, isArray,
+  freeze, noop
+} from './utils/utils'
 import compose  from './utils/compose'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
@@ -24,10 +28,14 @@ const DefAction = { type: '__INITIALIZE__ACTION__' }
  */
 
 class Store extends Observable {
-  constructor () {
+
+  /**
+   * @param {object} state
+   */
+  constructor (state = {}) {
     super()
     this.mw = []
-    this.state = {}
+    this.state = { ...state }
   }
 
   /**
@@ -44,22 +52,68 @@ class Store extends Observable {
    * 在此处会将所有的`middleware`执行一次。
    * 然后将得到的接果传给观察者。
    * @param {object} action
-   * @param {function} [callback]
+   * @param {function} callback
+   * @private
    * @return {Store}
    */
-  dispatch (action, callback) {
-    assert(isPureObject(action), 'action must be a pure object')
+  dispose (action, callback) {
     warning(isString(action.type), 'type of action must be a string')
 
     const next = Object.assign({}, this.state)
-    const processor = result => Object.assign(next, result)
-    const end = () => {
-      this.state = freeze(Object.assign({}, next))
+    compose(this.mw)(
+      action,
+      next,
+      result => Object.assign(next, result),
+      () => callback(this.state = freeze(Object.assign({}, next)))
+    )
+    return this
+  }
+
+  /**
+   * 派发单个事件
+   * @param {object} action
+   * @param {function} [callback]
+   * @private
+   * @return {Store}
+   */
+  single (action, callback) {
+    return this.dispose(action, state => {
+      this.onNext(state)
+      if (isFunction(callback)) callback(state)
+    })
+  }
+
+  /**
+   * 派发多个事件
+   * @param {Array<object>} actions
+   * @param {function} [callback]
+   * @private
+   * @return {Store}
+   */
+  multiple (actions, callback) {
+    const list = actions.map(action => (a, b, next) => this.dispose(action, () => next()))
+    compose(list)(null, null, noop, () => {
       this.onNext(this.state)
       if (isFunction(callback)) callback(this.state)
+    })
+    return this
+  }
+
+  /**
+   * 派发事件
+   * @param {object|Array<Object>} actionOrActions
+   * @param {function} [callback]
+   */
+  dispatch (actionOrActions, callback) {
+
+    if (isPureObject(actionOrActions)) {
+      return this.single(actionOrActions, callback)
     }
 
-    compose(this.mw)(action, next, processor, end)
+    if (isArray(actionOrActions) && !actionOrActions.some(action => assert(isPureObject(action), 'action must be a pure object'))) {
+      return this.multiple(actionOrActions, callback)
+    }
+
     return this
   }
 
