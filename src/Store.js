@@ -4,11 +4,7 @@
  */
 
 import Observable from './Observable'
-import {
-  warning, isPureObject, assert,
-  isString, isFunction, isArray,
-  freeze, noop
-} from './utils/utils'
+import { warning, isPureObject, assert, noop, isString, isFunction, isArray, } from './utils/utils'
 import compose  from './utils/compose'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
@@ -61,9 +57,9 @@ class Store extends Observable {
 
     compose(this.mw)(
       action,
-      next,
+      this.state,
       result => Object.assign(this.state, result),
-      () => callback(this.state = freeze(Object.assign({}, next)))
+      () => callback(this.state)
     )
     return this
   }
