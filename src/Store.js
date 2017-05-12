@@ -59,11 +59,10 @@ class Store extends Observable {
   dispose (action, callback) {
     warning(isString(action.type), 'type of action must be a string')
 
-    const next = Object.assign({}, this.state)
     compose(this.mw)(
       action,
       next,
-      result => Object.assign(next, result),
+      result => Object.assign(this.state, result),
       () => callback(this.state = freeze(Object.assign({}, next)))
     )
     return this
