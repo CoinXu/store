@@ -4,3 +4,4 @@
 require('babel-register')
 require('./store')
 require('./store-model')
+require('./store-view-model')

@@ -5,8 +5,8 @@
 import Model from './Model'
 
 /**
- * <h2>管理model的中间件</h2>
- * <p>这是目前唯一的一个中间件，model实现方法还在探索中。</p>
+ * <h2>管理`model`的中间件</h2>
+ * <p>`model`设计还在探索中</p>
  * @param {Array<Model|ModelDesc>} mods
  * @param {Store} store
  * @return {Store}
@@ -14,11 +14,7 @@ import Model from './Model'
 function storeModelCreator (mods, store) {
   mods
     .map(m => Model.isModel(m) ? m : new Model(m))
-    .map(mod => {
-      store.use(function (action, state, next) {
-        mod.receiver(action, state, next)
-      })
-    })
+    .map(mod => store.use((action, state, next) => mod.receiver(action, state, next)))
   return store
 }
 

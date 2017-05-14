@@ -51,7 +51,7 @@ class Model {
 
     this.name = name
     this.scheduler = scheduler
-    this.state = Object.assign({}, state)
+    this.state = { ...state }
   }
 
   /**
@@ -72,6 +72,7 @@ class Model {
   receiver (action, storeState, next) {
     const done = state => this.done(state, next)
     const state = this.scheduler.call(this, this.state, action, done)
+
     if (isPureObject(state)) done(state)
     return this
   }
@@ -89,7 +90,7 @@ class Model {
     assert(isPureObject(state), 'state must be a pure object')
 
     Object.assign(this.state, state)
-    next({ [this.name]: Object.assign({}, this.state) })
+    next({ [this.name]: { ...this.state } })
 
     return this
   }
