@@ -7,25 +7,22 @@
 import { isPureObject, isString, isFunction, assert } from '../../utils/utils'
 
 /**
- * @callback action
- * @param {Object} state
- * @param {function} done
- * @return {*}
- */
-
-/**
+ * 一个`scheduler`被调用时，会传入如下几个参数
+ * + state 当前`model`的状态
+ * + action 触发当前调用的`action`
+ * + done 完成此次`action`时通知`model`
  * @callback scheduler
  * @param {Object} state
  * @param {Object} action
- * @param {*}
+ * @param {function} done
  */
 
 /**
+ * `model`描述组成
  * @typedef {Object} ModelDesc
- * @property {String} name
- * @property {Object} state
- * @property {Object<String, action>} actions
- * @property {scheduler} scheduler
+ * @property {String} name - `model`名称，必须且在一个`Store`中唯一
+ * @property {Object} state - `model`初始状态
+ * @property {scheduler} scheduler - 调度器
  */
 
 /**

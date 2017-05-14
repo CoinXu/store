@@ -7,7 +7,7 @@ import Model from './Model'
 /**
  * <h2>管理model的中间件</h2>
  * <p>这是目前唯一的一个中间件，model实现方法还在探索中。</p>
- * @param {Array<Model|Object>} mods
+ * @param {Array<Model|ModelDesc>} mods
  * @param {Store} store
  * @return {Store}
  */

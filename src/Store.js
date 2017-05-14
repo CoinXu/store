@@ -3,7 +3,6 @@
  * @file 状态管理核心类
  */
 
-import Observable from './Observable'
 import { warning, isPureObject, assert, noop, isString, isFunction, isArray, } from './utils/utils'
 import compose  from './utils/compose'
 
@@ -23,15 +22,15 @@ const DefAction = { type: '__INITIALIZE__ACTION__' }
  * 该类可观察。
  */
 
-class Store extends Observable {
+class Store {
 
   /**
    * @param {object} state
    */
   constructor (state = {}) {
-    super()
     this.mw = []
     this.state = { ...state }
+    this.observer = noop
   }
 
   /**
@@ -73,7 +72,7 @@ class Store extends Observable {
    */
   single (action, callback) {
     return this.dispose(action, state => {
-      this.onNext(state)
+      this.observer(state)
       if (isFunction(callback)) callback(state)
     })
   }
@@ -88,7 +87,7 @@ class Store extends Observable {
   multiple (actions, callback) {
     const list = actions.map(action => (a, b, next) => this.dispose(action, () => next()))
     compose(list)(null, null, noop, () => {
-      this.onNext(this.state)
+      this.observer(this.state)
       if (isFunction(callback)) callback(this.state)
     })
     return this
@@ -132,6 +131,17 @@ class Store extends Observable {
    */
   getState () {
     return Object.assign({}, this.state)
+  }
+
+  /**
+   * 注册观察者
+   * @param {function} observer
+   * @return {Store}
+   */
+  subscribe (observer) {
+    assert(isFunction(observer), 'observer must be a function')
+    this.observer = observer
+    return this
   }
 }
 
