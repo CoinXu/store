@@ -4,7 +4,6 @@
   "description": "state manager",
   "scripts": {
     "webpack": "./node_modules/.bin/webpack",
-    "install": "npm run build",
     "build": "rm -r ./lib && ./node_modules/.bin/babel ./src --out-dir ./lib",
     "test": "./node_modules/.bin/mocha ./__test__"
   },
