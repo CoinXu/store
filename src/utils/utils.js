@@ -15,6 +15,7 @@ const isObject = isType('Object')
 const isUndefined = isType('Undefined')
 const isString = isType('String')
 const isArray = isType('Array')
+const isNumber = isType('Number')
 
 const getPrototypeOf = Object.getPrototypeOf || function (obj) {return obj.__proto__}
 
@@ -48,6 +49,22 @@ function freeze (obj) {
   return obj
 }
 
+/**
+ * 合法id属性
+ * 只能为number与string
+ * @param id
+ * @return {boolean}
+ */
+function legalId (id) {
+  if (isNumber(id)) {
+    return id !== Infinity && id === id
+  }
+  if (isString(id)) {
+    return !!id
+  }
+  return false
+}
+
 export {
   noop,
   isFunction,
@@ -55,8 +72,10 @@ export {
   isString,
   isUndefined,
   isArray,
+  isNumber,
   isPureObject,
   warning,
   assert,
-  freeze
+  freeze,
+  legalId
 }
