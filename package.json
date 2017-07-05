@@ -8,7 +8,7 @@
     "test": "./node_modules/.bin/mocha ./__test__/index.js"
   },
   "main": "./lib",
-  "typeings": "./@type/index.d.ts",
+  "typings": "./@type/index.d.ts",
   "license": "MIT",
   "devDependencies": {
     "react": "^15.5.4",
