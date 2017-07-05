@@ -39,7 +39,7 @@ class Store {
    * @param {object} action
    */
   initialize (action = DefAction) {
-    this.dispatch(action)
+    return this.dispatch(action)
   }
 
   /**
