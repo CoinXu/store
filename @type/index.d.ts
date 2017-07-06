@@ -26,8 +26,7 @@ declare namespace store {
   // ======================
   // Store
   // ======================
-  export interface Store<T> {
-    new(state?: T): Store<T>
+  interface Store<T> {
 
     readonly state: T
     readonly observer: (state: T) => any
@@ -43,13 +42,19 @@ declare namespace store {
     subscribe(observer: Subscriber<T>): Store<T>
   }
 
+  interface StoreConstructor {
+    new<T>(state?: T): Store<T>
+  }
+
+  export const Store: StoreConstructor
+
   // ======================
   // middleware
   // ======================
 
   // storeModelCreator
 
-  interface ModelDesc<T> {
+  interface ModelDesc <T> {
     name: string
     scheduler(state: T): T | void
     state: T
@@ -72,9 +77,14 @@ declare namespace store {
   // storeViewModelCreator
   interface ViewModel<T> extends Model<T> {
     readonly store: Store<any>
+  }
+
+  interface ViewModelConstructor {
     new<T>(desc: ModelDesc<T>, store: Store<any>): ViewModel<T>
     isViewModel(ins: any): boolean
   }
+
+  export const ViewModel: ViewModelConstructor
 
   export function storeViewModelCreator<T> (mods: Array<ModelDesc<T> | ViewModel<T>>, store: Store<any>): Store<any>
 }
