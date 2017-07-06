@@ -54,7 +54,7 @@ declare namespace store {
 
   // storeModelCreator
 
-  interface ModelDesc <T> {
+  interface ModelDesc<T> {
     name: string
     scheduler(state: T): T | void
     state: T
@@ -72,7 +72,7 @@ declare namespace store {
 
   export const Model: ModelConstructor;
 
-  export function storeModelCreator<T> (mods: Array<ModelDesc<T> | Model<T>>, store: Store<any>): Store<any>
+  export function storeModelCreator<T, U extends Store<U>> (mods: Array<ModelDesc<T> | Model<T>>, store: U): U
 
   // storeViewModelCreator
   interface ViewModel<T> extends Model<T> {
@@ -86,7 +86,7 @@ declare namespace store {
 
   export const ViewModel: ViewModelConstructor
 
-  export function storeViewModelCreator<T> (mods: Array<ModelDesc<T> | ViewModel<T>>, store: Store<any>): Store<any>
+  export function storeViewModelCreator<T, U extends Store<U>> (mods: Array<ModelDesc<T> | ViewModel<T>>, store: U): U
 }
 
 
