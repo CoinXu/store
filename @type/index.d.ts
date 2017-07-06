@@ -56,7 +56,7 @@ declare namespace store {
 
   interface ModelDesc<T> {
     name: string
-    scheduler(state: T): T | void
+    scheduler(this: Model<T>, state: T, action: ActionDesc, done: StoreNext): T | void
     state: T
   }
 
@@ -75,7 +75,11 @@ declare namespace store {
   export function storeModelCreator<T, U extends Store<U>> (mods: Array<ModelDesc<T> | Model<T>>, store: U): U
 
   // storeViewModelCreator
-  interface ViewModel<T> extends Model<T> {
+  interface ViewModelDesc<T> extends ModelDesc<T> {
+    scheduler(this: ViewModel<T>, state: T, action: ActionDesc, next: StoreNext): T | void
+  }
+
+  interface ViewModel<T> extends Model<T>, ViewModelDesc<T> {
     readonly store: Store<any>
   }
 
@@ -86,7 +90,7 @@ declare namespace store {
 
   export const ViewModel: ViewModelConstructor
 
-  export function storeViewModelCreator<T, U extends Store<U>> (mods: Array<ModelDesc<T> | ViewModel<T>>, store: U): U
+  export function storeViewModelCreator<T, U extends Store<U>> (mods: Array<ViewModelDesc<T> | ViewModel<T>>, store: U): U
 }
 
 
