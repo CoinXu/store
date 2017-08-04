@@ -27,7 +27,7 @@ store.di
 + subscribe(observer:Function): this
 
 # StoreMiddleware
-Store middleware must be a function which access three params.
+Store middleware must be a function which receive three params.
 + action: Object
 + storeState: Object
 + next: (Object) => any
