@@ -1,7 +1,16 @@
 {
   "name": "store",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "state manager",
+  "author": "coin xu<duanxian0605@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/CoinXu/store/issues"
+  },
+  "keywords": [
+    "store",
+    "state manager",
+    "multiple dispatch"
+  ],
   "scripts": {
     "webpack": "./node_modules/.bin/webpack",
     "build": "rm -r ./lib && ./node_modules/.bin/babel ./src --out-dir ./lib",
