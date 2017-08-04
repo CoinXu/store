@@ -6,8 +6,7 @@ import { Store, storeViewModelCreator } from '../src'
 import { equal } from 'assert'
 
 const Action = {
-  add: 'add',
-  reduce: 'reduce'
+  add: 'add'
 }
 
 const vm = {
@@ -24,10 +23,7 @@ const vm = {
       case Action.add:
         done({ count: state.count + 1 })
         this.store.dispatch({ type: Action.add })
-        this.store.dispatch({ type: Action.add })
         break
-      case Action.reduce:
-        return { count: state.count - 1 }
       default:
         return state
     }
@@ -41,8 +37,11 @@ describe('storeViewModelCreator middleware', function () {
   store.initialize()
 
   it('View model can dispatch anytime', function (done) {
-    store.subscribe(({ vm:{ count } }) => {
-      if (count === 3) {
+    let counter = 0
+    store.subscribe(({ vm: { count } }) => {
+      counter++
+      if (counter === 2) {
+        equal(count, 2)
         done()
       }
     })
