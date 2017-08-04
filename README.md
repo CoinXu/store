@@ -83,5 +83,10 @@ storeModelCreator(UserModelDesc, store)
 storeViewModelCreator(UserModelDesc, store)
 ```
 
+# Test
+```bash
+npm run test
+```
+
 # LICENSE
 [MIT](https://opensource.org/licenses/MIT)
