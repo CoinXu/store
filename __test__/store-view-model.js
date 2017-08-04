@@ -23,8 +23,7 @@ const vm = {
     switch (action.type) {
       case Action.add:
         done({ count: state.count + 1 })
-        this.store.dispatch({ type: Action.add })
-        this.store.dispatch({ type: Action.add })
+        this.store.dispatch({ type: Action.reduce })
         break
       case Action.reduce:
         return { count: state.count - 1 }
@@ -40,9 +39,12 @@ describe('storeViewModelCreator middleware', function () {
   storeViewModelCreator([vm], store)
   store.initialize()
 
+  let counter = 0
   it('View model can dispatch anytime', function (done) {
-    store.subscribe(({ vm:{ count } }) => {
-      if (count === 3) {
+    store.subscribe(({ vm: { count } }) => {
+      counter++
+      if (counter === 2) {
+        equal(count, 0)
         done()
       }
     })

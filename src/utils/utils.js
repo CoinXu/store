@@ -49,22 +49,6 @@ function freeze (obj) {
   return obj
 }
 
-/**
- * 合法id属性
- * 只能为number与string
- * @param id
- * @return {boolean}
- */
-function legalId (id) {
-  if (isNumber(id)) {
-    return id !== Infinity && id === id
-  }
-  if (isString(id)) {
-    return !!id
-  }
-  return false
-}
-
 export {
   noop,
   isFunction,
@@ -76,6 +60,5 @@ export {
   isPureObject,
   warning,
   assert,
-  freeze,
-  legalId
+  freeze
 }

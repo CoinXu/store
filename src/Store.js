@@ -5,6 +5,7 @@
 
 import { warning, isPureObject, assert, noop, isString, isFunction, isArray, } from './utils/utils'
 import compose  from './utils/compose'
+import { Scheduler } from './utils/Scheduler'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
 
@@ -25,18 +26,20 @@ const DefAction = { type: '__INITIALIZE__ACTION__' }
 class Store {
 
   /**
+   * @constructor
    * @param {object} state
    */
   constructor (state = {}) {
     this.mw = []
     this.state = { ...state }
     this.observer = noop
+    this.scheduler = new Scheduler()
   }
 
   /**
    * 初始化时，默认会发出一个初始化的action。
    * 当然用户也可指定。
-   * @param {object} action
+   * @param {object} [action]
    */
   initialize (action = DefAction) {
     return this.dispatch(action)
@@ -48,10 +51,10 @@ class Store {
    * 然后将得到的接果传给观察者。
    * @param {object} action
    * @param {function} callback
-   * @private
    * @return {Store}
+   * @private
    */
-  dispose (action, callback) {
+  _dispose (action, callback) {
     warning(isString(action.type), 'type of action must be a string')
 
     compose(this.mw)(
@@ -71,9 +74,11 @@ class Store {
    * @return {Store}
    */
   single (action, callback) {
-    return this.dispose(action, state => {
-      this.observer(state)
-      if (isFunction(callback)) callback(state)
+    return this._dispose(action, state => {
+      this.scheduler.push(() => {
+        this.observer(state)
+        if (isFunction(callback)) callback(state)
+      })
     })
   }
 
@@ -85,10 +90,12 @@ class Store {
    * @return {Store}
    */
   multiple (actions, callback) {
-    const list = actions.map(action => (a, b, next) => this.dispose(action, () => next()))
+    const list = actions.map(action => (a, b, next) => this._dispose(action, () => next()))
     compose(list)(null, null, noop, () => {
-      this.observer(this.state)
-      if (isFunction(callback)) callback(this.state)
+      this.scheduler.push(() => {
+        this.observer(this.state)
+        if (isFunction(callback)) callback(this.state)
+      })
     })
     return this
   }

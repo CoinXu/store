@@ -66,7 +66,7 @@ describe('storeModelCreator middleware', function () {
     store.dispatch({ type: Actions.reduce })
   })
 
-  it('Subscribe will Waiting for all model done', function () {
+  it('Subscribe will Waiting for all model done', function (done) {
     storeModelCreator([m1], store)
     store.subscribe(function (state) {
       equal(state.mod.count, 1)
