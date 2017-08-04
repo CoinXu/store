@@ -5,3 +5,4 @@ README.md
 webpack.config.js
 .gitignore
 yarn.*
+*.log*
