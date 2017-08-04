@@ -8,11 +8,9 @@
  *  @example
  * ```js
  * const scheduler = new Scheduler()
- * scheduler.subscribe(state => console.log(state))
  *
- * scheduler.push({a:1})
- * scheduler.push({a:2})
- * scheduler.push({a:3})
+ * scheduler.push(() => console.log(1))
+ * scheduler.push(() => console.log(2))
  * ``
  */
 
@@ -34,15 +32,15 @@ class Scheduler {
   push (callback) {
     assert(isFunction(callback), 'Callback must be a function in for Scheduler')
     this.tasks.push(callback)
-    this.dispose()
+    this.queue()
     return this
   }
 
   /**
-   * 处理任务
+   * 异步队列
    * @return {Scheduler}
    */
-  dispose () {
+  queue () {
     if (this.tasks.length === 0) {
       return this
     }
@@ -59,7 +57,6 @@ class Scheduler {
 
     return this
   }
-
 }
 
 export {
