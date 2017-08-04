@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/CoinXu/store.svg?branch=master)](https://travis-ci.org/CoinXu/store)
+[![npm version](https://badge.fury.io/js/sugo-store.svg)](https://badge.fury.io/js/sugo-store)
 
 # About
 Store is a state manager write by JavaScript.
