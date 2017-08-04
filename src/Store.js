@@ -5,7 +5,6 @@
 
 import { warning, isPureObject, assert, noop, isString, isFunction, isArray, } from './utils/utils'
 import compose  from './utils/compose'
-import { Scheduler } from './utils/Scheduler'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
 
@@ -33,7 +32,6 @@ class Store {
     this.mw = []
     this.state = { ...state }
     this.observer = noop
-    this.scheduler = new Scheduler()
   }
 
   /**
@@ -75,10 +73,8 @@ class Store {
    */
   single (action, callback) {
     return this._dispose(action, state => {
-      this.scheduler.push(() => {
-        this.observer(state)
-        if (isFunction(callback)) callback(state)
-      })
+      this.observer(state)
+      if (isFunction(callback)) callback(state)
     })
   }
 
@@ -92,10 +88,8 @@ class Store {
   multiple (actions, callback) {
     const list = actions.map(action => (a, b, next) => this._dispose(action, () => next()))
     compose(list)(null, null, noop, () => {
-      this.scheduler.push(() => {
-        this.observer(this.state)
-        if (isFunction(callback)) callback(this.state)
-      })
+      this.observer(this.state)
+      if (isFunction(callback)) callback(this.state)
     })
     return this
   }
