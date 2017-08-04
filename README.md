@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/CoinXu/store.svg?branch=master)](https://travis-ci.org/CoinXu/store)
+
 # About
 Store is a state manager write by JavaScript.
 
