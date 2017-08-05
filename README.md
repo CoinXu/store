@@ -4,8 +4,10 @@
 # About
 Store is a state manager write by JavaScript.
 
+
 # Example
 All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) directory.
+
 
 # Store
 + new(state = {}): this
@@ -14,20 +16,21 @@ All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) director
 + single(action:Object, callback?:Function): this
 + multiple(actions:Array<Object>, callback?:Function): this
 + dispatch(actionOrActions:Object|Array<Object>, callback?:Function): this
-```js
-// dispatch single action
-store.dispatch({type: 'TYPE_A'}, function(state){
-    // do sth
-})
-// dispatch multiple actions
-store.dispatch([{type: 'ACTION_A'}, {type: 'ACTION_B'}], function(state) {
-    // do sth
-})
-store.di
-```
+  ```js
+  // dispatch single action
+  store.dispatch({type: 'TYPE_A'}, function(state){
+      // do sth
+  })
+  // dispatch multiple actions
+  store.dispatch([{type: 'ACTION_A'}, {type: 'ACTION_B'}], function(state) {
+      // do sth
+  })
+  store.di
+  ```
 + use(mw:[StoreMiddleware](#storemiddleware)): this
 + getState(): Object
 + subscribe(observer:Function): this
+
 
 # StoreMiddleware
 Store middleware must be a function which receive three params.
@@ -35,12 +38,14 @@ Store middleware must be a function which receive three params.
 + storeState: Object
 + next: (Object) => any
 
+
 # ModelDesc
 ModelDesc is a object to define a store model include property below:
 
 + name: String
 + state: Object
 + scheduler: (state: Object, action: Object, next: Function) => any
+
 ```js
 const UserModelDesc = {
     name: 'User',
@@ -60,6 +65,7 @@ const UserModelDesc = {
 }
 ```
 
+
 # Model
 + new(desc:[ModelDesc](#modeldesc))
 + method receiver(action:Object, storeState:Object, next:Function): this
@@ -69,11 +75,13 @@ const UserModelDesc = {
 + property scheduler: ModelDesc.scheduler
 + property state: Object
 
+
 # ViewModel
 Extends from Model and have a store property that a store instance.
 You can use store's methods in ViewModel `scheduler` but not in Model.
 
 + property store: [Store](#store)
+
 
 # Middleware
 + storeModelCreator(Array<[Model](#model)|[ModelDesc](#modeldesc)>, store)
