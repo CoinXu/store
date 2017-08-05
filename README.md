@@ -31,11 +31,15 @@ Core class
 + subscribe(observer:Function): this
 
 
+
+
 # StoreMiddleware
 Store middleware must be a function which receive three params.
 + action: Object
 + storeState: Object
 + next: (Object) => any
+
+
 
 
 # ModelDesc
@@ -63,6 +67,8 @@ const UserModelDesc = {
 }
 ```
 
+
+
 # Model
 + new(desc:[ModelDesc](#modeldesc))
 + method receiver(action:Object, storeState:Object, next:Function): this
@@ -72,11 +78,15 @@ const UserModelDesc = {
 + property scheduler: ModelDesc.scheduler
 + property state: Object
 
+
+
 # ViewModel
 Extends from Model and have a store property that a store instance.
 You can use store's methods in ViewModel `scheduler` like `this.store.dispatch(...)` but can not in Model.
 
 + property store: [Store](#store)
+
+
 
 
 # Middleware
