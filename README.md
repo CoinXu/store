@@ -28,6 +28,7 @@ All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) director
 * getState(): Object
 * subscribe(observer:Function): this
 
+
 `Store` is base class only use by new operate.
 
 # StoreMiddleware
