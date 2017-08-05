@@ -8,7 +8,6 @@ Store is a state manager write by JavaScript.
 All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) directory.
 
 # Store
-
 * new(state = {}): this
 * initialize(action = DefAction): this
 * _dispose(action:Object, callback?:Function): this
@@ -28,6 +27,7 @@ All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) director
 * use(mw:[StoreMiddleware](#storemiddleware)): this
 * getState(): Object
 * subscribe(observer:Function): this
+`Store` is base class only use by new operate.
 
 # StoreMiddleware
 Store middleware must be a function which receive three params.
