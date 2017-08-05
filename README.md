@@ -8,6 +8,7 @@ Store is a state manager write by JavaScript.
 All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) directory.
 
 # Store
+Core class
 
 + new(state = {}): this
 + initialize(action = DefAction): this
@@ -31,14 +32,12 @@ All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) director
 
 # StoreMiddleware
 Store middleware must be a function which receive three params.
-
 + action: Object
 + storeState: Object
 + next: (Object) => any
 
 # ModelDesc
 ModelDesc is a object to define a store model include property below:
-
 + name: String
 + state: Object
 + scheduler: (state: Object, action: Object, next: Function) => any
@@ -63,7 +62,6 @@ const UserModelDesc = {
 ```
 
 # Model
-
 + new(desc:[ModelDesc](#modeldesc))
 + method receiver(action:Object, storeState:Object, next:Function): this
 + method done(state:Object, next:Function): this
@@ -74,7 +72,7 @@ const UserModelDesc = {
 
 # ViewModel
 Extends from Model and have a store property that a store instance.
-You can use store's methods in ViewModel `scheduler` but not in Model.
+You can use store's methods in ViewModel `scheduler` like `this.store.dispatch(...)` but can not in Model.
 
 + property store: [Store](#store)
 
