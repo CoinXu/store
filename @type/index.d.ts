@@ -1,7 +1,10 @@
 // Definitions by: Coinxu <https://github.com/CoinXu>
 // TypeScript Version: 2.4
 
-declare module store {
+export = store
+export as namespace store
+
+declare namespace store {
   interface ActionDesc {
     type: string
     payload?: any
@@ -90,4 +93,4 @@ declare module store {
   export function storeViewModelCreator<T, U extends Store<U>> (mods: Array<ViewModelDesc<T> | ViewModel<T>>, store: U): U
 }
 
-export = store
+
