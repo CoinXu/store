@@ -16,20 +16,21 @@ All in [__test__](https://github.com/CoinXu/store/tree/master/__test__) director
 + single(action:Object, callback?:Function): this
 + multiple(actions:Array<Object>, callback?:Function): this
 + dispatch(actionOrActions:Object|Array<Object>, callback?:Function): this
-  ```js
-  // dispatch single action
-  store.dispatch({type: 'TYPE_A'}, function(state){
-      // do sth
-  })
-  // dispatch multiple actions
-  store.dispatch([{type: 'ACTION_A'}, {type: 'ACTION_B'}], function(state) {
-      // do sth
-  })
-  store.di
-  ```
 + use(mw:[StoreMiddleware](#storemiddleware)): this
 + getState(): Object
 + subscribe(observer:Function): this
+
+```js
+// dispatch single action
+store.dispatch({type: 'TYPE_A'}, function(state){
+  // do sth
+})
+// dispatch multiple actions
+store.dispatch([{type: 'ACTION_A'}, {type: 'ACTION_B'}], function(state) {
+  // do sth
+})
+store.di
+```
 
 
 # StoreMiddleware
