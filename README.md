@@ -30,11 +30,13 @@ Core class
 + getState(): Object
 + subscribe(observer:Function): this
 
+
 # StoreMiddleware
 Store middleware must be a function which receive three params.
 + action: Object
 + storeState: Object
 + next: (Object) => any
+
 
 # ModelDesc
 ModelDesc is a object to define a store model include property below:
@@ -75,6 +77,7 @@ Extends from Model and have a store property that a store instance.
 You can use store's methods in ViewModel `scheduler` like `this.store.dispatch(...)` but can not in Model.
 
 + property store: [Store](#store)
+
 
 # Middleware
 
