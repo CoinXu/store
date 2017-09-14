@@ -177,6 +177,9 @@ describe("storeCollectionCreator middleware", function () {
           collection.remove(payload.id)
           next()
           break
+        case 'MESSAGE':
+          next({ message: payload.message })
+          break
         default:
           next()
       }
@@ -188,16 +191,23 @@ describe("storeCollectionCreator middleware", function () {
 
   it('add one item to collection', function (done) {
     store.dispatch({ type: 'ADD', payload: { name: 'a', id: 0 } }, function (state) {
-      equal(state.user.length, 1)
-      equal(state.user[0].name, 'a')
+      equal(state.user.list.length, 1)
+      equal(state.user.list[0].name, 'a')
       done()
     })
   })
 
   it('remove one from collection', function (done) {
     store.dispatch({ type: 'REMOVE', payload: { id: 0 } }, function (state) {
-      equal(state.user.length, 0)
+      equal(state.user.list.length, 0)
       done()
+    })
+  })
+
+  it('dispatch a message action', function () {
+    const message = 'example message'
+    store.dispatch({ type: 'MESSAGE', payload: { message } }, function (state) {
+      equal(state.user.message, message)
     })
   })
 })
