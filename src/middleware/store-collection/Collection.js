@@ -42,90 +42,6 @@ import { assert, isFunction, isNumber, isString, isArray, isObject } from '../..
  * @property {Function} scheduler
  */
 
-// https://github.com/CoinXu/store/issues/1
-/**
- * interface CollectionJSON<T> {
- *   models: T[]
- *   toDelete: T[]
- *   toUpdate: T[]
- *   toCreate: T[]
- * }
- * // collection structure
- * interface Collection<T> {
- *    readonly _models: T[]
- *    readonly _cache: T[]
- *    readonly _to_del: T[]
- *    readonly _to_update: T[]
- *    readonly _to_create: T[]
- *
- *    // methods
- *    reset(mods: T[]): Collection<T>
- *    remove(mod: T): Collection<T>
- *    update(mod: T): Collection<T>
- *    add(mod: T): Collection<T>
- *    sort(compare: (a: T, b: T) => number): Collection<T>
- *    at(index: number): T || null
- *    find(filter: (mod: T): boolean):  T || null
- *    get(): T[]
- *    toString(): string
- *    toJson(): CollectionJSON<T>
- * }
- *
- * interface CollectionDesc<T> {
- *   name: string
- *   scheduler(action: any, col: Collection<T>, next: () => void)
- * }
- *
- * // wrapper
- * function storeCollectionCreator<T, U>(desc: CollectionDesc<T>, Store<U>): Store<U>
- *
- * // define
- * interface Book {
- *    title: name
- *    price: number
- * }
- *
- * interface Action {
- *   type: string
- *   payload: any
- * }
- *
- * const desc: CollectionDesc<Book> = {
- *   name: 'books',
- *   scheduler(action: Action, collection: Collection<Book>, next: (ret: any) => void) {
- *      if (action.type === 'ADD_BOOK') {
- *       collection.add(action.payload)
- *     }
- *     if(action.type === 'SAVE_BOOK') {
- *        return new Promise(async function(resolve){
- *           // sync to server
- *           const json: CollectionJSON<Book> = collection.toJSON();
- *           await fetch('/api/book/create', {
- *              ...
- *              body: JSON.stringify(json.toCreate)
- *           })
- *           await fetch('/api/book/del', {
- *              ...
- *              body: JSON.stringify(json.toDelete)
- *           })
- *           ... make update ...
- *           resolve(collection.get())
- *        }).then( function(){ next() })
- *     }
- *     next(collection.get())
- *   }
- * }
- * // use
- * const store = new Store()
- * storeCollectionCreator<Book, any>(desc, store)
- * store.dispatch({
- *   type: 'ADD_BOOK',
- *   payload: {
- *    title: 'C primer plus',
- *    price: '￥60.00'
- * }
- */
-
 const generate = (function () {
   let counter = 0
   return function () {
@@ -141,7 +57,7 @@ export default class Collection {
   constructor (primaryKey, mods = []) {
     assert(isString(primaryKey) && !!primaryKey, 'Primary key must be a string and required')
     this._primaryKey = primaryKey;
-    this._reset(mods)
+    this.reset(mods)
   }
 
   /**
@@ -150,7 +66,7 @@ export default class Collection {
    * @return {Collection}
    * @private
    */
-  _reset (mods) {
+  reset (mods) {
     assert(isArray(mods), 'Models must be a Array')
 
     const map = {}
@@ -171,37 +87,16 @@ export default class Collection {
   }
 
   /**
-   * 匹配model
-   * 1. 检测primaryKey是否相同
-   * 2. 检测两个Object对象是否是同一个
-   * @param {string|Object} keyOrMod
-   * @param {Object} mod
-   * @return {boolean}
-   * @private
-   */
-  _match (keyOrMod, mod) {
-    return mod[this._primaryKey] === keyOrMod || mod === keyOrMod
-  }
-
-  /**
-   * 重置Collection
-   * @param {Array<Object>} mods
-   * @return {Collection}
-   */
-  reset (mods) {
-    return this._reset(mods)
-  }
-
-  /**
    * 移除model，可传primaryKey和model本身
    * @param {string|Object} keyOrMod
    * @return {Collection}
    */
   remove (keyOrMod) {
 
-    this._models = this._models.filter(m => !this._match(keyOrMod, m))
+    const notPrimaryKey = isObject(keyOrMod)
+    const primaryKey = notPrimaryKey ? keyOrMod[this._primaryKey] : keyOrMod
 
-    const primaryKey = isObject(keyOrMod) ? keyOrMod[this._primaryKey] : keyOrMod
+    this._models = this._models.filter(m => notPrimaryKey ? m !== keyOrMod : m[this._primaryKey] !== keyOrMod)
     this._to_del[primaryKey] = true
     this._to_create[primaryKey] = false
     this._to_update[primaryKey] = false
