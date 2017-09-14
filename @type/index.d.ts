@@ -91,6 +91,44 @@ declare namespace store {
   export const ViewModel: ViewModelConstructor
 
   export function storeViewModelCreator<T, U extends Store<U>> (mods: Array<ViewModelDesc<T> | ViewModel<T>>, store: U): U
+
+  // storeCollectionCreator
+  interface CollectionJSON<T> {
+    models: T[]
+    toDelete: T[]
+    toUpdate: T[]
+    toCreate: T[]
+  }
+
+  interface CollectionDesc<T> {
+    name: string
+    primaryKey: string
+    scheduler(action: ActionDesc, col: Collection<T>, next: StoreNext): void
+  }
+
+  interface Collection<T> {
+    reset(mods: T[]): Collection<T>
+    remove(keyOrMod: string): Collection<T>
+    remove(keyOrMod: number): Collection<T>
+    remove(keyOrMod: T): Collection<T>
+    update(primaryValue: number, props: object): Collection<T>
+    update(primaryValue: string, props: object): Collection<T>
+    add(mod: T): Collection<T>
+    sort(compare: (a: T, b: T) => number): Collection<T>
+    at(index: number): T | null
+    last(): T | null
+    find(filter: object): T | null
+    toString(): string
+    toJSON(): CollectionJSON<T>
+  }
+
+  interface CollectionConstructor {
+    new<T>(primaryKey: string, mods?: T[]): Collection<T>
+  }
+
+  export const Collection: CollectionConstructor
+
+  export function storeCollectionCreator<T, U extends Store<U>> (desc: CollectionDesc<T>, store: U): U
 }
 
 

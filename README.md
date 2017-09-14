@@ -76,6 +76,21 @@ You can use store's methods in ViewModel `scheduler` but not in Model.
 
 * property store: [Store](#store)
 
+# Collection
+Models manager.
+* new(primaryKey:string, models?:T[])
+* method reset(mods:T[]): this
+* method remove(keyOrMod: string|number|T): this
+* method update(primaryValue: string|number, props:any): this
+* method add(mod:T): this
+* method sort(compare:(a:T, b:T) => number): this
+* method at(index:number) T|null
+* method last(): T|null
+* method find(filter:Object): T:null
+* method get(): T[]
+* method toString(): string
+* method toJSON(): {models:T[], toDelete:T[], toUpdate:T[], toCreate:T[]}
+
 # Middleware
 * storeModelCreator(Array<[Model](#model)|[ModelDesc](#modeldesc)>, store)
 * storeViewModelCreator(Array<[ViewModel](#viewmodel)|[ModelDesc](#modeldesc)>, store)
