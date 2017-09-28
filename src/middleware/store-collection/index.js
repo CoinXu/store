@@ -12,15 +12,18 @@ import { isObject, assert } from '../../utils/utils'
  */
 export default function (desc, store) {
   const collection = new Collection(desc.primaryKey)
+  const state = { list: collection.get() }
 
   store.use(function (action, state, next) {
     desc.scheduler(action, collection, function (props) {
-      const ret = { list: collection.get() }
+      state.list = collection.get()
+
       if (isObject(props)) {
         assert(props.list === void 0, 'Props can not have a key which named [list]')
-        Object.assign(ret, props)
+        Object.assign(state, props)
       }
-      next({ [desc.name]: ret })
+      
+      next({ [desc.name]: state })
     })
   })
 
