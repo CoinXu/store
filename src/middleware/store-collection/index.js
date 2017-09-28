@@ -14,7 +14,7 @@ export default function (desc, store) {
   const collection = new Collection(desc.primaryKey)
   const state = { list: collection.get() }
 
-  store.use(function (action, state, next) {
+  store.use(function (action, storeState, next) {
     desc.scheduler(action, collection, function (props) {
       state.list = collection.get()
 
