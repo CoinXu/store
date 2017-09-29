@@ -165,11 +165,13 @@ describe("storeCollectionCreator middleware", function () {
      * @param {Object} action
      * @param {Collection} collection
      * @param {Function} next
+     * @this {Store}
      */
     scheduler(action, collection, next){
       const { type, payload } = action
       switch (type) {
         case 'ADD':
+          this.dispatch({ type: '', payload: '' })
           collection.add(payload)
           next()
           break
