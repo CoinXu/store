@@ -21,7 +21,7 @@ function creator (type) {
   }
 }
 
-export default {
+const Valid = {
   // primitive type
   isBoolean: creator('Boolean'),
   isNull: creator('Null'),
@@ -35,14 +35,23 @@ export default {
   isArray: creator('Array')
 }
 
-function add (target, key, descriptor) {
-  console.log(target)
-  console.log(key)
-  console.log(descriptor)
+function valid (validator, msg) {
+  return function (target, key, descriptor) {
+    const initializer = descriptor.initializer
+
+    descriptor.initializer = function () {
+      const value = initializer.call(target)
+      if (!validator(value)) {
+        throw new Error(msg)
+      }
+      return value
+    }
+    return descriptor
+  }
 }
 
 class A {
-  @add
+  @valid(Valid.isNumber)
   a = 0
 }
 

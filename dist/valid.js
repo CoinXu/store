@@ -73,11 +73,7 @@
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _desc, _value, _class, _descriptor;
+var _dec, _desc, _value, _class, _descriptor;
 
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
@@ -147,7 +143,7 @@ function creator(type) {
   };
 }
 
-exports.default = {
+var Valid = {
   // primitive type
   isBoolean: creator('Boolean'),
   isNull: creator('Null'),
@@ -161,23 +157,31 @@ exports.default = {
   isArray: creator('Array')
 };
 
+function valid(validator, msg) {
+  return function (target, key, descriptor) {
+    var initializer = descriptor.initializer;
 
-function add(target, key, descriptor) {
-  console.log(target);
-  console.log(key);
-  console.log(descriptor);
+    descriptor.initializer = function () {
+      var value = initializer.call(target);
+      if (!validator(value)) {
+        throw new Error(msg);
+      }
+      return value;
+    };
+    return descriptor;
+  };
 }
 
-var A = (_class = function A() {
+var A = (_dec = valid(Valid.isNumber), (_class = function A() {
   _classCallCheck(this, A);
 
   _initDefineProp(this, 'a', _descriptor, this);
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'a', [add], {
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'a', [_dec], {
   enumerable: true,
   initializer: function initializer() {
     return 0;
   }
-})), _class);
+})), _class));
 
 
 var a = new A();
