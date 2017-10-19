@@ -6,7 +6,7 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    valid: './src/valid/types'
+    valid: './__test__/decorate/browser'
   },
   output: {
     path: path.join(__dirname, './dist'),
@@ -16,7 +16,7 @@ module.exports = {
     'react': 'React',
     'react-dom': 'ReactDOM'
   },
-  //devtool: 'eval-source-map',
+  devtool: 'eval-source-map',
   module: {
     rules: [
       {
