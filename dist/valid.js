@@ -73,6 +73,10 @@
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _dec, _desc, _value, _class, _descriptor;
 
 function _initDefineProp(target, property, descriptor, context) {
@@ -84,8 +88,6 @@ function _initDefineProp(target, property, descriptor, context) {
     value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
   });
 }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -123,69 +125,158 @@ function _initializerWarningHelper(descriptor, context) {
 /**
  * @Author sugo.io<asd>
  * @Date 17-10-18
+ * @description 类型验证
  */
 
-var toString = Object.prototype.toString;
+const toString = Object.prototype.toString;
 
 /**
- * @callback TypeValid
- * @param {*} value
- * @return {boolean}
+ * @typedef {Object} ValidTypeDesc
+ * @property {string} type
+ * @property {string} msg
  */
 
 /**
  * @param {string} type
- * @return {TypeValid}
+ * @return {{type: string, msg: string}}
  */
 function creator(type) {
-  return function (val) {
-    return toString.call(val) === '[object ' + type + ']';
+  return {
+    type,
+    msg: `Property [{{key}}] Type Error : Not {{type}}`
   };
 }
 
-var Valid = {
-  // primitive type
-  isBoolean: creator('Boolean'),
-  isNull: creator('Null'),
-  isUndefined: creator('Undefined'),
-  isNumber: creator('Number'),
-  isString: creator('String'),
-  isSymbol: creator('Symbol'),
+/**
+ *
+ * @param {string} key
+ * @param {string} type
+ * @param {string} template
+ * @return {string}
+ */
+function parser(key, type, template) {
+  return template.replace(/{{\s*key\s*}}/, key.toString()).replace(/{{\s*type\s*}}/, type.toString());
+}
 
-  // object
-  isObject: creator('Object'),
-  isArray: creator('Array')
-};
+/**
+ * @type {Object<string, ValidTypeDesc>}
+ */
+const ValidType = {
+  PRIM_BOOL: creator('Boolean'),
+  PRIM_NUM: creator('Number'),
+  PRIM_STR: creator('String'),
+  PRIM_NL: creator('Null'),
+  PRIM_UNDEF: creator('Undefined'),
+  PRIM_SYMBOL: creator('Symbol'),
 
-function valid(validator, msg) {
+  OBJ_O: creator('Object'),
+  OBJ_A: creator('Array')
+
+  /**
+   * 验证装饰器描述对象中的getter函数
+   * @callback ValidDescriptorGetter
+   * @return {*}
+   */
+
+  /**
+   * 验证装饰器描述对象中的setter函数
+   * @callback ValidDescriptorSetter
+   * @param {*} value
+   * @return {undefined}
+   */
+
+  /**
+   * 验证装饰器描述对象
+   * @typedef {Object} ValidDescriptor
+   * @property {boolean} configurable
+   * @property {boolean} enumerable
+   * @property {ValidDescriptorGetter} get
+   * @property {ValidDescriptorSetter} set
+   */
+
+  /**
+   * 验证装饰器函数
+   * @callback ValidDecorate
+   * @param {Object} target
+   * @param {string} key
+   * @param {Object} descriptor
+   * @return {ValidDescriptor}
+   */
+
+  /**
+   * 生成验证装饰器函数
+   * @param {ValidTypeDesc} ValidType
+   * @param {string} [msg]
+   * @param {string} [messageKey = 'message']
+   * @return {ValidDecorate}
+   */
+};function Valid(ValidType, msg, messageKey = 'message') {
+
+  /** @type {ValidDecorate} */
   return function (target, key, descriptor) {
-    var initializer = descriptor.initializer;
-
-    descriptor.initializer = function () {
-      var value = initializer.call(target);
-      if (!validator(value)) {
-        throw new Error(msg);
+    msg = msg || ValidType.msg;
+    /**
+     * @param {*} value
+     * @return {boolean}
+     */
+    function validator(value) {
+      if (toString.call(value) !== `[object ${ValidType.type}]`) {
+        target[messageKey] = parser(key, ValidType.type, msg);
+        return false;
       }
-      return value;
+      target[messageKey] = null;
+      return true;
+    }
+
+    const get = descriptor.get,
+          set = descriptor.set,
+          initializer = descriptor.initializer;
+
+
+    let buf = get ? get.call(target) : initializer.call(target);
+    // 如果初始值验证不通过则重置为undefined
+    if (!validator(buf)) {
+      buf = void 0;
+    }
+
+    const desc = {
+      configurable: false,
+      enumerable: true,
+      // TODO 预先生成
+      get() {
+        return buf;
+      },
+      // TODO 预先生成
+      set(value) {
+        if (set) {
+          set.call(target, value);
+        }
+
+        value = get ? get.call(target) : value;
+        if (validator(value)) {
+          buf = value;
+        }
+      }
     };
-    return descriptor;
+
+    desc.__proto__ = null;
+    return desc;
   };
 }
 
-var A = (_dec = valid(Valid.isNumber), (_class = function A() {
-  _classCallCheck(this, A);
+exports.ValidType = ValidType;
+exports.Valid = Valid;
+let A = (_dec = Valid(ValidType.PRIM_NUM), (_class = class A {
+  constructor() {
+    _initDefineProp(this, 'a', _descriptor, this);
+  }
 
-  _initDefineProp(this, 'a', _descriptor, this);
 }, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'a', [_dec], {
   enumerable: true,
   initializer: function initializer() {
     return 0;
   }
 })), _class));
-
-
-var a = new A();
-console.log(a.a);
 
 /***/ })
 /******/ ]);
