@@ -1,16 +1,21 @@
 {
   "presets": [
-    "react",
-    "es2015",
-    "stage-0"
-  ],
-  "plugins": [
+    "stage-0",
     [
-      "transform-runtime",
+      "env",
       {
-        "polyfill": false,
-        "regenerator": true
+        "targets": {
+          "browsers": [
+            "chrome >= 50"
+          ],
+          "node": "7.0.0"
+        }
       }
     ]
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-object-rest-spread",
+    "transform-class-properties"
   ]
 }

@@ -6,9 +6,7 @@ const path = require('path')
 
 module.exports = {
   entry: {
-    simple: './example/simple/view.js',
-    'multi-models': './example/multi-models/view.js',
-    'with-react': './example/with-react/index.js'
+    valid: './src/valid/types'
   },
   output: {
     path: path.join(__dirname, './dist'),
@@ -18,17 +16,14 @@ module.exports = {
     'react': 'React',
     'react-dom': 'ReactDOM'
   },
-  devtool: 'eval-source-map',
+  //devtool: 'eval-source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env']
-          }
+          loader: 'babel-loader'
         }
       }
     ]
