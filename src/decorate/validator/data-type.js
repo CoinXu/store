@@ -41,45 +41,6 @@ const DateTypes = {
 }
 
 /**
- * 验证装饰器描述对象中的getter函数
- * @callback ValidDescriptorGetter
- * @return {*}
- */
-
-/**
- * 验证装饰器描述对象中的setter函数
- * @callback ValidDescriptorSetter
- * @param {*} value
- * @return {undefined}
- */
-
-/**
- * 验证装饰器描述对象
- * @typedef {Object} ValidDescriptor
- * @property {boolean} configurable
- * @property {boolean} enumerable
- * @property {ValidDescriptorGetter} get
- * @property {ValidDescriptorSetter} set
- */
-
-/**
- * babel-plugin-transform-decorators-legacy
- * 转换后的代码descriptor会有initializer函数，返回初始值
- * @typedef {Object} InitializeDescriptor
- * @property {boolean} enumerable
- * @property {Function} initializer
- */
-
-/**
- * 验证装饰器函数
- * @callback ValidDecorate
- * @param {Object} target
- * @param {string} key
- * @param {InitializeDescriptor} descriptor
- * @return {ValidDescriptor}
- */
-
-/**
  * 生成验证装饰器函数
  * @param {ValidTypeDesc} ValidType
  * @param {string} [msg]

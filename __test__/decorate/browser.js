@@ -68,27 +68,3 @@ const obj = {
 
 window.obj = obj
 
-class DemoX {
-  @Rule([
-    { required: true },
-    { type: Number },
-    { range: [0, 200] }
-  ])
-  age = null
-
-  @Rule([
-    { required: true },
-    { type: String },
-    { lenRange: [4, 32] }
-  ])
-  name = null
-
-  @Rule({ enumData: Gender })
-  gender = null
-}
-
-const dx = new DemoX()
-dx.age = 0
-dx.name = 'demo'
-dx.gender = Gender.Female
-
