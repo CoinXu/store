@@ -50,8 +50,23 @@ const d = new Demo()
 d.age = 0
 d.name = 'demo'
 d.gender = Gender.Female
-
 window.d = d
+
+const obj = {
+  @Max(200)
+  @Min(0)
+  @DateType(DateTypes.PRIM_NUM)
+  @Required()
+  age: null,
+
+  @MaxLen(32)
+  @MinLen(4)
+  @DateType(DateTypes.PRIM_STR)
+  @Required()
+  name: null
+}
+
+window.obj = obj
 
 class DemoX {
   @Rule([
