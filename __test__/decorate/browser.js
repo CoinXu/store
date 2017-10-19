@@ -3,6 +3,12 @@
  * @Date 17-10-19
  */
 
+function Rule (opt) {
+  return function () {
+
+  }
+}
+
 import {
   DateType,
   DateTypes,
@@ -20,8 +26,9 @@ import {
   Range
 } from '../../src/decorate/validator'
 
-const Femal = {
-
+const Gender = {
+  Female: 0,
+  Male: 1
 }
 
 class Demo {
@@ -35,5 +42,37 @@ class Demo {
   @Required()
   name = null
 
-  femal = null
+  @Enum(Gender)
+  gender = null
 }
+
+const d = new Demo()
+d.age = 0
+d.name = 'demo'
+d.gender = Gender.Female
+
+
+class DemoX {
+  @Rule([
+    { required: true },
+    { type: Number },
+    { range: [0, 200] }
+  ])
+  age = null
+
+  @Rule([
+    { required: true },
+    { type: String },
+    { lenRange: [4, 32] }
+  ])
+  name = null
+
+  @Rule({ enumData: Gender })
+  gender = null
+}
+
+const dx = new DemoX()
+dx.age = 0
+dx.name = 'demo'
+dx.gender = Gender.Female
+
