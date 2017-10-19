@@ -51,6 +51,7 @@ d.age = 0
 d.name = 'demo'
 d.gender = Gender.Female
 
+window.d = d
 
 class DemoX {
   @Rule([
