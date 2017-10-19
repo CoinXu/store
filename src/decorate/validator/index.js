@@ -21,7 +21,7 @@ export {
   Enum,
   Pattern,
   Required,
-  
+
   MaxLen,
   MinLen,
   RangeLen,
