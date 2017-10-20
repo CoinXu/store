@@ -3,7 +3,11 @@
  * @Date 17-10-20
  */
 
-import { DefaultWrapper, hasOwnProperty, template } from '../../decorate/validator/valid'
+import { ValidatorDefaultBuffer, hasOwnProperty, template } from '../../decorate/validator/valid'
+
+/**
+ * @typedef {Object<string, Array<string>>} ValidMessage
+ */
 
 class StoreModel {
 
@@ -12,7 +16,8 @@ class StoreModel {
    * @return {StoreModel}
    */
   listen (listener) {
-    this.listener = listener
+    // TODO 不占用this属性名
+    this.__listener__ = listener
     return this
   }
 
@@ -26,7 +31,7 @@ class StoreModel {
     let valid
 
     while (proto) {
-      valid = DefaultWrapper.get(proto)
+      valid = ValidatorDefaultBuffer.get(proto)
       if (valid !== null) {
         Object.assign(validators, valid.validator)
       }
@@ -73,22 +78,23 @@ class StoreModel {
   }
 
   /**
-   * @param {Object} values
+   * 更新数据
+   * @param {Object|string} valuesOrKey
+   * @param {*} [valueOrUndef]
    * @return {StoreModel}
    */
-  map (values) {
+  set (valuesOrKey, valueOrUndef) {
+    const values = valueOrUndef ? { [valuesOrKey]: valueOrUndef } : valuesOrKey
     const msg = this.valid(values)
 
-    let propKey
-
-    for (propKey in values) {
+    for (let propKey  in values) {
       if (!hasOwnProperty.call(values, propKey)) continue
       if (hasOwnProperty.call(msg, propKey)) continue
       this[propKey] = values[propKey]
     }
 
-    if (this.listener) {
-      this.listener(msg)
+    if (this.__listener__) {
+      this.__listener__(msg)
     }
 
     return this

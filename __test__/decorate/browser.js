@@ -26,18 +26,26 @@ const Gender = {
 }
 
 class User extends StoreModel {
-  @Range([0, 200])
+  @Max(200)
+  @Min(0)
   @DateType(DateTypes.PRIM_NUM)
   @Required()
   age = null
 
-  @RangeLen([4, 32])
+  @MaxLen(32)
+  @MinLen(4)
   @DateType(DateTypes.PRIM_STR)
   @Required()
   name = null
 
   @Enum(Gender)
   gender = null
+
+  @Pattern(/^\w+\.@\w+\.\w+$/, '邮箱格式为xxx@yyy.zzz')
+  @RangeLen([6, 32])
+  @DateType(DateTypes.PRIM_STR)
+  @Required()
+  email = null
 }
 
 const user = new User()
@@ -50,12 +58,7 @@ function listener (msg) {
 }
 
 user.listen(listener)
-user.map({ age: -1, name: '', gender: -1 })
-
-
-//user.age = 0
-//user.name = 'demo'
-//user.gender = Gender.Female
+user.set({ age: -1, name: '', gender: -1, email: 'aaaa.c' })
 
 window.user = user
 
@@ -67,8 +70,5 @@ class GameUser extends User {
 }
 
 const guser = window.guser = new GameUser()
-guser.listen(function (msg) {
-  console.log('guser => ', msg)
-})
-
-user.map({ age: -1, name: '', gender: -1, level: '' })
+guser.listen(function (msg) {console.log('guser => ', msg)})
+user.set({ age: -1, name: '', gender: -1, email: 'bbbb.a', level: '' })

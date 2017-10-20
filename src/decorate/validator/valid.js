@@ -37,7 +37,7 @@ function template (temp, values) {
 /**
  * @class 缓存验证器
  */
-class Wrapper {
+class ValidatorBuffer {
   constructor () {
     /** @type {Array<TargetValidator>} */
     this.buffer = []
@@ -48,7 +48,7 @@ class Wrapper {
    * @param {string} key
    * @param {Validator} validator
    * @param {string} msg
-   * @return {Wrapper}
+   * @return {ValidatorBuffer}
    */
   add (target, key, validator, msg) {
     let buf = this.buffer.find(buf => buf.target === target)
@@ -79,15 +79,15 @@ class Wrapper {
 
   /**
    * @param {Object} target
-   * @return {Wrapper}
+   * @return {ValidatorBuffer}
    */
-  destory (target) {
+  destroy (target) {
     this.buffer = this.buffer.filter(buf => buf.target !== target)
     return this
   }
 }
 
-const DefaultWrapper = new Wrapper()
+const ValidatorDefaultBuffer = new ValidatorBuffer()
 
 /**
  * @param {Validator} validator
@@ -96,13 +96,13 @@ const DefaultWrapper = new Wrapper()
  */
 function decorate (validator, msg) {
   return function (target, key, descriptor) {
-    DefaultWrapper.add(target, key, validator, msg)
+    ValidatorDefaultBuffer.add(target, key, validator, msg)
     return descriptor
   }
 }
 
 export {
-  DefaultWrapper,
+  ValidatorDefaultBuffer,
   hasOwnProperty,
   decorate,
   template
