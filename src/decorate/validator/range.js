@@ -7,15 +7,16 @@ import { decorate } from './valid'
 
 /**
  * 数值取值验证
- * @param {Array<number>} range
+ * @param {number} min
+ * @param {number} max
  * @param {string} [msg]
  * @return {ValidDecorate}
  */
-function Range (range, msg) {
-  msg = msg || `{{key}}: Must be of type number that greater than ${range[0]} less than ${range[1]} `
+function Range (min, max, msg) {
+  msg = msg || `{{key}}: Must be of type number that greater than ${min} less than ${max} `
 
   function validator (value) {
-    return typeof value === 'number' && value >= range[0] && value <= range[1]
+    return typeof value === 'number' && value >= min && value <= max
   }
 
   return decorate(validator, msg)

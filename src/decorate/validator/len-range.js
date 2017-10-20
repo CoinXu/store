@@ -7,15 +7,16 @@ import { decorate } from './valid'
 
 /**
  * 字符长度取值区间验证
- * @param {Array<number>} range
+ * @param {number} min
+ * @param {number} max
  * @param {string} [msg]
  * @return {ValidDecorate}
  */
-function RangeLen (range, msg) {
-  msg = msg || `{{key}}: Must be of type String than length greater than ${range[0]} less than ${range[1]} `
+function RangeLen (min, max, msg) {
+  msg = msg || `{{key}}: Must be of type String than length greater than ${min} less than ${max}`
 
   function validator (value) {
-    return typeof value === 'string' && value.length >= range[0] && value.length <= range[1]
+    return typeof value === 'string' && value.length >= min && value.length <= max
   }
 
   return decorate(validator, msg)
