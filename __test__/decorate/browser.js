@@ -50,6 +50,8 @@ function listener (msg) {
 }
 
 user.listen(listener)
+user.map({ age: -1, name: '', gender: -1 })
+
 
 //user.age = 0
 //user.name = 'demo'
@@ -57,7 +59,7 @@ user.listen(listener)
 
 window.user = user
 
-class GameUser extends StoreModel {
+class GameUser extends User {
   @Range([0, 175])
   @DateType(DateTypes.PRIM_NUM)
   @Required()
@@ -68,3 +70,5 @@ const guser = window.guser = new GameUser()
 guser.listen(function (msg) {
   console.log('guser => ', msg)
 })
+
+user.map({ age: -1, name: '', gender: -1, level: '' })

@@ -149,48 +149,6 @@ let Wrapper = class Wrapper {
 
   /**
    * @param {Object} target
-   * @param {Object} values
-   * @return {Object<string, Array<string>>}
-   */
-  valid(target, values) {
-    const buf = this.get(target);
-    const results = [];
-
-    if (buf === null) {
-      return results;
-    }
-
-    const validator = buf.validator;
-    let propKey;
-    let valid;
-    let fault;
-    let msg;
-
-    for (propKey in validator) {
-      if (!hasOwnProperty.call(validator, propKey) || !hasOwnProperty.call(values, propKey)) {
-        continue;
-      }
-
-      valid = validator[propKey];
-      msg = [];
-      fault = valid.some(function (vb) {
-        if (vb.validator(values[propKey])) {
-          return false;
-        }
-        msg.push(template(vb.msg, { key: propKey }));
-        return true;
-      });
-
-      if (fault) {
-        results[propKey] = msg;
-      }
-    }
-
-    return results;
-  }
-
-  /**
-   * @param {Object} target
    * @return {Object<string, Array<ValidatorBuffer>>|null}
    */
   get(target) {
@@ -302,17 +260,73 @@ let StoreModel = class StoreModel {
   }
 
   /**
+   * @return {Object<string, Array<ValidatorBuffer>>}
+   */
+  validator() {
+    const validators = {};
+
+    let proto = this.__proto__;
+    let valid;
+
+    while (proto) {
+      valid = _valid.DefaultWrapper.get(proto);
+      if (valid !== null) {
+        Object.assign(validators, valid.validator);
+      }
+      proto = proto.__proto__;
+    }
+
+    return validators;
+  }
+
+  /**
+   * @param {Object} values
+   * @return {Object<string, Array<string>>}
+   */
+  valid(values) {
+    const validator = this.validator();
+    const results = [];
+
+    let propKey;
+    let valid;
+    let fault;
+    let msg;
+
+    for (propKey in validator) {
+      if (!_valid.hasOwnProperty.call(validator, propKey) || !_valid.hasOwnProperty.call(values, propKey)) {
+        continue;
+      }
+
+      valid = validator[propKey];
+      msg = [];
+      fault = valid.some(function (vb) {
+        if (vb.validator(values[propKey])) {
+          return false;
+        }
+        msg.push((0, _valid.template)(vb.msg, { key: propKey }));
+        return true;
+      });
+
+      if (fault) {
+        results[propKey] = msg;
+      }
+    }
+
+    return results;
+  }
+
+  /**
    * @param {Object} values
    * @return {StoreModel}
    */
   map(values) {
-    const msg = _valid.DefaultWrapper.valid(this.__proto__, values);
+    const msg = this.valid(values);
 
     let propKey;
 
     for (propKey in values) {
       if (!_valid.hasOwnProperty.call(values, propKey)) continue;
-      if (!_valid.hasOwnProperty.call(msg, propKey)) continue;
+      if (_valid.hasOwnProperty.call(msg, propKey)) continue;
       this[propKey] = values[propKey];
     }
 
@@ -429,6 +443,7 @@ function listener(msg) {
 }
 
 user.listen(listener);
+user.map({ age: -1, name: '', gender: -1 });
 
 //user.age = 0
 //user.name = 'demo'
@@ -436,7 +451,7 @@ user.listen(listener);
 
 window.user = user;
 
-let GameUser = (_dec8 = (0, _validator.Range)([0, 175]), _dec9 = (0, _validator.DateType)(_validator.DateTypes.PRIM_NUM), _dec10 = (0, _validator.Required)(), (_class3 = class GameUser extends _Model.StoreModel {
+let GameUser = (_dec8 = (0, _validator.Range)([0, 175]), _dec9 = (0, _validator.DateType)(_validator.DateTypes.PRIM_NUM), _dec10 = (0, _validator.Required)(), (_class3 = class GameUser extends User {
   constructor(...args) {
     var _temp2;
 
@@ -455,6 +470,8 @@ const guser = window.guser = new GameUser();
 guser.listen(function (msg) {
   console.log('guser => ', msg);
 });
+
+user.map({ age: -1, name: '', gender: -1, level: '' });
 
 /***/ }),
 /* 4 */

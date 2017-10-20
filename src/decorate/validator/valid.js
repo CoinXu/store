@@ -71,49 +71,6 @@ class Wrapper {
 
   /**
    * @param {Object} target
-   * @param {Object} values
-   * @return {Object<string, Array<string>>}
-   */
-  valid (target, values) {
-    const buf = this.get(target)
-    const results = []
-
-    if (buf === null) {
-      return results
-    }
-
-    const validator = buf.validator
-    
-    let propKey
-    let valid
-    let fault
-    let msg
-
-    for (propKey in validator) {
-      if (!hasOwnProperty.call(validator, propKey) || !hasOwnProperty.call(values, propKey)) {
-        continue
-      }
-
-      valid = validator[propKey]
-      msg = []
-      fault = valid.some(function (vb) {
-        if (vb.validator(values[propKey])) {
-          return false
-        }
-        msg.push(template(vb.msg, { key: propKey }))
-        return true
-      })
-
-      if (fault) {
-        results[propKey] = msg
-      }
-    }
-
-    return results
-  }
-
-  /**
-   * @param {Object} target
    * @return {Object<string, Array<ValidatorBuffer>>|null}
    */
   get (target) {
