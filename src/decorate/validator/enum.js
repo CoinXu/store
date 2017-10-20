@@ -8,10 +8,9 @@ import { decorate } from './valid'
 /**
  * @param {Object} enumData
  * @param {string} [msg]
- * @param {string} [messageKey = 'message']
  * @return {ValidDecorate}
  */
-function Enum (enumData, msg, messageKey = 'message') {
+function Enum (enumData, msg) {
   const values = Object.keys(enumData).map(key => enumData[key])
   msg = msg || `Enum Type Error: {{key}} Must be one of ${values.join('')}`
 
@@ -19,7 +18,7 @@ function Enum (enumData, msg, messageKey = 'message') {
     return values.includes(value)
   }
 
-  return decorate(validator, msg, messageKey)
+  return decorate(validator, msg)
 }
 
 export default Enum

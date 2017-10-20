@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,91 +71,783 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n/**\n * @Author sugo.io<asd>\n * @Date 17-10-19\n */\n\n/**\n * 验证结果消息模版解析\n * @param {string} key\n * @param {string} type\n * @param {string} template\n * @return {string}\n * ```js\n * parse('a', 'Number', '{{key}}: Not {{type}} Error') // 'a: Not Number Error'\n * ```\n */\nfunction parse(key, type, template) {\n  return template.replace(/{{\\s*key\\s*}}/, key.toString()).replace(/{{\\s*type\\s*}}/, type.toString());\n}\n\n/**\n * 验证器，传入value，返回boolean值\n * @typedef {callback} Validator\n * @param {*} value\n * @param {Object} target\n * @return {boolean}\n */\n\n/**\n * 验证装饰器描述对象中的getter函数\n * @callback ValidDescriptorGetter\n * @return {*}\n */\n\n/**\n * 验证装饰器描述对象中的setter函数\n * @callback ValidDescriptorSetter\n * @param {*} value\n * @return {boolean}\n */\n\n/**\n * 验证装饰器描述对象\n * @typedef {Object} ValidDescriptor\n * @property {boolean} configurable\n * @property {boolean} enumerable\n * @property {ValidDescriptorGetter} get\n * @property {ValidDescriptorSetter} set\n */\n\n/**\n * babel-plugin-transform-decorators-legacy\n * 转换后的代码descriptor会有initializer函数，返回初始值\n * @typedef {Object} InitializeDescriptor\n * @property {boolean} enumerable\n * @property {Function} initializer\n */\n\n/**\n * 验证装饰器函数\n * @callback ValidDecorate\n * @param {Object} target\n * @param {string} key\n * @param {InitializeDescriptor} descriptor\n * @return {ValidDescriptor}\n */\n\n/**\n * 传入验证器及信息，返回\n * @param {Validator} validator\n * @param {string} msg\n * @param {string} [messageKey=message]\n * @return {ValidDecorate}\n */\nfunction decorate(validator, msg, messageKey = 'message') {\n\n  /**\n   * @param {Object} target\n   * @param {string} key\n   * @param {InitializeDescriptor|ValidDescriptor} descriptor\n   * @return {ValidDescriptor}\n   */\n  function wrapper(target, key, descriptor) {\n\n    function validator_wrapper(value) {\n      if (!validator(value, target)) {\n        target[messageKey] = parse(key, '', msg);\n        return false;\n      }\n      target[messageKey] = null;\n      return true;\n    }\n\n    const get = descriptor.get,\n          set = descriptor.set,\n          initializer = descriptor.initializer;\n\n\n    let buf = get ? get.call(target) : initializer.call(target);\n\n    // 如果初始值为null，则不验证\n    // 如果初始值验证不通过则重置为undefined\n    if (buf !== null && !validator_wrapper(buf)) {\n      buf = void 0;\n    }\n\n    const desc = {\n      configurable: false,\n      enumerable: true,\n      // TODO 预先生成\n      get() {\n        return buf;\n      },\n      // TODO 预先生成\n      set(value) {\n        // 如果某一个set返回了false，则直接返回\n        if (set && !set.call(target, value)) {\n          return false;\n        }\n\n        value = get ? get.call(target) : value;\n        if (validator_wrapper(value)) {\n          buf = value;\n          return true;\n        }\n\n        return false;\n      }\n    };\n\n    desc.__proto__ = null;\n\n    return desc;\n  }\n\n  return wrapper;\n}\n\nexports.parse = parse;\nexports.decorate = decorate;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL3ZhbGlkLmpzPzgzY2EiXSwibmFtZXMiOlsicGFyc2UiLCJrZXkiLCJ0eXBlIiwidGVtcGxhdGUiLCJyZXBsYWNlIiwidG9TdHJpbmciLCJkZWNvcmF0ZSIsInZhbGlkYXRvciIsIm1zZyIsIm1lc3NhZ2VLZXkiLCJ3cmFwcGVyIiwidGFyZ2V0IiwiZGVzY3JpcHRvciIsInZhbGlkYXRvcl93cmFwcGVyIiwidmFsdWUiLCJnZXQiLCJzZXQiLCJpbml0aWFsaXplciIsImJ1ZiIsImNhbGwiLCJkZXNjIiwiY29uZmlndXJhYmxlIiwiZW51bWVyYWJsZSIsIl9fcHJvdG9fXyJdLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBQTs7Ozs7QUFLQTs7Ozs7Ozs7OztBQVVBLFNBQVNBLEtBQVQsQ0FBZ0JDLEdBQWhCLEVBQXFCQyxJQUFyQixFQUEyQkMsUUFBM0IsRUFBcUM7QUFDbkMsU0FBT0EsU0FDSkMsT0FESSxDQUNJLGVBREosRUFDcUJILElBQUlJLFFBQUosRUFEckIsRUFFSkQsT0FGSSxDQUVJLGdCQUZKLEVBRXNCRixLQUFLRyxRQUFMLEVBRnRCLENBQVA7QUFHRDs7QUFFRDs7Ozs7Ozs7QUFRQTs7Ozs7O0FBTUE7Ozs7Ozs7QUFPQTs7Ozs7Ozs7O0FBU0E7Ozs7Ozs7O0FBUUE7Ozs7Ozs7OztBQVNBOzs7Ozs7O0FBT0EsU0FBU0MsUUFBVCxDQUFtQkMsU0FBbkIsRUFBOEJDLEdBQTlCLEVBQW1DQyxhQUFhLFNBQWhELEVBQTJEOztBQUV6RDs7Ozs7O0FBTUEsV0FBU0MsT0FBVCxDQUFrQkMsTUFBbEIsRUFBMEJWLEdBQTFCLEVBQStCVyxVQUEvQixFQUEyQzs7QUFFekMsYUFBU0MsaUJBQVQsQ0FBNEJDLEtBQTVCLEVBQW1DO0FBQ2pDLFVBQUksQ0FBQ1AsVUFBVU8sS0FBVixFQUFpQkgsTUFBakIsQ0FBTCxFQUErQjtBQUM3QkEsZUFBT0YsVUFBUCxJQUFxQlQsTUFBTUMsR0FBTixFQUFXLEVBQVgsRUFBZU8sR0FBZixDQUFyQjtBQUNBLGVBQU8sS0FBUDtBQUNEO0FBQ0RHLGFBQU9GLFVBQVAsSUFBcUIsSUFBckI7QUFDQSxhQUFPLElBQVA7QUFDRDs7QUFUd0MsVUFXakNNLEdBWGlDLEdBV1BILFVBWE8sQ0FXakNHLEdBWGlDO0FBQUEsVUFXNUJDLEdBWDRCLEdBV1BKLFVBWE8sQ0FXNUJJLEdBWDRCO0FBQUEsVUFXdkJDLFdBWHVCLEdBV1BMLFVBWE8sQ0FXdkJLLFdBWHVCOzs7QUFhekMsUUFBSUMsTUFBTUgsTUFBTUEsSUFBSUksSUFBSixDQUFTUixNQUFULENBQU4sR0FBeUJNLFlBQVlFLElBQVosQ0FBaUJSLE1BQWpCLENBQW5DOztBQUVBO0FBQ0E7QUFDQSxRQUFJTyxRQUFRLElBQVIsSUFBZ0IsQ0FBQ0wsa0JBQWtCSyxHQUFsQixDQUFyQixFQUE2QztBQUMzQ0EsWUFBTSxLQUFLLENBQVg7QUFDRDs7QUFFRCxVQUFNRSxPQUFPO0FBQ1hDLG9CQUFjLEtBREg7QUFFWEMsa0JBQVksSUFGRDtBQUdYO0FBQ0FQLFlBQU87QUFDTCxlQUFPRyxHQUFQO0FBQ0QsT0FOVTtBQU9YO0FBQ0FGLFVBQUtGLEtBQUwsRUFBWTtBQUNWO0FBQ0EsWUFBSUUsT0FBTyxDQUFDQSxJQUFJRyxJQUFKLENBQVNSLE1BQVQsRUFBaUJHLEtBQWpCLENBQVosRUFBcUM7QUFDbkMsaUJBQU8sS0FBUDtBQUNEOztBQUVEQSxnQkFBUUMsTUFBTUEsSUFBSUksSUFBSixDQUFTUixNQUFULENBQU4sR0FBeUJHLEtBQWpDO0FBQ0EsWUFBSUQsa0JBQWtCQyxLQUFsQixDQUFKLEVBQThCO0FBQzVCSSxnQkFBTUosS0FBTjtBQUNBLGlCQUFPLElBQVA7QUFDRDs7QUFFRCxlQUFPLEtBQVA7QUFDRDtBQXJCVSxLQUFiOztBQXdCQU0sU0FBS0csU0FBTCxHQUFpQixJQUFqQjs7QUFFQSxXQUFPSCxJQUFQO0FBQ0Q7O0FBRUQsU0FBT1YsT0FBUDtBQUNEOztRQUdDVixLLEdBQUFBLEs7UUFDQU0sUSxHQUFBQSxRIiwiZmlsZSI6IjAuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBBdXRob3Igc3Vnby5pbzxhc2Q+XG4gKiBARGF0ZSAxNy0xMC0xOVxuICovXG5cbi8qKlxuICog6aqM6K+B57uT5p6c5raI5oGv5qih54mI6Kej5p6QXG4gKiBAcGFyYW0ge3N0cmluZ30ga2V5XG4gKiBAcGFyYW0ge3N0cmluZ30gdHlwZVxuICogQHBhcmFtIHtzdHJpbmd9IHRlbXBsYXRlXG4gKiBAcmV0dXJuIHtzdHJpbmd9XG4gKiBgYGBqc1xuICogcGFyc2UoJ2EnLCAnTnVtYmVyJywgJ3t7a2V5fX06IE5vdCB7e3R5cGV9fSBFcnJvcicpIC8vICdhOiBOb3QgTnVtYmVyIEVycm9yJ1xuICogYGBgXG4gKi9cbmZ1bmN0aW9uIHBhcnNlIChrZXksIHR5cGUsIHRlbXBsYXRlKSB7XG4gIHJldHVybiB0ZW1wbGF0ZVxuICAgIC5yZXBsYWNlKC97e1xccyprZXlcXHMqfX0vLCBrZXkudG9TdHJpbmcoKSlcbiAgICAucmVwbGFjZSgve3tcXHMqdHlwZVxccyp9fS8sIHR5cGUudG9TdHJpbmcoKSlcbn1cblxuLyoqXG4gKiDpqozor4HlmajvvIzkvKDlhaV2YWx1Ze+8jOi/lOWbnmJvb2xlYW7lgLxcbiAqIEB0eXBlZGVmIHtjYWxsYmFja30gVmFsaWRhdG9yXG4gKiBAcGFyYW0geyp9IHZhbHVlXG4gKiBAcGFyYW0ge09iamVjdH0gdGFyZ2V0XG4gKiBAcmV0dXJuIHtib29sZWFufVxuICovXG5cbi8qKlxuICog6aqM6K+B6KOF6aWw5Zmo5o+P6L+w5a+56LGh5Lit55qEZ2V0dGVy5Ye95pWwXG4gKiBAY2FsbGJhY2sgVmFsaWREZXNjcmlwdG9yR2V0dGVyXG4gKiBAcmV0dXJuIHsqfVxuICovXG5cbi8qKlxuICog6aqM6K+B6KOF6aWw5Zmo5o+P6L+w5a+56LGh5Lit55qEc2V0dGVy5Ye95pWwXG4gKiBAY2FsbGJhY2sgVmFsaWREZXNjcmlwdG9yU2V0dGVyXG4gKiBAcGFyYW0geyp9IHZhbHVlXG4gKiBAcmV0dXJuIHtib29sZWFufVxuICovXG5cbi8qKlxuICog6aqM6K+B6KOF6aWw5Zmo5o+P6L+w5a+56LGhXG4gKiBAdHlwZWRlZiB7T2JqZWN0fSBWYWxpZERlc2NyaXB0b3JcbiAqIEBwcm9wZXJ0eSB7Ym9vbGVhbn0gY29uZmlndXJhYmxlXG4gKiBAcHJvcGVydHkge2Jvb2xlYW59IGVudW1lcmFibGVcbiAqIEBwcm9wZXJ0eSB7VmFsaWREZXNjcmlwdG9yR2V0dGVyfSBnZXRcbiAqIEBwcm9wZXJ0eSB7VmFsaWREZXNjcmlwdG9yU2V0dGVyfSBzZXRcbiAqL1xuXG4vKipcbiAqIGJhYmVsLXBsdWdpbi10cmFuc2Zvcm0tZGVjb3JhdG9ycy1sZWdhY3lcbiAqIOi9rOaNouWQjueahOS7o+eggWRlc2NyaXB0b3LkvJrmnIlpbml0aWFsaXplcuWHveaVsO+8jOi/lOWbnuWIneWni+WAvFxuICogQHR5cGVkZWYge09iamVjdH0gSW5pdGlhbGl6ZURlc2NyaXB0b3JcbiAqIEBwcm9wZXJ0eSB7Ym9vbGVhbn0gZW51bWVyYWJsZVxuICogQHByb3BlcnR5IHtGdW5jdGlvbn0gaW5pdGlhbGl6ZXJcbiAqL1xuXG4vKipcbiAqIOmqjOivgeijhemlsOWZqOWHveaVsFxuICogQGNhbGxiYWNrIFZhbGlkRGVjb3JhdGVcbiAqIEBwYXJhbSB7T2JqZWN0fSB0YXJnZXRcbiAqIEBwYXJhbSB7c3RyaW5nfSBrZXlcbiAqIEBwYXJhbSB7SW5pdGlhbGl6ZURlc2NyaXB0b3J9IGRlc2NyaXB0b3JcbiAqIEByZXR1cm4ge1ZhbGlkRGVzY3JpcHRvcn1cbiAqL1xuXG4vKipcbiAqIOS8oOWFpemqjOivgeWZqOWPiuS/oeaBr++8jOi/lOWbnlxuICogQHBhcmFtIHtWYWxpZGF0b3J9IHZhbGlkYXRvclxuICogQHBhcmFtIHtzdHJpbmd9IG1zZ1xuICogQHBhcmFtIHtzdHJpbmd9IFttZXNzYWdlS2V5PW1lc3NhZ2VdXG4gKiBAcmV0dXJuIHtWYWxpZERlY29yYXRlfVxuICovXG5mdW5jdGlvbiBkZWNvcmF0ZSAodmFsaWRhdG9yLCBtc2csIG1lc3NhZ2VLZXkgPSAnbWVzc2FnZScpIHtcblxuICAvKipcbiAgICogQHBhcmFtIHtPYmplY3R9IHRhcmdldFxuICAgKiBAcGFyYW0ge3N0cmluZ30ga2V5XG4gICAqIEBwYXJhbSB7SW5pdGlhbGl6ZURlc2NyaXB0b3J8VmFsaWREZXNjcmlwdG9yfSBkZXNjcmlwdG9yXG4gICAqIEByZXR1cm4ge1ZhbGlkRGVzY3JpcHRvcn1cbiAgICovXG4gIGZ1bmN0aW9uIHdyYXBwZXIgKHRhcmdldCwga2V5LCBkZXNjcmlwdG9yKSB7XG5cbiAgICBmdW5jdGlvbiB2YWxpZGF0b3Jfd3JhcHBlciAodmFsdWUpIHtcbiAgICAgIGlmICghdmFsaWRhdG9yKHZhbHVlLCB0YXJnZXQpKSB7XG4gICAgICAgIHRhcmdldFttZXNzYWdlS2V5XSA9IHBhcnNlKGtleSwgJycsIG1zZylcbiAgICAgICAgcmV0dXJuIGZhbHNlXG4gICAgICB9XG4gICAgICB0YXJnZXRbbWVzc2FnZUtleV0gPSBudWxsXG4gICAgICByZXR1cm4gdHJ1ZVxuICAgIH1cblxuICAgIGNvbnN0IHsgZ2V0LCBzZXQsIGluaXRpYWxpemVyIH0gPSBkZXNjcmlwdG9yXG5cbiAgICBsZXQgYnVmID0gZ2V0ID8gZ2V0LmNhbGwodGFyZ2V0KSA6IGluaXRpYWxpemVyLmNhbGwodGFyZ2V0KVxuXG4gICAgLy8g5aaC5p6c5Yid5aeL5YC85Li6bnVsbO+8jOWImeS4jemqjOivgVxuICAgIC8vIOWmguaenOWIneWni+WAvOmqjOivgeS4jemAmui/h+WImemHjee9ruS4unVuZGVmaW5lZFxuICAgIGlmIChidWYgIT09IG51bGwgJiYgIXZhbGlkYXRvcl93cmFwcGVyKGJ1ZikpIHtcbiAgICAgIGJ1ZiA9IHZvaWQgMFxuICAgIH1cblxuICAgIGNvbnN0IGRlc2MgPSB7XG4gICAgICBjb25maWd1cmFibGU6IGZhbHNlLFxuICAgICAgZW51bWVyYWJsZTogdHJ1ZSxcbiAgICAgIC8vIFRPRE8g6aKE5YWI55Sf5oiQXG4gICAgICBnZXQgKCkge1xuICAgICAgICByZXR1cm4gYnVmXG4gICAgICB9LFxuICAgICAgLy8gVE9ETyDpooTlhYjnlJ/miJBcbiAgICAgIHNldCAodmFsdWUpIHtcbiAgICAgICAgLy8g5aaC5p6c5p+Q5LiA5Liqc2V06L+U5Zue5LqGZmFsc2XvvIzliJnnm7TmjqXov5Tlm55cbiAgICAgICAgaWYgKHNldCAmJiAhc2V0LmNhbGwodGFyZ2V0LCB2YWx1ZSkpIHtcbiAgICAgICAgICByZXR1cm4gZmFsc2VcbiAgICAgICAgfVxuXG4gICAgICAgIHZhbHVlID0gZ2V0ID8gZ2V0LmNhbGwodGFyZ2V0KSA6IHZhbHVlXG4gICAgICAgIGlmICh2YWxpZGF0b3Jfd3JhcHBlcih2YWx1ZSkpIHtcbiAgICAgICAgICBidWYgPSB2YWx1ZVxuICAgICAgICAgIHJldHVybiB0cnVlXG4gICAgICAgIH1cblxuICAgICAgICByZXR1cm4gZmFsc2VcbiAgICAgIH1cbiAgICB9XG5cbiAgICBkZXNjLl9fcHJvdG9fXyA9IG51bGxcblxuICAgIHJldHVybiBkZXNjXG4gIH1cblxuICByZXR1cm4gd3JhcHBlclxufVxuXG5leHBvcnQge1xuICBwYXJzZSxcbiAgZGVjb3JhdGVcbn1cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL3NyYy9kZWNvcmF0ZS92YWxpZGF0b3IvdmFsaWQuanMiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///0\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @Author sugo.io<asd>
+ * @Date 17-10-20
+ */
+
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * @param {string} temp
+ * @param {Object} values
+ * @return {string}
+ * @example
+ * ```js
+ * template('{{key}} is {{value}}', {key:'k', value: 'v'}) // k is v
+ * ```
+ */
+function template(temp, values) {
+  for (let propKey in values) {
+    if (!hasOwnProperty.call(values, propKey)) continue;
+    temp = temp.replace(new RegExp(`{{${propKey}}}`, 'g'), values[propKey]);
+  }
+  return temp;
+}
+
+/**
+ * @typedef {Object} ValidatorBuffer
+ * @property {string} msg
+ * @property {Validator} validator
+ */
+
+/**
+ * @typedef {Object} TargetValidator
+ * @property {Object} target
+ * @property {Object<string, Array<ValidatorBuffer>>} validator
+ */
+
+/**
+ * @class 缓存验证器
+ */
+let Wrapper = class Wrapper {
+  constructor() {
+    /** @type {Array<TargetValidator>} */
+    this.buffer = [];
+  }
+
+  /**
+   * @param {Object} target
+   * @param {string} key
+   * @param {Validator} validator
+   * @param {string} msg
+   * @return {Wrapper}
+   */
+  add(target, key, validator, msg) {
+    let buf = this.buffer.find(buf => buf.target === target);
+
+    if (buf) {
+      const arr = buf.validator[key] || (buf.validator[key] = []);
+      arr.push({ msg, validator });
+      return this;
+    }
+
+    this.buffer.push({
+      target,
+      validator: {
+        [key]: [{ msg, validator }]
+      }
+    });
+
+    return this;
+  }
+
+  /**
+   * @param {Object} target
+   * @param {Object} values
+   * @return {Object<string, Array<string>>}
+   */
+  valid(target, values) {
+    const buf = this.get(target);
+    const results = [];
+
+    if (buf === null) {
+      return results;
+    }
+
+    const validator = buf.validator;
+    let propKey;
+    let valid;
+    let fault;
+    let msg;
+
+    for (propKey in validator) {
+      if (!hasOwnProperty.call(validator, propKey) || !hasOwnProperty.call(values, propKey)) {
+        continue;
+      }
+
+      valid = validator[propKey];
+      msg = [];
+      fault = valid.some(function (vb) {
+        if (vb.validator(values[propKey])) {
+          return false;
+        }
+        msg.push(template(vb.msg, { key: propKey }));
+        return true;
+      });
+
+      if (fault) {
+        results[propKey] = msg;
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * @param {Object} target
+   * @return {Object<string, Array<ValidatorBuffer>>|null}
+   */
+  get(target) {
+    return this.buffer.find(buf => buf.target === target) || null;
+  }
+
+  /**
+   * @param {Object} target
+   * @return {Wrapper}
+   */
+  destory(target) {
+    this.buffer = this.buffer.filter(buf => buf.target !== target);
+    return this;
+  }
+};
+
+
+const DefaultWrapper = new Wrapper();
+
+/**
+ * @param {Validator} validator
+ * @param {string} msg
+ * @return {ValidDecorate}
+ */
+function decorate(validator, msg) {
+  return function (target, key, descriptor) {
+    DefaultWrapper.add(target, key, validator, msg);
+    return descriptor;
+  };
+}
+
+exports.DefaultWrapper = DefaultWrapper;
+exports.hasOwnProperty = hasOwnProperty;
+exports.decorate = decorate;
+exports.template = template;
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Range = exports.Min = exports.Max = exports.RangeLen = exports.MinLen = exports.MaxLen = exports.Required = exports.Pattern = exports.Enum = exports.DateTypes = exports.DateType = undefined;\n\nvar _dataType = __webpack_require__(3);\n\nvar _enum = __webpack_require__(4);\n\nvar _lenMax = __webpack_require__(5);\n\nvar _lenMin = __webpack_require__(6);\n\nvar _lenRange = __webpack_require__(7);\n\nvar _max = __webpack_require__(8);\n\nvar _min = __webpack_require__(9);\n\nvar _range = __webpack_require__(11);\n\nvar _pattern = __webpack_require__(10);\n\nvar _required = __webpack_require__(12);\n\n/**\n * @Author sugo.io<asd>\n * @Date 17-10-19\n */\n\nexports.DateType = _dataType.DateType;\nexports.DateTypes = _dataType.DateTypes;\nexports.Enum = _enum.Enum;\nexports.Pattern = _pattern.Pattern;\nexports.Required = _required.Required;\nexports.MaxLen = _lenMax.MaxLen;\nexports.MinLen = _lenMin.MinLen;\nexports.RangeLen = _lenRange.RangeLen;\nexports.Max = _max.Max;\nexports.Min = _min.Min;\nexports.Range = _range.Range;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2luZGV4LmpzP2Q4MTUiXSwibmFtZXMiOlsiRGF0ZVR5cGUiLCJEYXRlVHlwZXMiLCJFbnVtIiwiUGF0dGVybiIsIlJlcXVpcmVkIiwiTWF4TGVuIiwiTWluTGVuIiwiUmFuZ2VMZW4iLCJNYXgiLCJNaW4iLCJSYW5nZSJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUtBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQUNBOztBQWRBOzs7OztRQWlCRUEsUTtRQUNBQyxTO1FBRUFDLEk7UUFDQUMsTztRQUNBQyxRO1FBRUFDLE07UUFDQUMsTTtRQUNBQyxRO1FBRUFDLEc7UUFDQUMsRztRQUNBQyxLIiwiZmlsZSI6IjEuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBBdXRob3Igc3Vnby5pbzxhc2Q+XG4gKiBARGF0ZSAxNy0xMC0xOVxuICovXG5cbmltcG9ydCB7IERhdGVUeXBlLCBEYXRlVHlwZXMgfSBmcm9tICcuL2RhdGEtdHlwZSdcbmltcG9ydCB7IEVudW0gfSBmcm9tICcuL2VudW0nXG5pbXBvcnQgeyBNYXhMZW4gfSBmcm9tICcuL2xlbi1tYXgnXG5pbXBvcnQgeyBNaW5MZW4gfSBmcm9tICcuL2xlbi1taW4nXG5pbXBvcnQgeyBSYW5nZUxlbiB9IGZyb20gJy4vbGVuLXJhbmdlJ1xuaW1wb3J0IHsgTWF4IH0gZnJvbSAnLi9tYXgnXG5pbXBvcnQgeyBNaW4gfSBmcm9tICcuL21pbidcbmltcG9ydCB7IFJhbmdlIH0gZnJvbSAnLi9yYW5nZSdcbmltcG9ydCB7IFBhdHRlcm4gfSBmcm9tICcuL3BhdHRlcm4nXG5pbXBvcnQgeyBSZXF1aXJlZCB9IGZyb20gJy4vcmVxdWlyZWQnXG5cbmV4cG9ydCB7XG4gIERhdGVUeXBlLFxuICBEYXRlVHlwZXMsXG5cbiAgRW51bSxcbiAgUGF0dGVybixcbiAgUmVxdWlyZWQsXG5cbiAgTWF4TGVuLFxuICBNaW5MZW4sXG4gIFJhbmdlTGVuLFxuXG4gIE1heCxcbiAgTWluLFxuICBSYW5nZVxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIC4vc3JjL2RlY29yYXRlL3ZhbGlkYXRvci9pbmRleC5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///1\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Range = exports.Min = exports.Max = exports.RangeLen = exports.MinLen = exports.MaxLen = exports.Required = exports.Pattern = exports.Enum = exports.DateTypes = exports.DateType = undefined;
+
+var _dataType = __webpack_require__(4);
+
+var _enum = __webpack_require__(5);
+
+var _lenMax = __webpack_require__(6);
+
+var _lenMin = __webpack_require__(7);
+
+var _lenRange = __webpack_require__(8);
+
+var _max = __webpack_require__(9);
+
+var _min = __webpack_require__(10);
+
+var _range = __webpack_require__(12);
+
+var _pattern = __webpack_require__(11);
+
+var _required = __webpack_require__(13);
+
+/**
+ * @Author sugo.io<asd>
+ * @Date 17-10-19
+ */
+
+exports.DateType = _dataType.DateType;
+exports.DateTypes = _dataType.DateTypes;
+exports.Enum = _enum.Enum;
+exports.Pattern = _pattern.Pattern;
+exports.Required = _required.Required;
+exports.MaxLen = _lenMax.MaxLen;
+exports.MinLen = _lenMin.MinLen;
+exports.RangeLen = _lenRange.RangeLen;
+exports.Max = _max.Max;
+exports.Min = _min.Min;
+exports.Range = _range.Range;
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _desc2, _value2, _obj, _init, _init2;\n\nvar _validator = __webpack_require__(1);\n\nfunction _initDefineProp(target, property, descriptor, context) {\n  if (!descriptor) return;\n  Object.defineProperty(target, property, {\n    enumerable: descriptor.enumerable,\n    configurable: descriptor.configurable,\n    writable: descriptor.writable,\n    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0\n  });\n}\n\nfunction _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {\n  var desc = {};\n  Object['ke' + 'ys'](descriptor).forEach(function (key) {\n    desc[key] = descriptor[key];\n  });\n  desc.enumerable = !!desc.enumerable;\n  desc.configurable = !!desc.configurable;\n\n  if ('value' in desc || desc.initializer) {\n    desc.writable = true;\n  }\n\n  desc = decorators.slice().reverse().reduce(function (desc, decorator) {\n    return decorator(target, property, desc) || desc;\n  }, desc);\n\n  if (context && desc.initializer !== void 0) {\n    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;\n    desc.initializer = undefined;\n  }\n\n  if (desc.initializer === void 0) {\n    Object['define' + 'Property'](target, property, desc);\n    desc = null;\n  }\n\n  return desc;\n}\n\nfunction _initializerWarningHelper(descriptor, context) {\n  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');\n}\n\n/**\n * @Author sugo.io<asd>\n * @Date 17-10-19\n */\n\nfunction Rule(opt) {\n  return function () {};\n}\n\nconst Gender = {\n  Female: 0,\n  Male: 1\n};\n\nlet Demo = (_dec = (0, _validator.Range)([0, 200]), _dec2 = (0, _validator.DateType)(_validator.DateTypes.PRIM_NUM), _dec3 = (0, _validator.Required)(), _dec4 = (0, _validator.RangeLen)([4, 32]), _dec5 = (0, _validator.DateType)(_validator.DateTypes.PRIM_STR), _dec6 = (0, _validator.Required)(), _dec7 = (0, _validator.Enum)(Gender), (_class = class Demo {\n  constructor() {\n    _initDefineProp(this, 'age', _descriptor, this);\n\n    _initDefineProp(this, 'name', _descriptor2, this);\n\n    _initDefineProp(this, 'gender', _descriptor3, this);\n  }\n\n}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'age', [_dec, _dec2, _dec3], {\n  enumerable: true,\n  initializer: function initializer() {\n    return null;\n  }\n}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'name', [_dec4, _dec5, _dec6], {\n  enumerable: true,\n  initializer: function initializer() {\n    return null;\n  }\n}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'gender', [_dec7], {\n  enumerable: true,\n  initializer: function initializer() {\n    return null;\n  }\n})), _class));\n\n\nconst d = new Demo();\nd.age = 0;\nd.name = 'demo';\nd.gender = Gender.Female;\nwindow.d = d;\n\nconst obj = (_dec8 = (0, _validator.Max)(200), _dec9 = (0, _validator.Min)(0), _dec10 = (0, _validator.DateType)(_validator.DateTypes.PRIM_NUM), _dec11 = (0, _validator.Required)(), _dec12 = (0, _validator.MaxLen)(32), _dec13 = (0, _validator.MinLen)(4), _dec14 = (0, _validator.DateType)(_validator.DateTypes.PRIM_STR), _dec15 = (0, _validator.Required)(), (_obj = {\n  age: null,\n\n  name: null\n}, (_applyDecoratedDescriptor(_obj, 'age', [_dec8, _dec9, _dec10, _dec11], (_init = Object.getOwnPropertyDescriptor(_obj, 'age'), _init = _init ? _init.value : undefined, {\n  enumerable: true,\n  configurable: true,\n  writable: true,\n  initializer: function initializer() {\n    return _init;\n  }\n}), _obj), _applyDecoratedDescriptor(_obj, 'name', [_dec12, _dec13, _dec14, _dec15], (_init2 = Object.getOwnPropertyDescriptor(_obj, 'name'), _init2 = _init2 ? _init2.value : undefined, {\n  enumerable: true,\n  configurable: true,\n  writable: true,\n  initializer: function initializer() {\n    return _init2;\n  }\n}), _obj)), _obj));\n\nwindow.obj = obj;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9fX3Rlc3RfXy9kZWNvcmF0ZS9icm93c2VyLmpzP2IyZmYiXSwibmFtZXMiOlsiUnVsZSIsIm9wdCIsIkdlbmRlciIsIkZlbWFsZSIsIk1hbGUiLCJEZW1vIiwiUFJJTV9OVU0iLCJQUklNX1NUUiIsImQiLCJhZ2UiLCJuYW1lIiwiZ2VuZGVyIiwid2luZG93Iiwib2JqIl0sIm1hcHBpbmdzIjoiOzs7O0FBV0E7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQVhBOzs7OztBQUtBLFNBQVNBLElBQVQsQ0FBZUMsR0FBZixFQUFvQjtBQUNsQixTQUFPLFlBQVksQ0FFbEIsQ0FGRDtBQUdEOztBQW1CRCxNQUFNQyxTQUFTO0FBQ2JDLFVBQVEsQ0FESztBQUViQyxRQUFNO0FBRk8sQ0FBZjs7SUFLTUMsSSxXQUNILHNCQUFNLENBQUMsQ0FBRCxFQUFJLEdBQUosQ0FBTixDLFVBQ0EseUJBQVMscUJBQVVDLFFBQW5CLEMsVUFDQSwwQixVQUdBLHlCQUFTLENBQUMsQ0FBRCxFQUFJLEVBQUosQ0FBVCxDLFVBQ0EseUJBQVMscUJBQVVDLFFBQW5CLEMsVUFDQSwwQixVQUdBLHFCQUFLTCxNQUFMLEMsWUFYSCxNQUFNRyxJQUFOLENBQVc7QUFBQTtBQUFBOztBQUFBOztBQUFBO0FBQUE7O0FBQUEsQzs7O1dBSUgsSTs7Ozs7V0FLQyxJOzs7OztXQUdFLEk7Ozs7O0FBR1gsTUFBTUcsSUFBSSxJQUFJSCxJQUFKLEVBQVY7QUFDQUcsRUFBRUMsR0FBRixHQUFRLENBQVI7QUFDQUQsRUFBRUUsSUFBRixHQUFTLE1BQVQ7QUFDQUYsRUFBRUcsTUFBRixHQUFXVCxPQUFPQyxNQUFsQjtBQUNBUyxPQUFPSixDQUFQLEdBQVdBLENBQVg7O0FBRUEsTUFBTUssZUFDSCxvQkFBSSxHQUFKLENBREcsVUFFSCxvQkFBSSxDQUFKLENBRkcsV0FHSCx5QkFBUyxxQkFBVVAsUUFBbkIsQ0FIRyxXQUlILDBCQUpHLFdBT0gsdUJBQU8sRUFBUCxDQVBHLFdBUUgsdUJBQU8sQ0FBUCxDQVJHLFdBU0gseUJBQVMscUJBQVVDLFFBQW5CLENBVEcsV0FVSCwwQkFWRyxVQUFNO0FBS1ZFLE9BQUssSUFMSzs7QUFXVkMsUUFBTTtBQVhJLENBQU47QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLGtCQUFOOztBQWNBRSxPQUFPQyxHQUFQLEdBQWFBLEdBQWIiLCJmaWxlIjoiMi5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQEF1dGhvciBzdWdvLmlvPGFzZD5cbiAqIEBEYXRlIDE3LTEwLTE5XG4gKi9cblxuZnVuY3Rpb24gUnVsZSAob3B0KSB7XG4gIHJldHVybiBmdW5jdGlvbiAoKSB7XG5cbiAgfVxufVxuXG5pbXBvcnQge1xuICBEYXRlVHlwZSxcbiAgRGF0ZVR5cGVzLFxuXG4gIEVudW0sXG4gIFBhdHRlcm4sXG4gIFJlcXVpcmVkLFxuXG4gIE1heExlbixcbiAgTWluTGVuLFxuICBSYW5nZUxlbixcblxuICBNYXgsXG4gIE1pbixcbiAgUmFuZ2Vcbn0gZnJvbSAnLi4vLi4vc3JjL2RlY29yYXRlL3ZhbGlkYXRvcidcblxuY29uc3QgR2VuZGVyID0ge1xuICBGZW1hbGU6IDAsXG4gIE1hbGU6IDFcbn1cblxuY2xhc3MgRGVtbyB7XG4gIEBSYW5nZShbMCwgMjAwXSlcbiAgQERhdGVUeXBlKERhdGVUeXBlcy5QUklNX05VTSlcbiAgQFJlcXVpcmVkKClcbiAgYWdlID0gbnVsbFxuXG4gIEBSYW5nZUxlbihbNCwgMzJdKVxuICBARGF0ZVR5cGUoRGF0ZVR5cGVzLlBSSU1fU1RSKVxuICBAUmVxdWlyZWQoKVxuICBuYW1lID0gbnVsbFxuXG4gIEBFbnVtKEdlbmRlcilcbiAgZ2VuZGVyID0gbnVsbFxufVxuXG5jb25zdCBkID0gbmV3IERlbW8oKVxuZC5hZ2UgPSAwXG5kLm5hbWUgPSAnZGVtbydcbmQuZ2VuZGVyID0gR2VuZGVyLkZlbWFsZVxud2luZG93LmQgPSBkXG5cbmNvbnN0IG9iaiA9IHtcbiAgQE1heCgyMDApXG4gIEBNaW4oMClcbiAgQERhdGVUeXBlKERhdGVUeXBlcy5QUklNX05VTSlcbiAgQFJlcXVpcmVkKClcbiAgYWdlOiBudWxsLFxuXG4gIEBNYXhMZW4oMzIpXG4gIEBNaW5MZW4oNClcbiAgQERhdGVUeXBlKERhdGVUeXBlcy5QUklNX1NUUilcbiAgQFJlcXVpcmVkKClcbiAgbmFtZTogbnVsbFxufVxuXG53aW5kb3cub2JqID0gb2JqXG5cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL19fdGVzdF9fL2RlY29yYXRlL2Jyb3dzZXIuanMiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///2\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.StoreModel = undefined;
+
+var _valid = __webpack_require__(0);
+
+let StoreModel = class StoreModel {
+
+  /**
+   * @param {function} listener
+   * @return {StoreModel}
+   */
+  listen(listener) {
+    this.listener = listener;
+    return this;
+  }
+
+  /**
+   * @param {Object} values
+   * @return {StoreModel}
+   */
+  map(values) {
+    const msg = _valid.DefaultWrapper.valid(this.__proto__, values);
+
+    let propKey;
+
+    for (propKey in values) {
+      if (!_valid.hasOwnProperty.call(values, propKey)) continue;
+      if (!_valid.hasOwnProperty.call(msg, propKey)) continue;
+      this[propKey] = values[propKey];
+    }
+
+    if (this.listener) {
+      this.listener(msg);
+    }
+
+    return this;
+  }
+}; /**
+    * @Author sugo.io<asd>
+    * @Date 17-10-20
+    */
+
+exports.StoreModel = StoreModel;
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.DateType = exports.DateTypes = undefined;\n\nvar _valid = __webpack_require__(0);\n\nconst toString = Object.prototype.toString;\n\n/**\n * @typedef {Object} ValidTypeDesc\n * @property {string} type\n * @property {string} msg\n */\n\n/**\n * @param {string} type\n * @return {{type: string, msg: string}}\n */\n/**\n * @Author sugo.io<asd>\n * @Date 17-10-18\n * @description 类型验证\n */\n\nfunction creator(type) {\n  return {\n    type,\n    msg: `Property [{{key}}] Type Error : Not ${type}`\n  };\n}\n\n/** @type {Object<string, ValidTypeDesc>} */\nconst DateTypes = {\n  // Primitive\n  PRIM_BOOL: creator('Boolean'),\n  PRIM_NUM: creator('Number'),\n  PRIM_STR: creator('String'),\n  PRIM_NL: creator('Null'),\n  PRIM_UNDEF: creator('Undefined'),\n  PRIM_SYMBOL: creator('Symbol'),\n\n  // Object\n  OBJ_O: creator('Object'),\n  OBJ_A: creator('Array')\n\n  /**\n   * 生成验证装饰器函数\n   * @param {ValidTypeDesc} ValidType\n   * @param {string} [msg]\n   * @param {string} [messageKey = 'message']\n   * @return {ValidDecorate}\n   */\n};function DateType(ValidType, msg, messageKey = 'message') {\n  function validator(value, target) {\n    return toString.call(value) === `[object ${ValidType.type}]`;\n  }\n\n  return (0, _valid.decorate)(validator, msg || ValidType.msg, messageKey);\n}\n\nDateType.DateTypes = DateTypes;\n\nexports.DateTypes = DateTypes;\nexports.DateType = DateType;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2RhdGEtdHlwZS5qcz85OTdjIl0sIm5hbWVzIjpbInRvU3RyaW5nIiwiT2JqZWN0IiwicHJvdG90eXBlIiwiY3JlYXRvciIsInR5cGUiLCJtc2ciLCJEYXRlVHlwZXMiLCJQUklNX0JPT0wiLCJQUklNX05VTSIsIlBSSU1fU1RSIiwiUFJJTV9OTCIsIlBSSU1fVU5ERUYiLCJQUklNX1NZTUJPTCIsIk9CSl9PIiwiT0JKX0EiLCJEYXRlVHlwZSIsIlZhbGlkVHlwZSIsIm1lc3NhZ2VLZXkiLCJ2YWxpZGF0b3IiLCJ2YWx1ZSIsInRhcmdldCIsImNhbGwiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFNQTs7QUFFQSxNQUFNQSxXQUFXQyxPQUFPQyxTQUFQLENBQWlCRixRQUFsQzs7QUFFQTs7Ozs7O0FBTUE7Ozs7QUFoQkE7Ozs7OztBQW9CQSxTQUFTRyxPQUFULENBQWtCQyxJQUFsQixFQUF3QjtBQUN0QixTQUFPO0FBQ0xBLFFBREs7QUFFTEMsU0FBTSx1Q0FBc0NELElBQUs7QUFGNUMsR0FBUDtBQUlEOztBQUVEO0FBQ0EsTUFBTUUsWUFBWTtBQUNoQjtBQUNBQyxhQUFXSixRQUFRLFNBQVIsQ0FGSztBQUdoQkssWUFBVUwsUUFBUSxRQUFSLENBSE07QUFJaEJNLFlBQVVOLFFBQVEsUUFBUixDQUpNO0FBS2hCTyxXQUFTUCxRQUFRLE1BQVIsQ0FMTztBQU1oQlEsY0FBWVIsUUFBUSxXQUFSLENBTkk7QUFPaEJTLGVBQWFULFFBQVEsUUFBUixDQVBHOztBQVNoQjtBQUNBVSxTQUFPVixRQUFRLFFBQVIsQ0FWUztBQVdoQlcsU0FBT1gsUUFBUSxPQUFSOztBQUdUOzs7Ozs7O0FBZGtCLENBQWxCLENBcUJBLFNBQVNZLFFBQVQsQ0FBbUJDLFNBQW5CLEVBQThCWCxHQUE5QixFQUFtQ1ksYUFBYSxTQUFoRCxFQUEyRDtBQUN6RCxXQUFTQyxTQUFULENBQW9CQyxLQUFwQixFQUEyQkMsTUFBM0IsRUFBbUM7QUFDakMsV0FBT3BCLFNBQVNxQixJQUFULENBQWNGLEtBQWQsTUFBMEIsV0FBVUgsVUFBVVosSUFBSyxHQUExRDtBQUNEOztBQUVELFNBQU8scUJBQVNjLFNBQVQsRUFBb0JiLE9BQU9XLFVBQVVYLEdBQXJDLEVBQTBDWSxVQUExQyxDQUFQO0FBQ0Q7O0FBRURGLFNBQVNULFNBQVQsR0FBcUJBLFNBQXJCOztRQUdFQSxTLEdBQUFBLFM7UUFDQVMsUSxHQUFBQSxRIiwiZmlsZSI6IjMuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBBdXRob3Igc3Vnby5pbzxhc2Q+XG4gKiBARGF0ZSAxNy0xMC0xOFxuICogQGRlc2NyaXB0aW9uIOexu+Wei+mqjOivgVxuICovXG5cbmltcG9ydCB7IGRlY29yYXRlIH0gZnJvbSAnLi92YWxpZCdcblxuY29uc3QgdG9TdHJpbmcgPSBPYmplY3QucHJvdG90eXBlLnRvU3RyaW5nXG5cbi8qKlxuICogQHR5cGVkZWYge09iamVjdH0gVmFsaWRUeXBlRGVzY1xuICogQHByb3BlcnR5IHtzdHJpbmd9IHR5cGVcbiAqIEBwcm9wZXJ0eSB7c3RyaW5nfSBtc2dcbiAqL1xuXG4vKipcbiAqIEBwYXJhbSB7c3RyaW5nfSB0eXBlXG4gKiBAcmV0dXJuIHt7dHlwZTogc3RyaW5nLCBtc2c6IHN0cmluZ319XG4gKi9cbmZ1bmN0aW9uIGNyZWF0b3IgKHR5cGUpIHtcbiAgcmV0dXJuIHtcbiAgICB0eXBlLFxuICAgIG1zZzogYFByb3BlcnR5IFt7e2tleX19XSBUeXBlIEVycm9yIDogTm90ICR7dHlwZX1gXG4gIH1cbn1cblxuLyoqIEB0eXBlIHtPYmplY3Q8c3RyaW5nLCBWYWxpZFR5cGVEZXNjPn0gKi9cbmNvbnN0IERhdGVUeXBlcyA9IHtcbiAgLy8gUHJpbWl0aXZlXG4gIFBSSU1fQk9PTDogY3JlYXRvcignQm9vbGVhbicpLFxuICBQUklNX05VTTogY3JlYXRvcignTnVtYmVyJyksXG4gIFBSSU1fU1RSOiBjcmVhdG9yKCdTdHJpbmcnKSxcbiAgUFJJTV9OTDogY3JlYXRvcignTnVsbCcpLFxuICBQUklNX1VOREVGOiBjcmVhdG9yKCdVbmRlZmluZWQnKSxcbiAgUFJJTV9TWU1CT0w6IGNyZWF0b3IoJ1N5bWJvbCcpLFxuXG4gIC8vIE9iamVjdFxuICBPQkpfTzogY3JlYXRvcignT2JqZWN0JyksXG4gIE9CSl9BOiBjcmVhdG9yKCdBcnJheScpXG59XG5cbi8qKlxuICog55Sf5oiQ6aqM6K+B6KOF6aWw5Zmo5Ye95pWwXG4gKiBAcGFyYW0ge1ZhbGlkVHlwZURlc2N9IFZhbGlkVHlwZVxuICogQHBhcmFtIHtzdHJpbmd9IFttc2ddXG4gKiBAcGFyYW0ge3N0cmluZ30gW21lc3NhZ2VLZXkgPSAnbWVzc2FnZSddXG4gKiBAcmV0dXJuIHtWYWxpZERlY29yYXRlfVxuICovXG5mdW5jdGlvbiBEYXRlVHlwZSAoVmFsaWRUeXBlLCBtc2csIG1lc3NhZ2VLZXkgPSAnbWVzc2FnZScpIHtcbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSwgdGFyZ2V0KSB7XG4gICAgcmV0dXJuIHRvU3RyaW5nLmNhbGwodmFsdWUpID09PSBgW29iamVjdCAke1ZhbGlkVHlwZS50eXBlfV1gXG4gIH1cblxuICByZXR1cm4gZGVjb3JhdGUodmFsaWRhdG9yLCBtc2cgfHwgVmFsaWRUeXBlLm1zZywgbWVzc2FnZUtleSlcbn1cblxuRGF0ZVR5cGUuRGF0ZVR5cGVzID0gRGF0ZVR5cGVzXG5cbmV4cG9ydCB7XG4gIERhdGVUeXBlcyxcbiAgRGF0ZVR5cGVcbn1cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL3NyYy9kZWNvcmF0ZS92YWxpZGF0b3IvZGF0YS10eXBlLmpzIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///3\n");
+
+
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _dec8, _dec9, _dec10, _desc2, _value2, _class3, _descriptor4; /**
+                                                                                                                                                                                   * @Author sugo.io<asd>
+                                                                                                                                                                                   * @Date 17-10-19
+                                                                                                                                                                                   */
+
+
+var _Model = __webpack_require__(2);
+
+var _validator = __webpack_require__(1);
+
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+const Gender = {
+  Female: 0,
+  Male: 1
+};
+
+let User = (_dec = (0, _validator.Range)([0, 200]), _dec2 = (0, _validator.DateType)(_validator.DateTypes.PRIM_NUM), _dec3 = (0, _validator.Required)(), _dec4 = (0, _validator.RangeLen)([4, 32]), _dec5 = (0, _validator.DateType)(_validator.DateTypes.PRIM_STR), _dec6 = (0, _validator.Required)(), _dec7 = (0, _validator.Enum)(Gender), (_class = class User extends _Model.StoreModel {
+  constructor(...args) {
+    var _temp;
+
+    return _temp = super(...args), _initDefineProp(this, 'age', _descriptor, this), _initDefineProp(this, 'name', _descriptor2, this), _initDefineProp(this, 'gender', _descriptor3, this), _temp;
+  }
+
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'age', [_dec, _dec2, _dec3], {
+  enumerable: true,
+  initializer: function initializer() {
+    return null;
+  }
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'name', [_dec4, _dec5, _dec6], {
+  enumerable: true,
+  initializer: function initializer() {
+    return null;
+  }
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'gender', [_dec7], {
+  enumerable: true,
+  initializer: function initializer() {
+    return null;
+  }
+})), _class));
+
+
+const user = new User();
+
+/**
+ * @param {Array<ValidMessage>} msg
+ */
+function listener(msg) {
+  console.log(msg);
+}
+
+user.listen(listener);
+
+//user.age = 0
+//user.name = 'demo'
+//user.gender = Gender.Female
+
+window.user = user;
+
+let GameUser = (_dec8 = (0, _validator.Range)([0, 175]), _dec9 = (0, _validator.DateType)(_validator.DateTypes.PRIM_NUM), _dec10 = (0, _validator.Required)(), (_class3 = class GameUser extends _Model.StoreModel {
+  constructor(...args) {
+    var _temp2;
+
+    return _temp2 = super(...args), _initDefineProp(this, 'level', _descriptor4, this), _temp2;
+  }
+
+}, (_descriptor4 = _applyDecoratedDescriptor(_class3.prototype, 'level', [_dec8, _dec9, _dec10], {
+  enumerable: true,
+  initializer: function initializer() {
+    return 0;
+  }
+})), _class3));
+
+
+const guser = window.guser = new GameUser();
+guser.listen(function (msg) {
+  console.log('guser => ', msg);
+});
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Enum = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * @param {Object} enumData\n * @param {string} [msg]\n * @param {string} [messageKey = 'message']\n * @return {ValidDecorate}\n */\nfunction Enum(enumData, msg, messageKey = 'message') {\n  const values = Object.keys(enumData).map(key => enumData[key]);\n  msg = msg || `Enum Type Error: {{key}} Must be one of ${values.join('')}`;\n\n  function validator(value) {\n    return values.includes(value);\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = Enum;\nexports.Enum = Enum;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2VudW0uanM/YjU5YiJdLCJuYW1lcyI6WyJFbnVtIiwiZW51bURhdGEiLCJtc2ciLCJtZXNzYWdlS2V5IiwidmFsdWVzIiwiT2JqZWN0Iiwia2V5cyIsIm1hcCIsImtleSIsImpvaW4iLCJ2YWxpZGF0b3IiLCJ2YWx1ZSIsImluY2x1ZGVzIl0sIm1hcHBpbmdzIjoiOzs7Ozs7O0FBS0E7O0FBRUE7Ozs7OztBQU1BLFNBQVNBLElBQVQsQ0FBZUMsUUFBZixFQUF5QkMsR0FBekIsRUFBOEJDLGFBQWEsU0FBM0MsRUFBc0Q7QUFDcEQsUUFBTUMsU0FBU0MsT0FBT0MsSUFBUCxDQUFZTCxRQUFaLEVBQXNCTSxHQUF0QixDQUEwQkMsT0FBT1AsU0FBU08sR0FBVCxDQUFqQyxDQUFmO0FBQ0FOLFFBQU1BLE9BQVEsMkNBQTBDRSxPQUFPSyxJQUFQLENBQVksRUFBWixDQUFnQixFQUF4RTs7QUFFQSxXQUFTQyxTQUFULENBQW9CQyxLQUFwQixFQUEyQjtBQUN6QixXQUFPUCxPQUFPUSxRQUFQLENBQWdCRCxLQUFoQixDQUFQO0FBQ0Q7O0FBRUQsU0FBTyxxQkFBU0QsU0FBVCxFQUFvQlIsR0FBcEIsRUFBeUJDLFVBQXpCLENBQVA7QUFDRCxDLENBdEJEOzs7OztrQkF3QmVILEk7UUFFYkEsSSxHQUFBQSxJIiwiZmlsZSI6IjQuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBBdXRob3Igc3Vnby5pbzxhc2Q+XG4gKiBARGF0ZSAxNy0xMC0xOVxuICovXG5cbmltcG9ydCB7IGRlY29yYXRlIH0gZnJvbSAnLi92YWxpZCdcblxuLyoqXG4gKiBAcGFyYW0ge09iamVjdH0gZW51bURhdGFcbiAqIEBwYXJhbSB7c3RyaW5nfSBbbXNnXVxuICogQHBhcmFtIHtzdHJpbmd9IFttZXNzYWdlS2V5ID0gJ21lc3NhZ2UnXVxuICogQHJldHVybiB7VmFsaWREZWNvcmF0ZX1cbiAqL1xuZnVuY3Rpb24gRW51bSAoZW51bURhdGEsIG1zZywgbWVzc2FnZUtleSA9ICdtZXNzYWdlJykge1xuICBjb25zdCB2YWx1ZXMgPSBPYmplY3Qua2V5cyhlbnVtRGF0YSkubWFwKGtleSA9PiBlbnVtRGF0YVtrZXldKVxuICBtc2cgPSBtc2cgfHwgYEVudW0gVHlwZSBFcnJvcjoge3trZXl9fSBNdXN0IGJlIG9uZSBvZiAke3ZhbHVlcy5qb2luKCcnKX1gXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiB2YWx1ZXMuaW5jbHVkZXModmFsdWUpXG4gIH1cblxuICByZXR1cm4gZGVjb3JhdGUodmFsaWRhdG9yLCBtc2csIG1lc3NhZ2VLZXkpXG59XG5cbmV4cG9ydCBkZWZhdWx0IEVudW1cbmV4cG9ydCB7XG4gIEVudW1cbn1cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL3NyYy9kZWNvcmF0ZS92YWxpZGF0b3IvZW51bS5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///4\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DateType = exports.DateTypes = undefined;
+
+var _valid = __webpack_require__(0);
+
+const toString = Object.prototype.toString;
+
+/**
+ * @typedef {Object} ValidTypeDesc
+ * @property {string} type
+ * @property {string} msg
+ */
+
+/**
+ * @param {string} type
+ * @return {{type: string, msg: string}}
+ */
+/**
+ * @Author sugo.io<asd>
+ * @Date 17-10-18
+ * @description 类型验证
+ */
+
+function creator(type) {
+  return {
+    type,
+    msg: `Property [{{key}}] Type Error : Not ${type}`
+  };
+}
+
+/** @type {Object<string, ValidTypeDesc>} */
+const DateTypes = {
+  // Primitive
+  PRIM_BOOL: creator('Boolean'),
+  PRIM_NUM: creator('Number'),
+  PRIM_STR: creator('String'),
+  PRIM_NL: creator('Null'),
+  PRIM_UNDEF: creator('Undefined'),
+  PRIM_SYMBOL: creator('Symbol'),
+
+  // Object
+  OBJ_O: creator('Object'),
+  OBJ_A: creator('Array')
+
+  /**
+   * 生成验证装饰器函数
+   * @param {ValidTypeDesc} ValidType
+   * @param {string} [msg]
+   * @return {ValidDecorate}
+   */
+};function DateType(ValidType, msg) {
+  function validator(value, target) {
+    return toString.call(value) === `[object ${ValidType.type}]`;
+  }
+
+  return (0, _valid.decorate)(validator, msg || ValidType.msg);
+}
+
+DateType.DateTypes = DateTypes;
+
+exports.DateTypes = DateTypes;
+exports.DateType = DateType;
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.MaxLen = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 字符最大长度验证\n * @param {number} length\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction MaxLen(length, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Must be of type String that length less than ${length}`;\n\n  function validator(value) {\n    return typeof value === 'string' && value.length <= length;\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = MaxLen;\nexports.MaxLen = MaxLen;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2xlbi1tYXguanM/MjJkNyJdLCJuYW1lcyI6WyJNYXhMZW4iLCJsZW5ndGgiLCJtc2ciLCJtZXNzYWdlS2V5IiwidmFsaWRhdG9yIiwidmFsdWUiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFLQTs7QUFFQTs7Ozs7OztBQU9BLFNBQVNBLE1BQVQsQ0FBaUJDLE1BQWpCLEVBQXlCQyxHQUF6QixFQUE4QkMsYUFBYSxTQUEzQyxFQUFzRDtBQUNwREQsUUFBTUEsT0FBUSx5REFBd0RELE1BQU8sRUFBN0U7O0FBRUEsV0FBU0csU0FBVCxDQUFvQkMsS0FBcEIsRUFBMkI7QUFDekIsV0FBTyxPQUFPQSxLQUFQLEtBQWlCLFFBQWpCLElBQTZCQSxNQUFNSixNQUFOLElBQWdCQSxNQUFwRDtBQUNEOztBQUVELFNBQU8scUJBQVNHLFNBQVQsRUFBb0JGLEdBQXBCLEVBQXlCQyxVQUF6QixDQUFQO0FBQ0QsQyxDQXRCRDs7Ozs7a0JBd0JlSCxNO1FBRWJBLE0sR0FBQUEsTSIsImZpbGUiOiI1LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAQXV0aG9yIHN1Z28uaW88YXNkPlxuICogQERhdGUgMTctMTAtMTlcbiAqL1xuXG5pbXBvcnQgeyBkZWNvcmF0ZSB9IGZyb20gJy4vdmFsaWQnXG5cbi8qKlxuICog5a2X56ym5pyA5aSn6ZW/5bqm6aqM6K+BXG4gKiBAcGFyYW0ge251bWJlcn0gbGVuZ3RoXG4gKiBAcGFyYW0ge3N0cmluZ30gW21zZ11cbiAqIEBwYXJhbSB7c3RyaW5nfSBbbWVzc2FnZUtleV1cbiAqIEByZXR1cm4ge1ZhbGlkRGVjb3JhdGV9XG4gKi9cbmZ1bmN0aW9uIE1heExlbiAobGVuZ3RoLCBtc2csIG1lc3NhZ2VLZXkgPSAnbWVzc2FnZScpIHtcbiAgbXNnID0gbXNnIHx8IGB7e2tleX19OiBNdXN0IGJlIG9mIHR5cGUgU3RyaW5nIHRoYXQgbGVuZ3RoIGxlc3MgdGhhbiAke2xlbmd0aH1gXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiB0eXBlb2YgdmFsdWUgPT09ICdzdHJpbmcnICYmIHZhbHVlLmxlbmd0aCA8PSBsZW5ndGhcbiAgfVxuXG4gIHJldHVybiBkZWNvcmF0ZSh2YWxpZGF0b3IsIG1zZywgbWVzc2FnZUtleSlcbn1cblxuZXhwb3J0IGRlZmF1bHQgTWF4TGVuXG5leHBvcnQge1xuICBNYXhMZW5cbn1cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL3NyYy9kZWNvcmF0ZS92YWxpZGF0b3IvbGVuLW1heC5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///5\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Enum = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * @param {Object} enumData
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function Enum(enumData, msg) {
+  const values = Object.keys(enumData).map(key => enumData[key]);
+  msg = msg || `Enum Type Error: {{key}} Must be one of ${values.join('')}`;
+
+  function validator(value) {
+    return values.includes(value);
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = Enum;
+exports.Enum = Enum;
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.MinLen = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 字符最小长度验证\n * @param {number} length\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction MinLen(length, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Must be of type String that length greater than ${length}`;\n\n  function validator(value) {\n    return typeof value === 'string' && value.length >= length;\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = MinLen;\nexports.MinLen = MinLen;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2xlbi1taW4uanM/ODcwZCJdLCJuYW1lcyI6WyJNaW5MZW4iLCJsZW5ndGgiLCJtc2ciLCJtZXNzYWdlS2V5IiwidmFsaWRhdG9yIiwidmFsdWUiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFLQTs7QUFFQTs7Ozs7OztBQU9BLFNBQVNBLE1BQVQsQ0FBaUJDLE1BQWpCLEVBQXlCQyxHQUF6QixFQUE4QkMsYUFBYSxTQUEzQyxFQUFzRDtBQUNwREQsUUFBTUEsT0FBUSw0REFBMkRELE1BQU8sRUFBaEY7O0FBRUEsV0FBU0csU0FBVCxDQUFvQkMsS0FBcEIsRUFBMkI7QUFDekIsV0FBTyxPQUFPQSxLQUFQLEtBQWlCLFFBQWpCLElBQTZCQSxNQUFNSixNQUFOLElBQWdCQSxNQUFwRDtBQUNEOztBQUVELFNBQU8scUJBQVNHLFNBQVQsRUFBb0JGLEdBQXBCLEVBQXlCQyxVQUF6QixDQUFQO0FBQ0QsQyxDQXRCRDs7Ozs7a0JBd0JlSCxNO1FBRWJBLE0sR0FBQUEsTSIsImZpbGUiOiI2LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAQXV0aG9yIHN1Z28uaW88YXNkPlxuICogQERhdGUgMTctMTAtMTlcbiAqL1xuXG5pbXBvcnQgeyBkZWNvcmF0ZSB9IGZyb20gJy4vdmFsaWQnXG5cbi8qKlxuICog5a2X56ym5pyA5bCP6ZW/5bqm6aqM6K+BXG4gKiBAcGFyYW0ge251bWJlcn0gbGVuZ3RoXG4gKiBAcGFyYW0ge3N0cmluZ30gW21zZ11cbiAqIEBwYXJhbSB7c3RyaW5nfSBbbWVzc2FnZUtleV1cbiAqIEByZXR1cm4ge1ZhbGlkRGVjb3JhdGV9XG4gKi9cbmZ1bmN0aW9uIE1pbkxlbiAobGVuZ3RoLCBtc2csIG1lc3NhZ2VLZXkgPSAnbWVzc2FnZScpIHtcbiAgbXNnID0gbXNnIHx8IGB7e2tleX19OiBNdXN0IGJlIG9mIHR5cGUgU3RyaW5nIHRoYXQgbGVuZ3RoIGdyZWF0ZXIgdGhhbiAke2xlbmd0aH1gXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiB0eXBlb2YgdmFsdWUgPT09ICdzdHJpbmcnICYmIHZhbHVlLmxlbmd0aCA+PSBsZW5ndGhcbiAgfVxuXG4gIHJldHVybiBkZWNvcmF0ZSh2YWxpZGF0b3IsIG1zZywgbWVzc2FnZUtleSlcbn1cblxuZXhwb3J0IGRlZmF1bHQgTWluTGVuXG5leHBvcnQge1xuICBNaW5MZW5cbn1cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL3NyYy9kZWNvcmF0ZS92YWxpZGF0b3IvbGVuLW1pbi5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///6\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MaxLen = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 字符最大长度验证
+ * @param {number} length
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function MaxLen(length, msg) {
+  msg = msg || `{{key}}: Must be of type String that length less than ${length}`;
+
+  function validator(value) {
+    return typeof value === 'string' && value.length <= length;
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = MaxLen;
+exports.MaxLen = MaxLen;
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.RangeLen = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 字符长度取值区间验证\n * @param {Array<number>} range\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction RangeLen(range, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Must be of type String than length greater than ${range[0]} less than ${range[1]} `;\n\n  function validator(value) {\n    return typeof value === 'string' && value.length >= range[0] && value.length <= range[1];\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = RangeLen;\nexports.RangeLen = RangeLen;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2xlbi1yYW5nZS5qcz8xZjY4Il0sIm5hbWVzIjpbIlJhbmdlTGVuIiwicmFuZ2UiLCJtc2ciLCJtZXNzYWdlS2V5IiwidmFsaWRhdG9yIiwidmFsdWUiLCJsZW5ndGgiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFLQTs7QUFFQTs7Ozs7OztBQU9BLFNBQVNBLFFBQVQsQ0FBbUJDLEtBQW5CLEVBQTBCQyxHQUExQixFQUErQkMsYUFBYSxTQUE1QyxFQUF1RDtBQUNyREQsUUFBTUEsT0FBUSw0REFBMkRELE1BQU0sQ0FBTixDQUFTLGNBQWFBLE1BQU0sQ0FBTixDQUFTLEdBQXhHOztBQUVBLFdBQVNHLFNBQVQsQ0FBb0JDLEtBQXBCLEVBQTJCO0FBQ3pCLFdBQU8sT0FBT0EsS0FBUCxLQUFpQixRQUFqQixJQUE2QkEsTUFBTUMsTUFBTixJQUFnQkwsTUFBTSxDQUFOLENBQTdDLElBQXlESSxNQUFNQyxNQUFOLElBQWdCTCxNQUFNLENBQU4sQ0FBaEY7QUFDRDs7QUFFRCxTQUFPLHFCQUFTRyxTQUFULEVBQW9CRixHQUFwQixFQUF5QkMsVUFBekIsQ0FBUDtBQUNELEMsQ0F0QkQ7Ozs7O2tCQXdCZUgsUTtRQUViQSxRLEdBQUFBLFEiLCJmaWxlIjoiNy5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQEF1dGhvciBzdWdvLmlvPGFzZD5cbiAqIEBEYXRlIDE3LTEwLTE5XG4gKi9cblxuaW1wb3J0IHsgZGVjb3JhdGUgfSBmcm9tICcuL3ZhbGlkJ1xuXG4vKipcbiAqIOWtl+espumVv+W6puWPluWAvOWMuumXtOmqjOivgVxuICogQHBhcmFtIHtBcnJheTxudW1iZXI+fSByYW5nZVxuICogQHBhcmFtIHtzdHJpbmd9IFttc2ddXG4gKiBAcGFyYW0ge3N0cmluZ30gW21lc3NhZ2VLZXldXG4gKiBAcmV0dXJuIHtWYWxpZERlY29yYXRlfVxuICovXG5mdW5jdGlvbiBSYW5nZUxlbiAocmFuZ2UsIG1zZywgbWVzc2FnZUtleSA9ICdtZXNzYWdlJykge1xuICBtc2cgPSBtc2cgfHwgYHt7a2V5fX06IE11c3QgYmUgb2YgdHlwZSBTdHJpbmcgdGhhbiBsZW5ndGggZ3JlYXRlciB0aGFuICR7cmFuZ2VbMF19IGxlc3MgdGhhbiAke3JhbmdlWzFdfSBgXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiB0eXBlb2YgdmFsdWUgPT09ICdzdHJpbmcnICYmIHZhbHVlLmxlbmd0aCA+PSByYW5nZVswXSAmJiB2YWx1ZS5sZW5ndGggPD0gcmFuZ2VbMV1cbiAgfVxuXG4gIHJldHVybiBkZWNvcmF0ZSh2YWxpZGF0b3IsIG1zZywgbWVzc2FnZUtleSlcbn1cblxuZXhwb3J0IGRlZmF1bHQgUmFuZ2VMZW5cbmV4cG9ydCB7XG4gIFJhbmdlTGVuXG59XG5cblxuXG4vLyBXRUJQQUNLIEZPT1RFUiAvL1xuLy8gLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL2xlbi1yYW5nZS5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///7\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MinLen = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 字符最小长度验证
+ * @param {number} length
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function MinLen(length, msg) {
+  msg = msg || `{{key}}: Must be of type String that length greater than ${length}`;
+
+  function validator(value) {
+    return typeof value === 'string' && value.length >= length;
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = MinLen;
+exports.MinLen = MinLen;
 
 /***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Max = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 右边界验证\n * @param {number} num\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction Max(num, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Must be of type umber and less than ${num}`;\n\n  function validator(value) {\n    return typeof value === 'number' && value <= num;\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = Max;\nexports.Max = Max;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL21heC5qcz85OWRmIl0sIm5hbWVzIjpbIk1heCIsIm51bSIsIm1zZyIsIm1lc3NhZ2VLZXkiLCJ2YWxpZGF0b3IiLCJ2YWx1ZSJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUtBOztBQUVBOzs7Ozs7O0FBT0EsU0FBU0EsR0FBVCxDQUFjQyxHQUFkLEVBQW1CQyxHQUFuQixFQUF3QkMsYUFBYSxTQUFyQyxFQUFnRDtBQUM5Q0QsUUFBTUEsT0FBUSxnREFBK0NELEdBQUksRUFBakU7O0FBRUEsV0FBU0csU0FBVCxDQUFvQkMsS0FBcEIsRUFBMkI7QUFDekIsV0FBTyxPQUFPQSxLQUFQLEtBQWlCLFFBQWpCLElBQTZCQSxTQUFTSixHQUE3QztBQUNEOztBQUVELFNBQU8scUJBQVNHLFNBQVQsRUFBb0JGLEdBQXBCLEVBQXlCQyxVQUF6QixDQUFQO0FBQ0QsQyxDQXRCRDs7Ozs7a0JBd0JlSCxHO1FBRWJBLEcsR0FBQUEsRyIsImZpbGUiOiI4LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAQXV0aG9yIHN1Z28uaW88YXNkPlxuICogQERhdGUgMTctMTAtMTlcbiAqL1xuXG5pbXBvcnQgeyBkZWNvcmF0ZSB9IGZyb20gJy4vdmFsaWQnXG5cbi8qKlxuICog5Y+z6L6555WM6aqM6K+BXG4gKiBAcGFyYW0ge251bWJlcn0gbnVtXG4gKiBAcGFyYW0ge3N0cmluZ30gW21zZ11cbiAqIEBwYXJhbSB7c3RyaW5nfSBbbWVzc2FnZUtleV1cbiAqIEByZXR1cm4ge1ZhbGlkRGVjb3JhdGV9XG4gKi9cbmZ1bmN0aW9uIE1heCAobnVtLCBtc2csIG1lc3NhZ2VLZXkgPSAnbWVzc2FnZScpIHtcbiAgbXNnID0gbXNnIHx8IGB7e2tleX19OiBNdXN0IGJlIG9mIHR5cGUgdW1iZXIgYW5kIGxlc3MgdGhhbiAke251bX1gXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiB0eXBlb2YgdmFsdWUgPT09ICdudW1iZXInICYmIHZhbHVlIDw9IG51bVxuICB9XG5cbiAgcmV0dXJuIGRlY29yYXRlKHZhbGlkYXRvciwgbXNnLCBtZXNzYWdlS2V5KVxufVxuXG5leHBvcnQgZGVmYXVsdCBNYXhcbmV4cG9ydCB7XG4gIE1heFxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIC4vc3JjL2RlY29yYXRlL3ZhbGlkYXRvci9tYXguanMiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///8\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RangeLen = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 字符长度取值区间验证
+ * @param {Array<number>} range
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function RangeLen(range, msg) {
+  msg = msg || `{{key}}: Must be of type String than length greater than ${range[0]} less than ${range[1]} `;
+
+  function validator(value) {
+    return typeof value === 'string' && value.length >= range[0] && value.length <= range[1];
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = RangeLen;
+exports.RangeLen = RangeLen;
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Min = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 左边界验证\n * @param {number} num\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction Min(num, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Must be of type umber and greater than ${num}`;\n\n  function validator(value) {\n    return typeof value === 'number' && value >= num;\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = Min;\nexports.Min = Min;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL21pbi5qcz84NTQyIl0sIm5hbWVzIjpbIk1pbiIsIm51bSIsIm1zZyIsIm1lc3NhZ2VLZXkiLCJ2YWxpZGF0b3IiLCJ2YWx1ZSJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUtBOztBQUVBOzs7Ozs7O0FBT0EsU0FBU0EsR0FBVCxDQUFjQyxHQUFkLEVBQW1CQyxHQUFuQixFQUF3QkMsYUFBYSxTQUFyQyxFQUFnRDtBQUM5Q0QsUUFBTUEsT0FBUSxtREFBa0RELEdBQUksRUFBcEU7O0FBRUEsV0FBU0csU0FBVCxDQUFvQkMsS0FBcEIsRUFBMkI7QUFDekIsV0FBTyxPQUFPQSxLQUFQLEtBQWlCLFFBQWpCLElBQTZCQSxTQUFTSixHQUE3QztBQUNEOztBQUVELFNBQU8scUJBQVNHLFNBQVQsRUFBb0JGLEdBQXBCLEVBQXlCQyxVQUF6QixDQUFQO0FBQ0QsQyxDQXRCRDs7Ozs7a0JBd0JlSCxHO1FBRWJBLEcsR0FBQUEsRyIsImZpbGUiOiI5LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAQXV0aG9yIHN1Z28uaW88YXNkPlxuICogQERhdGUgMTctMTAtMTlcbiAqL1xuXG5pbXBvcnQgeyBkZWNvcmF0ZSB9IGZyb20gJy4vdmFsaWQnXG5cbi8qKlxuICog5bem6L6555WM6aqM6K+BXG4gKiBAcGFyYW0ge251bWJlcn0gbnVtXG4gKiBAcGFyYW0ge3N0cmluZ30gW21zZ11cbiAqIEBwYXJhbSB7c3RyaW5nfSBbbWVzc2FnZUtleV1cbiAqIEByZXR1cm4ge1ZhbGlkRGVjb3JhdGV9XG4gKi9cbmZ1bmN0aW9uIE1pbiAobnVtLCBtc2csIG1lc3NhZ2VLZXkgPSAnbWVzc2FnZScpIHtcbiAgbXNnID0gbXNnIHx8IGB7e2tleX19OiBNdXN0IGJlIG9mIHR5cGUgdW1iZXIgYW5kIGdyZWF0ZXIgdGhhbiAke251bX1gXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiB0eXBlb2YgdmFsdWUgPT09ICdudW1iZXInICYmIHZhbHVlID49IG51bVxuICB9XG5cbiAgcmV0dXJuIGRlY29yYXRlKHZhbGlkYXRvciwgbXNnLCBtZXNzYWdlS2V5KVxufVxuXG5leHBvcnQgZGVmYXVsdCBNaW5cbmV4cG9ydCB7XG4gIE1pblxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIC4vc3JjL2RlY29yYXRlL3ZhbGlkYXRvci9taW4uanMiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///9\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Max = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 右边界验证
+ * @param {number} num
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function Max(num, msg) {
+  msg = msg || `{{key}}: Must be of type umber and less than ${num}`;
+
+  function validator(value) {
+    return typeof value === 'number' && value <= num;
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = Max;
+exports.Max = Max;
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Pattern = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 正则匹配\n * @param {RegExp} pattern\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction Pattern(pattern, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Not Matched Error`;\n\n  function validator(value) {\n    return pattern.test(value);\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = Pattern;\nexports.Pattern = Pattern;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL3BhdHRlcm4uanM/MWYxYSJdLCJuYW1lcyI6WyJQYXR0ZXJuIiwicGF0dGVybiIsIm1zZyIsIm1lc3NhZ2VLZXkiLCJ2YWxpZGF0b3IiLCJ2YWx1ZSIsInRlc3QiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFLQTs7QUFFQTs7Ozs7OztBQU9BLFNBQVNBLE9BQVQsQ0FBa0JDLE9BQWxCLEVBQTJCQyxHQUEzQixFQUFnQ0MsYUFBYSxTQUE3QyxFQUF3RDtBQUN0REQsUUFBTUEsT0FBUSw0QkFBZDs7QUFFQSxXQUFTRSxTQUFULENBQW9CQyxLQUFwQixFQUEyQjtBQUN6QixXQUFPSixRQUFRSyxJQUFSLENBQWFELEtBQWIsQ0FBUDtBQUNEOztBQUVELFNBQU8scUJBQVNELFNBQVQsRUFBb0JGLEdBQXBCLEVBQXlCQyxVQUF6QixDQUFQO0FBQ0QsQyxDQXRCRDs7Ozs7a0JBd0JlSCxPO1FBRWJBLE8sR0FBQUEsTyIsImZpbGUiOiIxMC5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQEF1dGhvciBzdWdvLmlvPGFzZD5cbiAqIEBEYXRlIDE3LTEwLTE5XG4gKi9cblxuaW1wb3J0IHsgZGVjb3JhdGUgfSBmcm9tICcuL3ZhbGlkJ1xuXG4vKipcbiAqIOato+WImeWMuemFjVxuICogQHBhcmFtIHtSZWdFeHB9IHBhdHRlcm5cbiAqIEBwYXJhbSB7c3RyaW5nfSBbbXNnXVxuICogQHBhcmFtIHtzdHJpbmd9IFttZXNzYWdlS2V5XVxuICogQHJldHVybiB7VmFsaWREZWNvcmF0ZX1cbiAqL1xuZnVuY3Rpb24gUGF0dGVybiAocGF0dGVybiwgbXNnLCBtZXNzYWdlS2V5ID0gJ21lc3NhZ2UnKSB7XG4gIG1zZyA9IG1zZyB8fCBge3trZXl9fTogTm90IE1hdGNoZWQgRXJyb3JgXG5cbiAgZnVuY3Rpb24gdmFsaWRhdG9yICh2YWx1ZSkge1xuICAgIHJldHVybiBwYXR0ZXJuLnRlc3QodmFsdWUpXG4gIH1cblxuICByZXR1cm4gZGVjb3JhdGUodmFsaWRhdG9yLCBtc2csIG1lc3NhZ2VLZXkpXG59XG5cbmV4cG9ydCBkZWZhdWx0IFBhdHRlcm5cbmV4cG9ydCB7XG4gIFBhdHRlcm5cbn1cblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyAuL3NyYy9kZWNvcmF0ZS92YWxpZGF0b3IvcGF0dGVybi5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///10\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Min = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 左边界验证
+ * @param {number} num
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function Min(num, msg) {
+  msg = msg || `{{key}}: Must be of type umber and greater than ${num}`;
+
+  function validator(value) {
+    return typeof value === 'number' && value >= num;
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = Min;
+exports.Min = Min;
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Range = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 数值取值验证\n * @param {Array<number>} range\n * @param {string} [msg]\n * @param {string} [messageKey]\n * @return {ValidDecorate}\n */\nfunction Range(range, msg, messageKey = 'message') {\n  msg = msg || `{{key}}: Must be of type number that greater than ${range[0]} less than ${range[1]} `;\n\n  function validator(value) {\n    return typeof value === 'number' && value >= range[0] && value <= range[1];\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = Range;\nexports.Range = Range;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL3JhbmdlLmpzP2E1ZjEiXSwibmFtZXMiOlsiUmFuZ2UiLCJyYW5nZSIsIm1zZyIsIm1lc3NhZ2VLZXkiLCJ2YWxpZGF0b3IiLCJ2YWx1ZSJdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUtBOztBQUVBOzs7Ozs7O0FBT0EsU0FBU0EsS0FBVCxDQUFnQkMsS0FBaEIsRUFBdUJDLEdBQXZCLEVBQTRCQyxhQUFhLFNBQXpDLEVBQW9EO0FBQ2xERCxRQUFNQSxPQUFRLHFEQUFvREQsTUFBTSxDQUFOLENBQVMsY0FBYUEsTUFBTSxDQUFOLENBQVMsR0FBakc7O0FBRUEsV0FBU0csU0FBVCxDQUFvQkMsS0FBcEIsRUFBMkI7QUFDekIsV0FBTyxPQUFPQSxLQUFQLEtBQWlCLFFBQWpCLElBQTZCQSxTQUFTSixNQUFNLENBQU4sQ0FBdEMsSUFBa0RJLFNBQVNKLE1BQU0sQ0FBTixDQUFsRTtBQUNEOztBQUVELFNBQU8scUJBQVNHLFNBQVQsRUFBb0JGLEdBQXBCLEVBQXlCQyxVQUF6QixDQUFQO0FBQ0QsQyxDQXRCRDs7Ozs7a0JBd0JlSCxLO1FBRWJBLEssR0FBQUEsSyIsImZpbGUiOiIxMS5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQEF1dGhvciBzdWdvLmlvPGFzZD5cbiAqIEBEYXRlIDE3LTEwLTE5XG4gKi9cblxuaW1wb3J0IHsgZGVjb3JhdGUgfSBmcm9tICcuL3ZhbGlkJ1xuXG4vKipcbiAqIOaVsOWAvOWPluWAvOmqjOivgVxuICogQHBhcmFtIHtBcnJheTxudW1iZXI+fSByYW5nZVxuICogQHBhcmFtIHtzdHJpbmd9IFttc2ddXG4gKiBAcGFyYW0ge3N0cmluZ30gW21lc3NhZ2VLZXldXG4gKiBAcmV0dXJuIHtWYWxpZERlY29yYXRlfVxuICovXG5mdW5jdGlvbiBSYW5nZSAocmFuZ2UsIG1zZywgbWVzc2FnZUtleSA9ICdtZXNzYWdlJykge1xuICBtc2cgPSBtc2cgfHwgYHt7a2V5fX06IE11c3QgYmUgb2YgdHlwZSBudW1iZXIgdGhhdCBncmVhdGVyIHRoYW4gJHtyYW5nZVswXX0gbGVzcyB0aGFuICR7cmFuZ2VbMV19IGBcblxuICBmdW5jdGlvbiB2YWxpZGF0b3IgKHZhbHVlKSB7XG4gICAgcmV0dXJuIHR5cGVvZiB2YWx1ZSA9PT0gJ251bWJlcicgJiYgdmFsdWUgPj0gcmFuZ2VbMF0gJiYgdmFsdWUgPD0gcmFuZ2VbMV1cbiAgfVxuXG4gIHJldHVybiBkZWNvcmF0ZSh2YWxpZGF0b3IsIG1zZywgbWVzc2FnZUtleSlcbn1cblxuZXhwb3J0IGRlZmF1bHQgUmFuZ2VcbmV4cG9ydCB7XG4gIFJhbmdlXG59XG5cblxuXG4vLyBXRUJQQUNLIEZPT1RFUiAvL1xuLy8gLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL3JhbmdlLmpzIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///11\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Pattern = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 正则匹配
+ * @param {RegExp} pattern
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function Pattern(pattern, msg) {
+  msg = msg || `{{key}}: Not Matched Error`;
+
+  function validator(value) {
+    return pattern.test(value);
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = Pattern;
+exports.Pattern = Pattern;
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.Required = undefined;\n\nvar _valid = __webpack_require__(0);\n\n/**\n * 必填验证：验证是否为undefined或空字符\n * @param {string} [msg]\n * @param {string} [messageKey = 'message']\n * @return {ValidDecorate}\n */\nfunction Required(msg = '{{key}} is required', messageKey = 'message') {\n  function validator(value) {\n    return value !== void 0 && value !== '';\n  }\n\n  return (0, _valid.decorate)(validator, msg, messageKey);\n} /**\n   * @Author sugo.io<asd>\n   * @Date 17-10-19\n   */\n\nexports.default = Required;\nexports.Required = Required;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvZGVjb3JhdGUvdmFsaWRhdG9yL3JlcXVpcmVkLmpzPzQ0ZDYiXSwibmFtZXMiOlsiUmVxdWlyZWQiLCJtc2ciLCJtZXNzYWdlS2V5IiwidmFsaWRhdG9yIiwidmFsdWUiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFLQTs7QUFFQTs7Ozs7O0FBTUEsU0FBU0EsUUFBVCxDQUFtQkMsTUFBTSxxQkFBekIsRUFBZ0RDLGFBQWEsU0FBN0QsRUFBd0U7QUFDdEUsV0FBU0MsU0FBVCxDQUFvQkMsS0FBcEIsRUFBMkI7QUFDekIsV0FBT0EsVUFBVSxLQUFLLENBQWYsSUFBb0JBLFVBQVUsRUFBckM7QUFDRDs7QUFFRCxTQUFPLHFCQUFTRCxTQUFULEVBQW9CRixHQUFwQixFQUF5QkMsVUFBekIsQ0FBUDtBQUNELEMsQ0FuQkQ7Ozs7O2tCQXFCZUYsUTtRQUViQSxRLEdBQUFBLFEiLCJmaWxlIjoiMTIuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBBdXRob3Igc3Vnby5pbzxhc2Q+XG4gKiBARGF0ZSAxNy0xMC0xOVxuICovXG5cbmltcG9ydCB7IGRlY29yYXRlIH0gZnJvbSAnLi92YWxpZCdcblxuLyoqXG4gKiDlv4Xloavpqozor4HvvJrpqozor4HmmK/lkKbkuLp1bmRlZmluZWTmiJbnqbrlrZfnrKZcbiAqIEBwYXJhbSB7c3RyaW5nfSBbbXNnXVxuICogQHBhcmFtIHtzdHJpbmd9IFttZXNzYWdlS2V5ID0gJ21lc3NhZ2UnXVxuICogQHJldHVybiB7VmFsaWREZWNvcmF0ZX1cbiAqL1xuZnVuY3Rpb24gUmVxdWlyZWQgKG1zZyA9ICd7e2tleX19IGlzIHJlcXVpcmVkJywgbWVzc2FnZUtleSA9ICdtZXNzYWdlJykge1xuICBmdW5jdGlvbiB2YWxpZGF0b3IgKHZhbHVlKSB7XG4gICAgcmV0dXJuIHZhbHVlICE9PSB2b2lkIDAgJiYgdmFsdWUgIT09ICcnXG4gIH1cblxuICByZXR1cm4gZGVjb3JhdGUodmFsaWRhdG9yLCBtc2csIG1lc3NhZ2VLZXkpXG59XG5cbmV4cG9ydCBkZWZhdWx0IFJlcXVpcmVkXG5leHBvcnQge1xuICBSZXF1aXJlZFxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIC4vc3JjL2RlY29yYXRlL3ZhbGlkYXRvci9yZXF1aXJlZC5qcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///12\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Range = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 数值取值验证
+ * @param {Array<number>} range
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function Range(range, msg) {
+  msg = msg || `{{key}}: Must be of type number that greater than ${range[0]} less than ${range[1]} `;
+
+  function validator(value) {
+    return typeof value === 'number' && value >= range[0] && value <= range[1];
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = Range;
+exports.Range = Range;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Required = undefined;
+
+var _valid = __webpack_require__(0);
+
+/**
+ * 必填验证：验证是否为undefined或空字符
+ * @param {string} [msg]
+ * @return {ValidDecorate}
+ */
+function Required(msg = '{{key}} is required') {
+  function validator(value) {
+    return value !== void 0 && value !== '';
+  }
+
+  return (0, _valid.decorate)(validator, msg);
+} /**
+   * @Author sugo.io<asd>
+   * @Date 17-10-19
+   */
+
+exports.default = Required;
+exports.Required = Required;
 
 /***/ })
 /******/ ]);

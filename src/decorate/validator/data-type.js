@@ -44,15 +44,14 @@ const DateTypes = {
  * 生成验证装饰器函数
  * @param {ValidTypeDesc} ValidType
  * @param {string} [msg]
- * @param {string} [messageKey = 'message']
  * @return {ValidDecorate}
  */
-function DateType (ValidType, msg, messageKey = 'message') {
+function DateType (ValidType, msg) {
   function validator (value, target) {
     return toString.call(value) === `[object ${ValidType.type}]`
   }
 
-  return decorate(validator, msg || ValidType.msg, messageKey)
+  return decorate(validator, msg || ValidType.msg)
 }
 
 DateType.DateTypes = DateTypes
