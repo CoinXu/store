@@ -42,7 +42,7 @@ class User extends StoreModel {
   gender = null
 
   @Pattern(/^\w+\.@\w+\.\w+$/, '邮箱格式为xxx@yyy.zzz')
-  @RangeLen([6, 32])
+  @RangeLen(6, 32)
   @DateType(DateTypes.PRIM_STR)
   @Required()
   email = null
@@ -50,25 +50,22 @@ class User extends StoreModel {
 
 const user = new User()
 
-/**
- * @param {Array<ValidMessage>} msg
- */
-function listener (msg) {
-  console.log(msg)
-}
-
-user.listen(listener)
-user.set({ age: -1, name: '', gender: -1, email: 'aaaa.c' })
-
-window.user = user
+user.listen(function (msg) {
+  console.log('user=>', msg)
+})
 
 class GameUser extends User {
-  @Range([0, 175])
+  @Range(0, 175)
   @DateType(DateTypes.PRIM_NUM)
   @Required()
   level = 0
 }
 
-const guser = window.guser = new GameUser()
-guser.listen(function (msg) {console.log('guser => ', msg)})
-user.set({ age: -1, name: '', gender: -1, email: 'bbbb.a', level: '' })
+const guser = new GameUser()
+guser.listen(function (msg) {
+  console.log('guser => ', msg)
+})
+
+window.user = user
+window.guser = guser
+

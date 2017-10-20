@@ -12,7 +12,7 @@ import { decorate } from './valid'
  * @return {ValidDecorate}
  */
 function Min (num, msg) {
-  msg = msg || `{{key}}: Must be of type umber and greater than ${num}`
+  msg = msg || `{{key}}: Must be of type number and greater than ${num}`
 
   function validator (value) {
     return typeof value === 'number' && value >= num

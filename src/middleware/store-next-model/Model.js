@@ -86,7 +86,7 @@ class StoreModel {
    * @return {StoreModel}
    */
   set (valuesOrKey, valueOrUndef) {
-    const values = valueOrUndef ? { [valuesOrKey]: valueOrUndef } : valuesOrKey
+    const values = arguments.length === 2 ? { [valuesOrKey]: valueOrUndef } : valuesOrKey
     const msg = this.valid(values)
 
     for (let propKey  in values) {
