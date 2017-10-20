@@ -1,140 +1,152 @@
 /**
  * @Author sugo.io<asd>
- * @Date 17-10-19
+ * @Date 17-10-20
  */
 
+const hasOwnProperty = Object.prototype.hasOwnProperty
+
 /**
- * 验证结果消息模版解析
- * @param {string} key
- * @param {string} type
- * @param {string} template
+ * @param {string} temp
+ * @param {Object} values
  * @return {string}
+ * @example
  * ```js
- * parse('a', 'Number', '{{key}}: Not {{type}} Error') // 'a: Not Number Error'
+ * template('{{key}} is {{value}}', {key:'k', value: 'v'}) // k is v
  * ```
  */
-function parse (key, type, template) {
-  return template
-    .replace(/{{\s*key\s*}}/, key.toString())
-    .replace(/{{\s*type\s*}}/, type.toString())
+function template (temp, values) {
+  for (let propKey in values) {
+    if (!hasOwnProperty.call(values, propKey)) continue
+    temp = temp.replace(new RegExp(`{{${propKey}}}`, 'g'), values[propKey])
+  }
+  return temp
 }
 
 /**
- * 验证器，传入value，返回boolean值
- * @typedef {callback} Validator
- * @param {*} value
- * @param {Object} target
- * @return {boolean}
+ * @typedef {Object} ValidatorBuffer
+ * @property {string} msg
+ * @property {Validator} validator
  */
 
 /**
- * 验证装饰器描述对象中的getter函数
- * @callback ValidDescriptorGetter
- * @return {*}
+ * @typedef {Object} TargetValidator
+ * @property {Object} target
+ * @property {Object<string, Array<ValidatorBuffer>>} validator
  */
 
 /**
- * 验证装饰器描述对象中的setter函数
- * @callback ValidDescriptorSetter
- * @param {*} value
- * @return {boolean}
+ * @class 缓存验证器
  */
-
-/**
- * 验证装饰器描述对象
- * @typedef {Object} ValidDescriptor
- * @property {boolean} configurable
- * @property {boolean} enumerable
- * @property {ValidDescriptorGetter} get
- * @property {ValidDescriptorSetter} set
- */
-
-/**
- * babel-plugin-transform-decorators-legacy
- * 转换后的代码descriptor会有initializer函数，返回初始值
- * @typedef {Object} InitializeDescriptor
- * @property {boolean} enumerable
- * @property {Function} initializer
- */
-
-/**
- * 验证装饰器函数
- * @callback ValidDecorate
- * @param {Object} target
- * @param {string} key
- * @param {InitializeDescriptor} descriptor
- * @return {ValidDescriptor}
- */
-
-/**
- * 传入验证器及信息，返回
- * @param {Validator} validator
- * @param {string} msg
- * @param {string} [messageKey=message]
- * @return {ValidDecorate}
- */
-function decorate (validator, msg, messageKey = 'message') {
+class Wrapper {
+  constructor () {
+    /** @type {Array<TargetValidator>} */
+    this.buffer = []
+  }
 
   /**
    * @param {Object} target
    * @param {string} key
-   * @param {InitializeDescriptor|ValidDescriptor} descriptor
-   * @return {ValidDescriptor}
+   * @param {Validator} validator
+   * @param {string} msg
+   * @return {Wrapper}
    */
-  function wrapper (target, key, descriptor) {
+  add (target, key, validator, msg) {
+    let buf = this.buffer.find(buf => buf.target === target)
 
-    function validator_wrapper (value) {
-      if (!validator(value, target)) {
-        target[messageKey] = parse(key, '', msg)
-        return false
+    if (buf) {
+      const arr = buf.validator[key] || (buf.validator[key] = [])
+      arr.push({ msg, validator })
+      return this
+    }
+
+    this.buffer.push({
+      target,
+      validator: {
+        [key]: [{ msg, validator }]
       }
-      target[messageKey] = null
-      return true
-    }
+    })
 
-    const { get, set, initializer } = descriptor
-
-    let buf = get ? get.call(target) : initializer.call(target)
-
-    // 如果初始值为null，则不验证
-    // 如果初始值验证不通过则重置为undefined
-    if (buf !== null && !validator_wrapper(buf)) {
-      buf = void 0
-    }
-
-    const desc = {
-      configurable: false,
-      enumerable: true,
-      // TODO 预先生成
-      get () {
-        return buf
-      },
-      // TODO 预先生成
-      set (value) {
-        // 如果某一个set返回了false，则直接返回
-        if (set && !set.call(target, value)) {
-          return false
-        }
-
-        value = get ? get.call(target) : value
-        if (validator_wrapper(value)) {
-          buf = value
-          return true
-        }
-
-        return false
-      }
-    }
-
-    desc.__proto__ = null
-
-    return desc
+    return this
   }
 
-  return wrapper
+  /**
+   * @param {Object} target
+   * @param {Object} values
+   * @return {Object<string, Array<string>>}
+   */
+  valid (target, values) {
+    const buf = this.get(target)
+    const results = []
+
+    if (buf === null) {
+      return results
+    }
+
+    const validator = buf.validator
+    
+    let propKey
+    let valid
+    let fault
+    let msg
+
+    for (propKey in validator) {
+      if (!hasOwnProperty.call(validator, propKey) || !hasOwnProperty.call(values, propKey)) {
+        continue
+      }
+
+      valid = validator[propKey]
+      msg = []
+      fault = valid.some(function (vb) {
+        if (vb.validator(values[propKey])) {
+          return false
+        }
+        msg.push(template(vb.msg, { key: propKey }))
+        return true
+      })
+
+      if (fault) {
+        results[propKey] = msg
+      }
+    }
+
+    return results
+  }
+
+  /**
+   * @param {Object} target
+   * @return {Object<string, Array<ValidatorBuffer>>|null}
+   */
+  get (target) {
+    return this.buffer.find(buf => buf.target === target) || null
+  }
+
+  /**
+   * @param {Object} target
+   * @return {Wrapper}
+   */
+  destory (target) {
+    this.buffer = this.buffer.filter(buf => buf.target !== target)
+    return this
+  }
+}
+
+const DefaultWrapper = new Wrapper()
+
+/**
+ * @param {Validator} validator
+ * @param {string} msg
+ * @return {ValidDecorate}
+ */
+function decorate (validator, msg) {
+  return function (target, key, descriptor) {
+    DefaultWrapper.add(target, key, validator, msg)
+    return descriptor
+  }
 }
 
 export {
-  parse,
-  decorate
+  DefaultWrapper,
+  hasOwnProperty,
+  decorate,
+  template
 }

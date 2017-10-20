@@ -2,13 +2,7 @@
  * @Author sugo.io<asd>
  * @Date 17-10-19
  */
-
-function Rule (opt) {
-  return function () {
-
-  }
-}
-
+import { StoreModel } from '../../src/middleware/store-next-model/Model'
 import {
   DateType,
   DateTypes,
@@ -31,7 +25,7 @@ const Gender = {
   Male: 1
 }
 
-class Demo {
+class User extends StoreModel {
   @Range([0, 200])
   @DateType(DateTypes.PRIM_NUM)
   @Required()
@@ -46,25 +40,31 @@ class Demo {
   gender = null
 }
 
-const d = new Demo()
-d.age = 0
-d.name = 'demo'
-d.gender = Gender.Female
-window.d = d
+const user = new User()
 
-const obj = {
-  @Max(200)
-  @Min(0)
-  @DateType(DateTypes.PRIM_NUM)
-  @Required()
-  age: null,
-
-  @MaxLen(32)
-  @MinLen(4)
-  @DateType(DateTypes.PRIM_STR)
-  @Required()
-  name: null
+/**
+ * @param {Array<ValidMessage>} msg
+ */
+function listener (msg) {
+  console.log(msg)
 }
 
-window.obj = obj
+user.listen(listener)
 
+//user.age = 0
+//user.name = 'demo'
+//user.gender = Gender.Female
+
+window.user = user
+
+class GameUser extends StoreModel {
+  @Range([0, 175])
+  @DateType(DateTypes.PRIM_NUM)
+  @Required()
+  level = 0
+}
+
+const guser = window.guser = new GameUser()
+guser.listen(function (msg) {
+  console.log('guser => ', msg)
+})
