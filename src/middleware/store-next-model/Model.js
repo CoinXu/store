@@ -43,16 +43,17 @@ class StoreModel {
 
   /**
    * @param {Object} values
-   * @return {Object<string, Array<string>>}
+   * @return {?Object<string, Array<string>>}
    */
   valid (values) {
     const validator = this.validator()
-    const results = []
+    const results = {}
 
     let propKey
     let valid
     let fault
     let msg
+    let has = fault
 
     for (propKey in validator) {
       if (!hasOwnProperty.call(validator, propKey) || !hasOwnProperty.call(values, propKey)) {
@@ -71,10 +72,11 @@ class StoreModel {
 
       if (fault) {
         results[propKey] = msg
+        has = true
       }
     }
 
-    return results
+    return has ? results : null
   }
 
   /**
@@ -89,7 +91,7 @@ class StoreModel {
 
     for (let propKey  in values) {
       if (!hasOwnProperty.call(values, propKey)) continue
-      if (hasOwnProperty.call(msg, propKey)) continue
+      if (msg && hasOwnProperty.call(msg, propKey)) continue
       this[propKey] = values[propKey]
     }
 

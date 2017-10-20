@@ -47,7 +47,7 @@ const DateTypes = {
  * @return {ValidDecorate}
  */
 function DateType (ValidType, msg) {
-  function validator (value, target) {
+  function validator (value) {
     return toString.call(value) === `[object ${ValidType.type}]`
   }
 
