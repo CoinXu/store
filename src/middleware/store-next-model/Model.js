@@ -11,6 +11,23 @@ import { ValidatorDefaultBuffer, hasOwnProperty, template } from '../../decorate
 
 class StoreModel {
 
+  constructor () {
+    this.__listener__ = null
+    this.__message__ = {}
+    this.__validator__ = this.validator()
+  }
+
+  /**
+   * @param {Object} action
+   * @param {Function} done
+   * @return {StoreModel}
+   */
+  scheduler (action, done) {
+    console.error('Store Model must implement scheduler method')
+    done()
+    return this
+  }
+
   /**
    * @param {function} listener
    * @return {StoreModel}
@@ -46,37 +63,46 @@ class StoreModel {
    * @return {?Object<string, Array<string>>}
    */
   valid (values) {
-    const validator = this.validator()
-    const results = {}
+    const validator = this.__validator__
+    const message = this.__message__
 
     let propKey
     let valid
     let fault
-    let msg
-    let has = fault
+    let arr
 
-    for (propKey in validator) {
-      if (!hasOwnProperty.call(validator, propKey) || !hasOwnProperty.call(values, propKey)) {
+    for (propKey in values) {
+      if (!hasOwnProperty.call(values, propKey) || !hasOwnProperty.call(validator, propKey)) {
         continue
       }
 
       valid = validator[propKey]
-      msg = []
+      arr = []
       fault = valid.some(function (vb) {
         if (vb.validator(values[propKey])) {
           return false
         }
-        msg.push(template(vb.msg, { key: propKey }))
+        arr.push(template(vb.msg, { key: propKey }))
         return true
       })
 
       if (fault) {
-        results[propKey] = msg
-        has = true
+        message[propKey] = arr
+      } else {
+        message[propKey] = null
       }
     }
 
-    return has ? results : null
+    const result = {}
+    let has = false
+
+    for (propKey in message) {
+      if (!hasOwnProperty.call(message, propKey) || message[propKey] === null) continue
+      has = true
+      result[propKey] = message[propKey]
+    }
+
+    return has ? result : null
   }
 
   /**
