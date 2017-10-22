@@ -9,33 +9,11 @@ import { ValidatorDefaultBuffer, hasOwnProperty, template } from '../../decorate
  * @typedef {Object<string, Array<string>>} ValidMessage
  */
 
-class StoreModel {
+class Validator {
 
   constructor () {
-    this.__listener__ = null
     this.__message__ = {}
     this.__validator__ = this.validator()
-  }
-
-  /**
-   * @param {Object} action
-   * @param {Function} done
-   * @return {StoreModel}
-   */
-  scheduler (action, done) {
-    console.error('Store Model must implement scheduler method')
-    done()
-    return this
-  }
-
-  /**
-   * @param {function} listener
-   * @return {StoreModel}
-   */
-  listen (listener) {
-    // TODO 不占用this属性名
-    this.__listener__ = listener
-    return this
   }
 
   /**
@@ -56,6 +34,25 @@ class StoreModel {
     }
 
     return validators
+  }
+
+  /**
+   * @return {?Object<string, Array<string>>}
+   */
+  getValid () {
+    const result = {}
+    const message = this.__message__
+
+    let has
+    let propKey
+
+    for (propKey in message) {
+      if (!hasOwnProperty.call(message, propKey) || message[propKey] === null) continue
+      has = true
+      result[propKey] = message[propKey]
+    }
+
+    return has ? result : null
   }
 
   /**
@@ -93,42 +90,37 @@ class StoreModel {
       }
     }
 
-    const result = {}
-    let has = false
-
-    for (propKey in message) {
-      if (!hasOwnProperty.call(message, propKey) || message[propKey] === null) continue
-      has = true
-      result[propKey] = message[propKey]
-    }
-
-    return has ? result : null
+    return this.getValid()
   }
 
   /**
    * 更新数据
    * @param {Object|string} valuesOrKey
    * @param {*} [valueOrUndef]
-   * @return {StoreModel}
+   * @return {Validator}
    */
   set (valuesOrKey, valueOrUndef) {
     const values = arguments.length === 2 ? { [valuesOrKey]: valueOrUndef } : valuesOrKey
-    const msg = this.valid(values)
+    const validate = this.valid(values)
 
     for (let propKey  in values) {
       if (!hasOwnProperty.call(values, propKey)) continue
-      if (msg && hasOwnProperty.call(msg, propKey)) continue
+      if (validate && hasOwnProperty.call(validate, propKey)) continue
       this[propKey] = values[propKey]
-    }
-
-    if (this.__listener__) {
-      this.__listener__(msg)
     }
 
     return this
   }
+
+  /**
+   * @param {*} ins
+   * @return {boolean}
+   */
+  static isValidator (ins) {
+    return ins instanceof Validator
+  }
 }
 
 export {
-  StoreModel
+  Validator
 }
