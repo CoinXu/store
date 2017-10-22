@@ -80,10 +80,13 @@ class User extends Validator {
    @Required()
    group_id = null
 }
+
+// Action
 const Action = { fetch_user: 'FETCH_USER', fetch_group: 'FETCH_GROUP' }
+
 const scheduler_user = function(action, model, done){
   if(action.type === Action.fetch_user){
-    fetch(`/api/user/${action.payload}/info').then(user => {
+    fetch(`/api/user/${action.payload}/info`).then(user => {
       model.set(user)
       done()
     })
@@ -96,9 +99,10 @@ class Group extends Validator {
   @Required()
   id = null
 }
+
 const scheduler_group = function(action, model, done){
   if(action.type === Action.fetch_group){
-    fetch(`/api/group/${action.payload}/info').then(user => {
+    fetch(`/api/group/${action.payload}/info`).then(user => {
       model.set(user)
       done()
     })
