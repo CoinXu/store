@@ -101,7 +101,7 @@ const scheduler_group = function(action, model, done){
     fetch(`/api/group/${action.payload}/info').then(user => {
       model.set(user)
       done()
-    )
+    })
   }
 }
 
