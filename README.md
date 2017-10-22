@@ -86,7 +86,7 @@ const scheduler_user = function(action, model, done){
     fetch(`/api/user/${action.payload}/info').then(user => {
       model.set(user)
       done()
-    )
+    })
   }
 }
 
@@ -132,7 +132,7 @@ store.dispatch(
 # APIS
 TODO
 
-# Plugins
+# Middleware
 TODO
 
 # Examples
