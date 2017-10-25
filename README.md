@@ -78,30 +78,38 @@ const Action = { initialize: 'INITIALIZE' }
 
 // define user middleware
 store.use(function(action, state, next){
-  if(action.type === Action.initialize){
-    fetch(`/api/user/${action.payload}/info`).then(user => {
-      next({user})
-    })
-  }
-  next({user:{}})
+    const { type, payload } = action
+    switch (type) {
+      case Action.initialize:
+        window.fetch(`/api/user/${payload}/info`).then(group => {
+          next({group})
+        })
+        break
+      default:
+        next()
+    }
 })
 
 // define group middleware
 store.use(function(action, state, next){
-  if(action.type === Action.initialize){
-    // 由于中间件是有序的，所以此时state.user已经获取到了
-    // 可以直接使用
-    fetch(`/api/group/${state.user.group_id}/info`).then(group => {
-      next({group})
-    })
+  const { type, payload } = action
+  switch (type) {
+    case Action.initialize:
+      // 由于中间件是有序的，所以此时state.user已经获取到了
+      // 可以直接使用
+      window.fetch(`/api/group/${state.user.group_id}/info`).then(group => {
+        next({group})
+      })
+      break
+    default:
+      next()
   }
-  next({group:{}})
 })
 
 // 建立完成后，派发action
 store.dispatch(
- {type: Action.initialize, payload: 'user_record_id'},
- state => console.log(state.user, state.group)
+  { type: Action.initialize, payload: 'user_record_id'  }, 
+  state => console.log(state.user, state.group)
 )
 ```
 上面的代码是Store最基本的示例，实际上Store提供了一些基础的中间件来更好的组织代的代码。
