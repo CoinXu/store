@@ -79,7 +79,7 @@ declare namespace store {
     scheduler(this: ViewModel<T>, state: T, action: ActionDesc, next: StoreNext): T | void
   }
 
-  interface ViewModel<T> extends Model<T>, ViewModelDesc<T> {
+  interface ViewModel<T> extends Model<T> {
     readonly store: Store<any>
   }
 
