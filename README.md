@@ -68,76 +68,65 @@ Store认为每个action都是有序或独立的，比如`A->B->C`或`A`,`B`,`C`�
 
 同样处理上面的问题，Store的代码大致如下：
 ```js
-import { Store, storeValidatorCreator, Vlidator, DateType, DateTypes, Required } from 'strore'
-
-// define user model
-class User extends Validator {
-   @DateType(DateTypes.PRIM_STR)
-   @Required()
-   id = null
-
-   @DateType(DateTypes.PRIM_STR)
-   @Required()
-   group_id = null
-}
-
-// Action
-const Action = { fetch_user: 'FETCH_USER', fetch_group: 'FETCH_GROUP' }
-
-const scheduler_user = function(action, model, done){
-  if(action.type === Action.fetch_user){
-    fetch(`/api/user/${action.payload}/info`).then(user => {
-      model.set(user)
-      done()
-    })
-  }
-}
-
-// define group model
-class Group extends Validator {
-  @DateType(DateTypes.PRIM_STR)
-  @Required()
-  id = null
-}
-
-const scheduler_group = function(action, model, done){
-  if(action.type === Action.fetch_group){
-    fetch(`/api/group/${action.payload}/info`).then(user => {
-      model.set(user)
-      done()
-    })
-  }
-}
+import { Store } from 'strore'
 
 // create store
 const store = new Store()
-// 注意：首先创建User
-storeValidatorCreator({
-  namespace: 'User',
-  model: new User(),
-  scheduler: scheduler_user,
-  map: model => ({id: model.id, group_id: model.group_id})
-}, store)
-// 然后创建Group
-storeValidatorCreator({
-  namespace: 'Group',
-  model: new Group(),
-  scheduler: scheduler_group,
-  map: model => ({id: model.id})
-}, store)
+
+// Action
+const Action = { initialize: 'INITIALIZE' }
+
+// define user middleware
+store.use(function(action, state, next){
+    const { type, payload } = action
+    switch (type) {
+      case Action.initialize:
+        window.fetch(`/api/user/${payload}/info`).then(group => {
+          next({group})
+        })
+        break
+      default:
+        next()
+    }
+})
+
+// define group middleware
+store.use(function(action, state, next){
+  const { type, payload } = action
+  switch (type) {
+    case Action.initialize:
+      // 由于中间件是有序的，所以此时state.user已经获取到了
+      // 可以直接使用
+      window.fetch(`/api/group/${state.user.group_id}/info`).then(group => {
+        next({group})
+      })
+      break
+    default:
+      next()
+  }
+})
 
 // 建立完成后，派发action
 store.dispatch(
- {type: Action.fetch_usr, payload: 'user_record_id'},
- state => store.dispatch({type: Action.fetch_group, payload: state.User.group_id})
+  { type: Action.initialize, payload: 'user_record_id'  }, 
+  state => console.log(state.user, state.group)
 )
 ```
+上面的代码是Store最基本的示例，实际上Store提供了一些基础的中间件来更好的组织代的代码。
+比如`storeViewModelCreator`,`StoreValidatorCreator`等
 
 # APIS
-TODO
++ Store.initialize        详细文档待补充
++ Store.dispatch          详细文档待补充
++ Store.use               详细文档待补充
++ store.getState          详细文档待补充
++ store.subscribe         详细文档待补充
 
 # Middleware
-TODO
++ storeModelCreator       详细文档待补充
++ storeViewModelCreator   详细文档待补充
++ storeValidatorCreator   详细文档待补充
++ storeCollectionCreator  详细文档待补充
 
 # Examples
 TODO
