@@ -90,6 +90,13 @@ class ValidatorBuffer {
 const ValidatorDefaultBuffer = new ValidatorBuffer()
 
 /**
+ * @typedef {function} ValidDecorate
+ * @param {*} target
+ * @param {string} key
+ * @param {object} descriptor
+ */
+
+/**
  * @param {Validator} validator
  * @param {string} msg
  * @return {ValidDecorate}
