@@ -69,9 +69,7 @@ class Validator {
     let arr
 
     for (propKey in values) {
-      if (!hasOwnProperty.call(values, propKey) || !hasOwnProperty.call(validator, propKey)) {
-        continue
-      }
+      if (!hasOwnProperty.call(values, propKey) || !hasOwnProperty.call(validator, propKey)) continue
 
       valid = validator[propKey]
       arr = []
@@ -83,11 +81,7 @@ class Validator {
         return true
       })
 
-      if (fault) {
-        message[propKey] = arr
-      } else {
-        message[propKey] = null
-      }
+      message[propKey] = fault ? arr : null
     }
 
     return this.getValid()

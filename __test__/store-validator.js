@@ -74,7 +74,13 @@ describe('Store.middleware.Validator', function () {
     equal(user.getValid().age.length, 1)
   })
 
-  it('A object or null returned while Validator.valid(values) called', function () {
+  it('Validator will ignore null', function () {
+    const user = new User()
+    user.valid({ age: null, name: null, gender: null, email: null })
+    equal(user.getValid(), null)
+  })
+
+  it('An Array that include validate message returned while Validator.valid(values) called', function () {
     const user = new User()
     user.valid({ age: -1 })
     equal(user.getValid().age.length, 1)
@@ -88,8 +94,7 @@ describe('Store.middleware.Validator', function () {
 
   it('A legal value will be assign to property through Validator.set method', function () {
     const user = new User()
-    user.set('age', 0)
-    equal(user.age, 0)
+    equal(user.age, null)
   })
 
   it('Validator.isValidator is a static method to valid argument is a Validator instance', function () {

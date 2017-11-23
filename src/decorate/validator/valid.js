@@ -25,7 +25,7 @@ function template (temp, values) {
 /**
  * @typedef {Object} ValidatorBuffer
  * @property {string} msg
- * @property {Validator} validator
+ * @property {ValidatorDesc} validator
  */
 
 /**
@@ -46,7 +46,7 @@ class ValidatorBuffer {
   /**
    * @param {Object} target
    * @param {string} key
-   * @param {Validator} validator
+   * @param {ValidatorDesc} validator
    * @param {string} msg
    * @return {ValidatorBuffer}
    */
@@ -87,6 +87,9 @@ class ValidatorBuffer {
   }
 }
 
+/**
+ * @type {ValidatorBuffer}
+ */
 const ValidatorDefaultBuffer = new ValidatorBuffer()
 
 /**
@@ -94,16 +97,33 @@ const ValidatorDefaultBuffer = new ValidatorBuffer()
  * @param {*} target
  * @param {string} key
  * @param {object} descriptor
+ * @return {object}
  */
 
 /**
- * @param {Validator} validator
+ * @typedef {function} ValidatorDesc
+ * @param {*} value
+ * @return {boolean}
+ */
+
+/**
+ * @param {ValidatorDesc} validator
  * @param {string} msg
  * @return {ValidDecorate}
  */
 function decorate (validator, msg) {
+  /**
+   * 如果value为初始值,直接返回true
+   * 使用null标识初始值
+   * @param {*} value
+   * @return {boolean}
+   */
+  function wrapper (value) {
+    return value === null || validator(value)
+  }
+
   return function (target, key, descriptor) {
-    ValidatorDefaultBuffer.add(target, key, validator, msg)
+    ValidatorDefaultBuffer.add(target, key, wrapper, msg)
     return descriptor
   }
 }

@@ -129,6 +129,59 @@ declare namespace store {
   export const Collection: CollectionConstructor
 
   export function storeCollectionCreator<T, K> (desc: CollectionDesc<T>, store: Store<K>): Store<K>
+
+  // ====================
+  // validator
+  // ====================
+
+  type ValidatorMessageMap<T> = { [P in keyof T]?: string[] }
+  type ValidatorsMap<T> = { [P in keyof T]?: ValidatorBuffer }
+
+  interface Validator<T> {
+    readonly __message__: ValidatorMessageMap<T>
+    readonly __validator__: ValidatorsMap<T>
+
+    validator(): ValidatorsMap<T>
+    getValid(): ValidatorMessageMap<T> | null
+    valid(values: {[P in keyof T]?:any}): ValidatorMessageMap<T> | null
+    set(valuesOrKey: {[P in keyof T]?:any} | string, valueOrUndef: any | void): Validator<T>
+    isValidator(ins: any): boolean
+  }
+
+  interface ValidatorConstructor {
+    new<T>(): Validator<T>
+  }
+
+  export const Validator: ValidatorConstructor
+
+  interface ValidatorBuffer {
+    msg: string
+    validator: Validator
+  }
+
+  interface TargetValidator {
+    target: any
+    validator: { [key: string]: ValidatorBuffer }
+  }
+
+  interface ValidatorBuffer {
+    readonly buffer: Array<TargetValidator>
+
+    add(target: any, key: string, validator: Validator, msg: string): ValidatorBuffer
+    get(target: any): { [key: string]: ValidatorBuffer[] } | null
+    destroy(target: any): ValidatorBuffer
+  }
+
+  interface ValidDecorate {
+    (target: any, key: string, descriptor: any): any
+  }
+
+  export const ValidatorDefaultBuffer: ValidatorBuffer
+  export const hasOwnProperty = Object.prototype.hasOwnProperty
+
+  export function decorate (validator: Validator, msg: string): ValidDecorate
+  export function template (temp: string, values: { [key: string]: any }): string
+
 }
 
 
