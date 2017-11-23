@@ -72,14 +72,14 @@ declare namespace store {
 
   export const Model: ModelConstructor;
 
-  export function storeModelCreator<T, U extends Store<U>> (mods: Array<ModelDesc<T> | Model<T>>, store: U): U
+  export function storeModelCreator<T, K> (mods: Array<ModelDesc<T> | Model<T>>, store: Store<K>): Store<K>
 
   // storeViewModelCreator
   interface ViewModelDesc<T> extends ModelDesc<T> {
     scheduler(this: ViewModel<T>, state: T, action: ActionDesc, next: StoreNext): T | void
   }
 
-  interface ViewModel<T> extends Model<T>, ViewModelDesc<T> {
+  interface ViewModel<T> extends Model<T> {
     readonly store: Store<any>
   }
 
@@ -90,7 +90,7 @@ declare namespace store {
 
   export const ViewModel: ViewModelConstructor
 
-  export function storeViewModelCreator<T, U extends Store<U>> (mods: Array<ViewModelDesc<T> | ViewModel<T>>, store: U): U
+  export function storeViewModelCreator<T, K> (mods: Array<ViewModelDesc<T> | ViewModel<T>>, store: Store<K>): Store<K>
 
   // storeCollectionCreator
   interface CollectionJSON<T> {
@@ -128,7 +128,7 @@ declare namespace store {
 
   export const Collection: CollectionConstructor
 
-  export function storeCollectionCreator<T, U extends Store<U>> (desc: CollectionDesc<T>, store: U): U
+  export function storeCollectionCreator<T, K> (desc: CollectionDesc<T>, store: Store<K>): Store<K>
 }
 
 
