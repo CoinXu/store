@@ -176,11 +176,38 @@ declare namespace store {
     (target: any, key: string, descriptor: any): any
   }
 
-  export const ValidatorDefaultBuffer: ValidatorBuffer
-  export const hasOwnProperty = Object.prototype.hasOwnProperty
+  interface StoreValidatorDesc {
+    namespace: string
+    model: Validator,
+    scheduler(action: ActionDesc, model: Validator, next: StoreNext)
+    map(): { [key: string]: any }
+  }
 
-  export function decorate (validator: Validator, msg: string): ValidDecorate
-  export function template (temp: string, values: { [key: string]: any }): string
+  export namespace Validates {
+    export enum DataTypes {
+      PRIM_BOOL,
+      PRIM_NUM,
+      PRIM_STR,
+      PRIM_STR,
+      PRIM_NL,
+      PRIM_UNDEF,
+      PRIM_SYMBOL,
+
+      OBJ_O,
+      OBJ_A
+    }
+
+    export function DateType (ValidType: DataTypes, msg?: string): ValidDecorate
+    export function Enum<T> (enumDate: { [P in keyof T]: T[P] }, msg?: string): ValidDecorate
+    export function Pattern (pattern: RegExp, msg?: string): ValidDecorate
+    export function Required (msg?: string): ValidDecorate
+    export function MaxLen (length: number, msg?: string): ValidDecorate
+    export function MinLen (length: number, msg?: string): ValidDecorate
+    export function RangeLen (min: number, max: number, msg?: string): ValidDecorate
+    export function Max (num: number, msg?: string): ValidDecorate
+    export function Min (num: number, msg?: string): ValidDecorate
+    export function Range (min: number, max: number, msg?: string): ValidDecorate
+  }
 
 }
 
