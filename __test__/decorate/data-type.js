@@ -4,15 +4,15 @@
  */
 
 import { ok } from 'assert'
-import { DateType, DateTypes } from '../../src/decorate/validator'
+import { DataType, DataTypes } from '../../src/decorate/validator'
 import { Validator } from '../../src/middleware/store-validator/Validator'
 
-describe('Validator.DateType', function () {
+describe('Validator.DataType', function () {
 
   // bool
   it('Set value that not boolean type to a boolean property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.PRIM_BOOL)
+      @DataType(DataTypes.PRIM_BOOL)
       val = null
     }
 
@@ -24,7 +24,7 @@ describe('Validator.DateType', function () {
   // number
   it('Set value that not number type to a number property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.PRIM_NUM)
+      @DataType(DataTypes.PRIM_NUM)
       num = null
     }
 
@@ -36,7 +36,7 @@ describe('Validator.DateType', function () {
   // string
   it('Set value that not string type to a string property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.PRIM_STR)
+      @DataType(DataTypes.PRIM_STR)
       val = null
     }
 
@@ -48,7 +48,7 @@ describe('Validator.DateType', function () {
   // null
   it('Set value that not null type to a null property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.PRIM_NL)
+      @DataType(DataTypes.PRIM_NL)
       val = null
     }
 
@@ -60,7 +60,7 @@ describe('Validator.DateType', function () {
   // undef
   it('Set value that not undefined type to a undefined property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.PRIM_UNDEF)
+      @DataType(DataTypes.PRIM_UNDEF)
       val = null
     }
 
@@ -72,7 +72,7 @@ describe('Validator.DateType', function () {
   // symbol
   it('Set value that not symbol type to a symbol property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.PRIM_SYMBOL)
+      @DataType(DataTypes.PRIM_SYMBOL)
       val = null
     }
 
@@ -84,7 +84,7 @@ describe('Validator.DateType', function () {
   // object
   it('Set value that not object type to a object property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.OBJ_O)
+      @DataType(DataTypes.OBJ_O)
       val = null
     }
 
@@ -96,7 +96,7 @@ describe('Validator.DateType', function () {
   // array
   it('Set value that not array type to a array property will receive error message', function () {
     class D extends Validator {
-      @DateType(DateTypes.OBJ_A)
+      @DataType(DataTypes.OBJ_A)
       val = null
     }
 

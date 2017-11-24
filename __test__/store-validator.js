@@ -7,8 +7,8 @@ import Store from '../src/Store'
 import { storeValidatorCreator } from '../src/middleware/store-validator'
 import { Validator } from '../src/middleware/store-validator/Validator'
 import {
-  DateType,
-  DateTypes,
+  DataType,
+  DataTypes,
 
   Enum,
   Pattern,
@@ -32,13 +32,13 @@ const Gender = {
 class User extends Validator {
   @Max(200)
   @Min(0)
-  @DateType(DateTypes.PRIM_NUM)
+  @DataType(DataTypes.PRIM_NUM)
   @Required()
   age = null
 
   @MaxLen(32)
   @MinLen(4)
-  @DateType(DateTypes.PRIM_STR)
+  @DataType(DataTypes.PRIM_STR)
   @Required()
   name = null
 
@@ -47,7 +47,7 @@ class User extends Validator {
 
   @Pattern(/^\w+\.@\w+\.\w+$/, '邮箱格式为xxx@yyy.zzz')
   @RangeLen(6, 32)
-  @DateType(DateTypes.PRIM_STR)
+  @DataType(DataTypes.PRIM_STR)
   @Required()
   email = null
 }
@@ -106,7 +106,7 @@ describe('Store.middleware.Validator', function () {
   it('When A extends Validator & B extends A. B will extend all property and that validator decorator from A', function () {
     class GameUser extends User {
       @Range(0, 175)
-      @DateType(DateTypes.PRIM_NUM)
+      @DataType(DataTypes.PRIM_NUM)
       @Required()
       level = 0
     }

@@ -26,7 +26,7 @@ function creator (type) {
 }
 
 /** @type {Object<string, ValidTypeDesc>} */
-const DateTypes = {
+const DataTypes = {
   // Primitive
   PRIM_BOOL: creator('Boolean'),
   PRIM_NUM: creator('Number'),
@@ -46,7 +46,7 @@ const DateTypes = {
  * @param {string} [msg]
  * @return {ValidDecorate}
  */
-function DateType (ValidType, msg) {
+function DataType (ValidType, msg) {
   function validator (value) {
     return toString.call(value) === `[object ${ValidType.type}]`
   }
@@ -54,9 +54,9 @@ function DateType (ValidType, msg) {
   return decorate(validator, msg || ValidType.msg)
 }
 
-DateType.DateTypes = DateTypes
+DataType.DataTypes = DataTypes
 
 export {
-  DateTypes,
-  DateType
+  DataTypes,
+  DataType
 }

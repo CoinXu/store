@@ -197,7 +197,7 @@ declare namespace store {
       OBJ_A
     }
 
-    export function DateType (ValidType: DataTypes, msg?: string): ValidDecorate
+    export function DataType (ValidType: DataTypes, msg?: string): ValidDecorate
     export function Enum<T> (enumDate: { [P in keyof T]: T[P] }, msg?: string): ValidDecorate
     export function Pattern (pattern: RegExp, msg?: string): ValidDecorate
     export function Required (msg?: string): ValidDecorate

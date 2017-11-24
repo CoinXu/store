@@ -3,7 +3,7 @@
  * @Date 17-10-19
  */
 
-import { DateType, DateTypes } from './data-type'
+import { DataType, DataTypes } from './data-type'
 import { Enum } from './enum'
 import { MaxLen } from './len-max'
 import { MinLen } from './len-min'
@@ -15,8 +15,8 @@ import { Pattern } from './pattern'
 import { Required } from './required'
 
 export {
-  DateType,
-  DateTypes,
+  DataType,
+  DataTypes,
 
   Enum,
   Pattern,
