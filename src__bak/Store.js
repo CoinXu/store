@@ -4,7 +4,7 @@
  */
 
 import { warning, isPureObject, assert, noop, isString, isFunction, isArray, } from './utils/utils'
-import compose  from './utils/compose'
+import compose from './utils/compose'
 
 const DefAction = { type: '__INITIALIZE__ACTION__' }
 
@@ -28,7 +28,7 @@ class Store {
    * @constructor
    * @param {object} state
    */
-  constructor (state = {}) {
+  constructor(state = {}) {
     this.mw = []
     this.state = { ...state }
     this.observer = noop
@@ -39,7 +39,7 @@ class Store {
    * 当然用户也可指定。
    * @param {object} [action]
    */
-  initialize (action = DefAction) {
+  initialize(action = DefAction) {
     return this.dispatch(action)
   }
 
@@ -52,7 +52,7 @@ class Store {
    * @return {Store}
    * @private
    */
-  _dispose (action, callback) {
+  _dispose(action, callback) {
     warning(isString(action.type), 'type of action must be a string')
 
     compose(this.mw)(
@@ -71,7 +71,7 @@ class Store {
    * @private
    * @return {Store}
    */
-  single (action, callback) {
+  single(action, callback) {
     return this._dispose(action, state => {
       this.observer(state)
       if (isFunction(callback)) callback(state)
@@ -85,7 +85,7 @@ class Store {
    * @private
    * @return {Store}
    */
-  multiple (actions, callback) {
+  multiple(actions, callback) {
     const list = actions.map(action => (a, b, next) => this._dispose(action, () => next()))
     compose(list)(null, null, noop, () => {
       this.observer(this.state)
@@ -99,7 +99,7 @@ class Store {
    * @param {object|Array<Object>} actionOrActions
    * @param {function} [callback]
    */
-  dispatch (actionOrActions, callback) {
+  dispatch(actionOrActions, callback) {
 
     if (isPureObject(actionOrActions)) {
       return this.single(actionOrActions, callback)
@@ -120,7 +120,7 @@ class Store {
    * @param {StoreMiddleware} mw
    * @return {Store}
    */
-  use (mw) {
+  use(mw) {
     assert(isFunction(mw), 'Middleware must be composed of functions')
     this.mw.push(mw)
     return this
@@ -130,7 +130,7 @@ class Store {
    * 获取当存储的 state
    * @return {object}
    */
-  getState () {
+  getState() {
     return Object.assign({}, this.state)
   }
 
@@ -139,7 +139,7 @@ class Store {
    * @param {function} observer
    * @return {Store}
    */
-  subscribe (observer) {
+  subscribe(observer) {
     assert(isFunction(observer), 'observer must be a function')
     this.observer = observer
     return this

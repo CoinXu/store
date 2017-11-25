@@ -3,3 +3,5 @@ node_modules
 *.log*
 yarn.lock
 lib/*
+__build__
+.DS_store

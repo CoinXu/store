@@ -3,6 +3,7 @@
   "version": "0.1.23",
   "description": "state manager",
   "author": "CoinXu<duanxian0605@gmail.com>",
+  "repository": "https://github.com/CoinXu/store",
   "bugs": {
     "url": "https://github.com/CoinXu/store/issues"
   },
@@ -12,29 +13,18 @@
     "multiple dispatch"
   ],
   "scripts": {
-    "webpack": "./node_modules/.bin/webpack",
-    "build": "rm -r ./lib && ./node_modules/.bin/babel ./src --out-dir ./lib",
-    "test": "./node_modules/.bin/mocha ./__test__/index.js",
+    "build": "rm -r ./lib && ./node_modules/.bin/tsc -p tsconfig.json",
+    "build:test": "rm -r ./__build__/* && ./node_modules/.bin/tsc -p tsconfig.test.json",
+    "test": "npm run build:test && ./node_modules/.bin/mocha ./lib/__build__",
     "prepublishOnly": "npm run build"
   },
   "main": "./lib",
-  "typings": "./@type/index.d.ts",
+  "typings": "./@types",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.24.1",
-    "babel-runtime": "^6.23.0",
+    "typescript": "2.6.1",
     "mocha": "^3.3.0",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "webpack": "^2.4.1"
+    "@types/mocha": "^2.2.44",
+    "@types/lodash": "^4.14.85"
   }
 }

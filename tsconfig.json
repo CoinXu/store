@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "target": "es3",
+    "outDir": "./lib",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "./@types",
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

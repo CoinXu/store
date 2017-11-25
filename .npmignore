@@ -6,3 +6,5 @@ webpack.config.js
 .gitignore
 yarn.*
 *.log*
+__build__
+.DS_store
