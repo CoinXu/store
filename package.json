@@ -15,7 +15,7 @@
     "webpack": "./node_modules/.bin/webpack",
     "build": "rm -r ./lib && ./node_modules/.bin/babel ./src --out-dir ./lib",
     "test": "./node_modules/.bin/mocha ./__test__/index.js",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "main": "./lib",
   "typings": "./@type/index.d.ts",
