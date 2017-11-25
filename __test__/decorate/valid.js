@@ -36,7 +36,7 @@ describe('Validator.valid', function () {
     equal(d.getValid(), null)
 
     d.set('val', 2)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string', 1)
 
     done()
   })
@@ -55,7 +55,7 @@ describe('Validator.valid', function () {
     equal(d.getValid(), null)
 
     d.set('val', 'a')
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string', 1)
 
     done()
   })
@@ -74,13 +74,13 @@ describe('Validator.valid', function () {
     equal(d.getValid(), null)
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', [])
     equal(d.getValid(), null)
 
     d.set('val', '')
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     done()
   })
@@ -96,13 +96,13 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', 'aa')
     equal(d.getValid(), null)
 
     d.set({ val: 1 })
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
     done()
   })
 
@@ -116,7 +116,7 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', '123')
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', '1')
     equal(d.getValid(), null)
@@ -136,13 +136,13 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', 'aa')
     equal(d.getValid(), null)
 
     d.set({ val: '1' })
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
     done()
   })
 
@@ -156,13 +156,13 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', 'aa')
     equal(d.getValid(), null)
 
     d.set({ val: '1234' })
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
     done()
   })
 
@@ -176,13 +176,13 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', 0)
     equal(d.getValid(), null)
 
     d.set({ val: 3 })
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
     done()
   })
 
@@ -196,13 +196,13 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', 3)
     equal(d.getValid(), null)
 
     d.set({ val: 1 })
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
     done()
   })
 
@@ -215,13 +215,13 @@ describe('Validator.valid', function () {
     const d = new D()
 
     d.set('val', void 0)
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
 
     d.set('val', 2)
     equal(d.getValid(), null)
 
     d.set({ val: 0 })
-    equal(d.getValid().val.length, 1)
+    equal(typeof d.getValid().val, 'string')
     done()
   })
 })

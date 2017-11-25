@@ -1,2 +1,2 @@
-import './data-type'
 import './valid'
+import './data-type'

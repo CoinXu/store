@@ -37,7 +37,61 @@ class Validator {
   }
 
   /**
-   * @return {?Object<string, Array<string>>}
+   * 验证单个key
+   * @param {string} key
+   * @param {*} value
+   * @return {?string}
+   */
+  validOne (key, value) {
+    const validator = this.__validator__[key]
+
+    if (validator === void 0) {
+      return null
+    }
+
+    let message = null
+    let length = validator.length
+    let i = 0
+    let vb
+
+    // 一个验证失败后不再继续验证
+    for (; i < length; i++) {
+      vb = validator[i]
+      if (!vb.validator(value)) {
+        message = template(vb.msg, { key })
+        break
+      }
+    }
+
+    return message
+  }
+
+  /**
+   * 验证一个object上所有字段
+   * @param {Object} values
+   * @return {?Object<string, string>}
+   */
+  valid (values) {
+    const message = {}
+
+    let propKey
+    let msg
+    let has = false
+
+    for (propKey in values) {
+      if (!hasOwnProperty.call(values, propKey)) continue
+      msg = this.validOne(propKey, values[propKey])
+      if (msg !== null) {
+        has = true
+        message[propKey] = msg
+      }
+    }
+
+    return has ? message : null
+  }
+
+  /**
+   * @return {?Object<string, string>}
    */
   getValid () {
     const result = {}
@@ -56,67 +110,25 @@ class Validator {
   }
 
   /**
-   * 验证单个key
-   * @param {string} key
-   * @param {*} value
-   * @return {Array<string>}
-   */
-  validOne (key, value) {
-    const valid = this.__validator__[key]
-    const message = []
-
-    if (valid === void 0) {
-      return message
-    }
-
-    // 一个验证失败后不再继续验证
-    valid.some(function (vb) {
-      if (vb.validator(value)) {
-        return false
-      }
-      message.push(template(vb.msg, { key }))
-      return true
-    })
-
-    return message
-  }
-
-  /**
-   * @param {Object} values
-   * @return {?Object<string, Array<string>>}
-   */
-  valid (values) {
-    const message = this.__message__
-
-    let propKey
-    let msg
-
-    for (propKey in values) {
-      if (!hasOwnProperty.call(values, propKey)) continue
-      msg = this.validOne(propKey, values[propKey])
-      message[propKey] = msg.length ? msg : null
-    }
-
-    return this.getValid()
-  }
-
-  /**
    * 更新数据
    * @param {Object|string} valuesOrKey
    * @param {*} [valueOrUndef]
-   * @return {Validator}
+   * @return {?Object<string, string>}
    */
   set (valuesOrKey, valueOrUndef) {
     const values = arguments.length === 2 ? { [valuesOrKey]: valueOrUndef } : valuesOrKey
-    const validate = this.valid(values)
+    const message = this.valid(values)
+
+    // 保存检测状态
+    this.__message__ = message === null ? {} : message
 
     for (let propKey  in values) {
       if (!hasOwnProperty.call(values, propKey)) continue
-      if (validate && hasOwnProperty.call(validate, propKey)) continue
+      if (message && hasOwnProperty.call(message, propKey)) continue
       this[propKey] = values[propKey]
     }
 
-    return this
+    return message
   }
 
   /**

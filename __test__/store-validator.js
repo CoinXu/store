@@ -65,25 +65,35 @@ describe('Store.middleware.Validator', function () {
     ok(validator.email.length === 4)
   })
 
+  it('Should get null while Validator.validOne(key, value) pass', function () {
+    const user = new User()
+    equal(user.validOne('age', 1), null)
+  })
+
+  it('Should get string while Validator.validOne(key, value) not pass', function () {
+    const user = new User()
+    equal(typeof user.validOne('age', -1), 'string')
+  })
+
   it('A object or null returned while Validator.getValid() called', function () {
     const user = new User()
     // no valid error
     equal(user.getValid(), null)
     // set a illegal value
     user.set('age', -1)
-    equal(user.getValid().age.length, 1)
+    equal(typeof user.getValid().age, 'string')
   })
 
   it('Validator will ignore null', function () {
     const user = new User()
-    user.valid({ age: null, name: null, gender: null, email: null })
+    user.set({ age: null, name: null, gender: null, email: null })
     equal(user.getValid(), null)
   })
 
-  it('An Array that include validate message returned while Validator.valid(values) called', function () {
+  it('Should get a string message while Validator.valid(values) not pass', function () {
     const user = new User()
-    user.valid({ age: -1 })
-    equal(user.getValid().age.length, 1)
+    user.set({ age: -1 })
+    equal(typeof user.getValid().age, 'string')
   })
 
   it('A illegal value will be ignore through Validator.set method', function () {
@@ -113,13 +123,13 @@ describe('Store.middleware.Validator', function () {
 
     const user = new GameUser()
     user.set({ age: -1, name: '', gender: -1, email: '' })
-    equal(user.getValid().age.length, 1)
-    equal(user.getValid().name.length, 1)
-    equal(user.getValid().gender.length, 1)
-    equal(user.getValid().email.length, 1)
+    equal(typeof user.getValid().age, 'string')
+    equal(typeof user.getValid().name, 'string')
+    equal(typeof user.getValid().gender, 'string')
+    equal(typeof user.getValid().email, 'string')
 
     user.set('level', -1)
-    equal(user.getValid().level.length, 1)
+    equal(typeof user.getValid().level, 'string')
   })
 })
 

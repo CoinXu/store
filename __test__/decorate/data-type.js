@@ -3,7 +3,7 @@
  * @Date 17-10-19
  */
 
-import { ok } from 'assert'
+import { equal } from 'assert'
 import { DataType, DataTypes } from '../../src/decorate/validator'
 import { Validator } from '../../src/middleware/store-validator/Validator'
 
@@ -18,7 +18,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: 0 })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 
   // number
@@ -30,7 +30,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ num: '-1' })
-    ok(d.getValid().num.length === 1)
+    equal(typeof d.getValid().num, 'string')
   })
 
   // string
@@ -42,7 +42,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: [] })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 
   // null
@@ -54,7 +54,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: 0 })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 
   // undef
@@ -66,7 +66,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: 1 })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 
   // symbol
@@ -78,7 +78,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: 0 })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 
   // object
@@ -90,7 +90,7 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: 0 })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 
   // array
@@ -102,6 +102,6 @@ describe('Validator.DataType', function () {
 
     const d = new D()
     d.set({ val: {} })
-    ok(d.getValid().val.length === 1)
+    equal(typeof d.getValid().val, 'string')
   })
 })
