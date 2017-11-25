@@ -56,32 +56,45 @@ class Validator {
   }
 
   /**
+   * 验证单个key
+   * @param {string} key
+   * @param {*} value
+   * @return {Array<string>}
+   */
+  validOne (key, value) {
+    const valid = this.__validator__[key]
+    const message = []
+
+    if (valid === void 0) {
+      return message
+    }
+
+    // 一个验证失败后不再继续验证
+    valid.some(function (vb) {
+      if (vb.validator(value)) {
+        return false
+      }
+      message.push(template(vb.msg, { key }))
+      return true
+    })
+
+    return message
+  }
+
+  /**
    * @param {Object} values
    * @return {?Object<string, Array<string>>}
    */
   valid (values) {
-    const validator = this.__validator__
     const message = this.__message__
 
     let propKey
-    let valid
-    let fault
-    let arr
+    let msg
 
     for (propKey in values) {
-      if (!hasOwnProperty.call(values, propKey) || !hasOwnProperty.call(validator, propKey)) continue
-
-      valid = validator[propKey]
-      arr = []
-      fault = valid.some(function (vb) {
-        if (vb.validator(values[propKey])) {
-          return false
-        }
-        arr.push(template(vb.msg, { key: propKey }))
-        return true
-      })
-
-      message[propKey] = fault ? arr : null
+      if (!hasOwnProperty.call(values, propKey)) continue
+      msg = this.validOne(propKey, values[propKey])
+      message[propKey] = msg.length ? msg : null
     }
 
     return this.getValid()

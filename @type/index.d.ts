@@ -143,6 +143,7 @@ declare namespace store {
 
     validator(): ValidatorsMap<T>
     getValid(): ValidatorMessageMap<T> | null
+    validOne(key: string, value: any): string[]
     valid(values: {[P in keyof T]?:any}): ValidatorMessageMap<T> | null
     set(valuesOrKey: {[P in keyof T]?:any} | string, valueOrUndef: any | void): Validator<T>
     isValidator(ins: any): boolean
