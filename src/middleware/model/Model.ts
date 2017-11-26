@@ -8,7 +8,7 @@ import { isPureObject, isString, isFunction, assert, assign } from '../../utils/
 import { Action, Next } from '../../interfaces'
 
 export interface ModelScheduler<T> {
-  (state: T, action: Action, done: (state: Partial<T>) => void): any
+  (this: Model<T>, state: T, action: Action, done: (state: Partial<T>) => void): any
 }
 
 export interface ModelDescription<T> {
@@ -50,15 +50,15 @@ export interface ModelDescription<T> {
 
 export default class Model<T> {
 
-  private name: string
-  private scheduler: ModelScheduler<T>
-  private state: T
+  protected name: string
+  protected scheduler: ModelScheduler<T>
+  protected state: T
 
   /**
    * @param {ModelDescription} desc
    * @constructor
    */
-  constructor (desc: ModelDescription<T>) {
+  constructor(desc: ModelDescription<T>) {
     const { name, scheduler, state } = desc
 
     assert(isString(name), 'name must be a string')
@@ -87,7 +87,7 @@ export default class Model<T> {
    * @return {Model}
    */
 
-  receiver (action: Action, storeState: any, next: Next<any>) {
+  receiver(action: Action, storeState: any, next: Next<any>) {
     const done = (state: Partial<T>) => this.done(state, next)
     const state: any = this.scheduler.call(this, this.state, action, done)
 
@@ -104,7 +104,7 @@ export default class Model<T> {
    * @param {Next} next
    * @return {Model}
    */
-  done (state: Partial<T>, next: Next<any>) {
+  done(state: Partial<T>, next: Next<any>) {
     assert(isPureObject(state), 'state must be a pure object');
 
     assign(this.state, state)
@@ -118,7 +118,7 @@ export default class Model<T> {
    * @param ins
    * @return {boolean}
    */
-  static isModel<T> (ins: any): ins is Model<T> {
+  static isModel<T>(ins: any): ins is Model<T> {
     return ins instanceof Model
   }
 }

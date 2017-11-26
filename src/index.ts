@@ -4,11 +4,17 @@
  * @description
  */
 
-import Store from './Store'
-import storeModelCreator from './middleware/model'
+import Store from "./Store"
+import Model from "./middleware/model/Model"
+import storeModelCreator from "./middleware/model"
+import ViewModel from "./middleware/view-model/ViewModel"
+import storeViewModelCreator from "./middleware/view-model"
 
 export {
   Store,
-  storeModelCreator
+  Model,
+  storeModelCreator,
+  ViewModel,
+  storeViewModelCreator
 }
 
