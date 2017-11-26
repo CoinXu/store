@@ -13,9 +13,11 @@
     "multiple dispatch"
   ],
   "scripts": {
-    "build": "rm -r ./lib && ./node_modules/.bin/tsc -p tsconfig.json",
-    "build:test": "rm -r ./__build__/* && ./node_modules/.bin/tsc -p tsconfig.test.json",
-    "test": "npm run build:test && ./node_modules/.bin/mocha ./lib/__build__",
+    "clean:build": "rm -rf ./lib/src/*",
+    "build": "npm run clean:build && ./node_modules/.bin/tsc",
+    "clean:test": "rm -rf ./lib/__test__/*",
+    "build:test": "npm run clean:test && ./node_modules/.bin/tsc",
+    "test": "npm run build:test && ./node_modules/.bin/mocha ./lib/__test__",
     "prepublishOnly": "npm run build"
   },
   "main": "./lib",
@@ -25,6 +27,6 @@
     "typescript": "2.6.1",
     "mocha": "^3.3.0",
     "@types/mocha": "^2.2.44",
-    "@types/lodash": "^4.14.85"
+    "@types/node": "8.0.53"
   }
 }
