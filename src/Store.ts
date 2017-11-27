@@ -23,7 +23,7 @@ export default class Store<T> {
   /**
    * @param {T} state
    */
-  constructor(state: T = {} as T) {
+  public constructor(state: T = {} as T) {
     this.mw = []
     // TODO 查看看这种代码应该怎么定义
     // 这写法也是无奈啊
@@ -36,7 +36,7 @@ export default class Store<T> {
    * 当然用户也可指定。
    * @param {Action} [action]
    */
-  initialize(action: Action = DefAction): Store<T> {
+  public initialize(action: Action = DefAction): Store<T> {
     return this.dispatch(action)
   }
 
@@ -45,7 +45,7 @@ export default class Store<T> {
    * @param {Action | Action[]} actionOrActions
    * @param {Observer} [callback]
    */
-  dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T> {
+  public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T> {
     if (isPureObject<Action>(actionOrActions)) {
       return this.single(actionOrActions, callback)
     }
@@ -68,7 +68,7 @@ export default class Store<T> {
    * @private
    * @return {Store}
    */
-  private single(action: Action, callback?: Observer<T>) {
+  protected single(action: Action, callback?: Observer<T>) {
     return this.dispose(action, (state: T) => {
       this.observer(state)
       if (isFunction(callback)) callback(state)
@@ -82,7 +82,7 @@ export default class Store<T> {
    * @private
    * @return {Store}
    */
-  private multiple(actions: Action[], callback?: Observer<T>): Store<T> {
+  protected multiple(actions: Action[], callback?: Observer<T>): Store<T> {
     const mws: Middleware<T>[] = actions.map((action): Middleware<T> => {
       return (a: Action, s: T, next: Next<T>): void => {
         this.dispose(action, (state: T) => next(state))
@@ -129,7 +129,7 @@ export default class Store<T> {
    * @param {Middleware} mw
    * @return {Store}
    */
-  use(mw: Middleware<T>): Store<T> {
+  public use(mw: Middleware<T>): Store<T> {
     assert(isFunction(mw), 'Middleware must be composed of functions')
     this.mw.push(mw)
     return this
@@ -139,7 +139,7 @@ export default class Store<T> {
    * 获取当存储的 state
    * @return {object}
    */
-  getState(): T {
+  public getState(): T {
     return assign({}, this.state)
   }
 
@@ -148,7 +148,7 @@ export default class Store<T> {
    * @param {Observer} observer
    * @return {Store}
    */
-  subscribe(observer: Observer<T>): Store<T> {
+  public subscribe(observer: Observer<T>): Store<T> {
     assert(isFunction(observer), 'observer must be a function')
     this.observer = observer
     return this

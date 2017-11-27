@@ -58,7 +58,7 @@ export default class Model<T> {
    * @param {ModelDescription} desc
    * @constructor
    */
-  constructor(desc: ModelDescription<T>) {
+  public constructor(desc: ModelDescription<T>) {
     const { name, scheduler, state } = desc
 
     assert(isString(name), 'name must be a string')
@@ -87,7 +87,7 @@ export default class Model<T> {
    * @return {Model}
    */
 
-  receiver(action: Action, storeState: any, next: Next<any>): Model<T> {
+  public receiver(action: Action, storeState: any, next: Next<any>): Model<T> {
     const done = (state: Partial<T>) => this.done(state, next)
     const state: any = this.scheduler.call(this, this.state, action, done)
 
@@ -104,7 +104,7 @@ export default class Model<T> {
    * @param {Next} next
    * @return {Model}
    */
-  done(state: Partial<T>, next: Next<any>): Model<T> {
+  public done(state: Partial<T>, next: Next<any>): Model<T> {
     assert(isPureObject(state), 'state must be a pure object');
 
     assign(this.state, state)
@@ -118,7 +118,7 @@ export default class Model<T> {
    * @param ins
    * @return {boolean}
    */
-  static isModel<T>(ins: any): ins is Model<T> {
+  public static isModel<T>(ins: any): ins is Model<T> {
     return ins instanceof Model
   }
 }

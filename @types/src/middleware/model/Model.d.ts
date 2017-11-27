@@ -12,7 +12,7 @@ export default class Model<T> {
     protected scheduler: ModelScheduler<T>;
     protected state: T;
     constructor(desc: ModelDescription<T>);
-    receiver(action: Action, storeState: any, next: Next<any>): this;
-    done(state: Partial<T>, next: Next<any>): this;
+    receiver(action: Action, storeState: any, next: Next<any>): Model<T>;
+    done(state: Partial<T>, next: Next<any>): Model<T>;
     static isModel<T>(ins: any): ins is Model<T>;
 }

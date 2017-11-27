@@ -12,3 +12,8 @@ export declare function warning(expected: boolean, message: string): void;
 export declare function assert(expected: boolean, message: string): void | never;
 export declare function freeze<T extends Object>(obj: T): T;
 export declare function assign(object: any, ...otherArgs: any[]): any;
+export declare function find<T>(arr: T[], filter: (v: T, index: number, arr: T[]) => boolean): T | undefined;
+export declare function every<T>(arr: T[], filter: (v: T, index: number, arr: T[]) => boolean): boolean;
+export declare function keys(obj: {
+    [key: string]: any;
+}): string[];

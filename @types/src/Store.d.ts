@@ -4,12 +4,12 @@ export default class Store<T> {
     private state;
     private observer;
     constructor(state?: T);
-    initialize(action?: Action): this;
-    dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): this;
-    private single(action, callback?);
-    private multiple(actions, callback?);
+    initialize(action?: Action): Store<T>;
+    dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>;
+    protected single(action: Action, callback?: Observer<T>): Store<T>;
+    protected multiple(actions: Action[], callback?: Observer<T>): Store<T>;
     private dispose(action, callback);
-    use(mw: Middleware<T>): this;
-    getState(): any;
-    subscribe(observer: Observer<T>): this;
+    use(mw: Middleware<T>): Store<T>;
+    getState(): T;
+    subscribe(observer: Observer<T>): Store<T>;
 }

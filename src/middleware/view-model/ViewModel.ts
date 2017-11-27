@@ -34,7 +34,7 @@ export default class ViewModel<T> extends Model<T> {
    * @param {ViewModelDescription} desc 
    * @param {Store} store 
    */
-  constructor(desc: ViewModelDescription<T>, store: Store<any>) {
+  public constructor(desc: ViewModelDescription<T>, store: Store<any>) {
     super(desc)
     this.store = store
   }
@@ -44,7 +44,7 @@ export default class ViewModel<T> extends Model<T> {
    * @param ins
    * @return {boolean}
    */
-  static isViewModel<T>(ins: any): ins is ViewModel<T> {
+  public static isViewModel<T>(ins: any): ins is ViewModel<T> {
     return ins instanceof ViewModel
   }
 }
