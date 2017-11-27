@@ -15,7 +15,10 @@ import Store from "../../Store"
  * @param {Store} store
  * @return {Store}
  */
-function storeModelCreator<T> (mods: Array<Model<T> | ModelDescription<T>>, store: Store<any>) {
+function storeModelCreator<T>(
+  mods: Array<Model<T> | ModelDescription<T>>,
+  store: Store<any>
+): Store<any> {
   mods
     .map(m => Model.isModel<T>(m) ? m : new Model<T>(m))
     .map((mod: Model<T>) => {

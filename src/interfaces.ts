@@ -18,10 +18,12 @@ export interface Middleware<T> {
 }
 
 export interface MiddlewareCompose<T> {
-  (action: Action,
+  (
+    action: Action,
     state: T,
     processor: (state: Partial<T>) => void,
-    complete: (action: Action) => void): void
+    complete: (action: Action) => void
+  ): void
 }
 
 export interface Observer<T> {

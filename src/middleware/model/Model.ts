@@ -87,7 +87,7 @@ export default class Model<T> {
    * @return {Model}
    */
 
-  receiver(action: Action, storeState: any, next: Next<any>) {
+  receiver(action: Action, storeState: any, next: Next<any>): Model<T> {
     const done = (state: Partial<T>) => this.done(state, next)
     const state: any = this.scheduler.call(this, this.state, action, done)
 
@@ -104,7 +104,7 @@ export default class Model<T> {
    * @param {Next} next
    * @return {Model}
    */
-  done(state: Partial<T>, next: Next<any>) {
+  done(state: Partial<T>, next: Next<any>): Model<T> {
     assert(isPureObject(state), 'state must be a pure object');
 
     assign(this.state, state)
