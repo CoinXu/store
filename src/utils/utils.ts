@@ -132,6 +132,23 @@ export function every<T>(arr: T[], filter: (v: T, index: number, arr: T[]) => bo
   return false
 }
 
+export function includes(arr: any[], value: any): boolean {
+  for (let v of arr) {
+    if (v === value) {
+      return true
+    }
+  }
+  return false
+}
+
+export function map(arr: any[], iterator: (v: any, i?: number, a?: any[]) => any): any[] {
+  const result: any[] = []
+  for (let i = 0, len: number = arr.length; i < len; i++) {
+    result.push(iterator(arr[i], i, arr))
+  }
+  return result
+}
+
 /* Object */
 export function keys(obj: { [key: string]: any }): string[] {
   if (!isObject(obj)) {

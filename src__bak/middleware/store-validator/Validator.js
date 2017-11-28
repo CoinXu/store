@@ -36,35 +36,7 @@ class Validator {
     return validators
   }
 
-  /**
-   * 验证单个key
-   * @param {string} key
-   * @param {*} value
-   * @return {?string}
-   */
-  validOne (key, value) {
-    const validator = this.__validator__[key]
 
-    if (validator === void 0) {
-      return null
-    }
-
-    let message = null
-    let length = validator.length
-    let i = 0
-    let vb
-
-    // 一个验证失败后不再继续验证
-    for (; i < length; i++) {
-      vb = validator[i]
-      if (!vb.validator(value)) {
-        message = template(vb.msg, { key })
-        break
-      }
-    }
-
-    return message
-  }
 
   /**
    * 验证一个object上所有字段
