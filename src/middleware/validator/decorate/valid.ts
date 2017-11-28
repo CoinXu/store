@@ -4,6 +4,8 @@
  * @description 验证器相关工具类
  */
 
+import { find } from "../../../utils/utils"
+
 export const hasOwnProperty = Object.prototype.hasOwnProperty
 
 /**
@@ -71,7 +73,7 @@ export class ValidatorBuffer {
    * @return {ValidatorBuffer}
    */
   public add(target: object, key: string, validator: Validator, msg: string): ValidatorBuffer {
-    let buf: TargetValidator = this.buffer.find(buf => buf.target === target)
+    let buf: TargetValidator = find<TargetValidator>(this.buffer, buf => buf.target === target)
 
     if (buf) {
       const arr = buf.validator[key] || (buf.validator[key] = [])
@@ -94,7 +96,7 @@ export class ValidatorBuffer {
    * @return {Object<string, Array<ValidatorBuffer>>|null}
    */
   public get(target: object): TargetValidator {
-    return this.buffer.find(buf => buf.target === target) || null
+    return find<TargetValidator>(this.buffer, buf => buf.target === target) || null
   }
 
   /**
