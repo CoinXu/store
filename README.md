@@ -28,8 +28,8 @@ Store认为每个action都是有序或独立的，比如`A->B->C`或`A`,`B`,`C`�
 1. 使用`user_id`查询用户信息
 2. 使用用户信息中的`group_id`查询用户所属用户组的信息
 
-__ 下面示例代码为typescript __
 ```ts
+// typescript
 import { Store } from 'strore'
 
 interface User {
@@ -37,12 +37,10 @@ interface User {
   name: string
   group_id: string
 }
-
 interface Group {
   id: string
   name: string
 }
-
 interface State {
   user: User
   group: Group
