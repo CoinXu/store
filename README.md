@@ -3,9 +3,9 @@
 
 # 概述
 Store是一个JavaScript状态管理器,主要特性如下:
-+ 业务流程控制
-+ Model独立,可复用
-+ 单独的ViewModel
++ 任意组合多个action,实现业务流程控制
++ Model独立,高可复用,通常一个Model只用定义一次,可在整个项目中使用
++ 单独的ViewModel,与Model完全隔离
 + Collection相关操作
 + 验证器
 
