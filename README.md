@@ -68,8 +68,7 @@ store.use(function(action, state, next){
 store.use(function(action, state, next){
   const { type, payload } = action
   switch (type) {
-    // 由于中间件是有序执行的，所以此时state.user已经获取到了
-    // 可以直接使用
+    // 由于中间件是有序执行的，所以此时state.user已经获取到了,可以直接使用
     case Action.initialize:
       window.fetch(`/api/group/${state.user.group_id}/info`).then(group => next({group}))
       break
