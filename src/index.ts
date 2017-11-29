@@ -12,6 +12,9 @@ import storeViewModelCreator from "./middleware/view-model"
 import Collection from "./middleware/collection/Collection"
 import storeCollectionCreator from "./middleware/collection"
 
+import { Validator } from "./middleware/validator/Validator"
+import * as Validates from "./middleware/validator/decorate"
+
 export {
   Store,
   Model,
@@ -19,6 +22,9 @@ export {
   ViewModel,
   storeViewModelCreator,
   Collection,
-  storeCollectionCreator
+  storeCollectionCreator,
+
+  Validator,
+  Validates
 }
 

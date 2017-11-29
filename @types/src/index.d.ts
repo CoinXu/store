@@ -5,4 +5,6 @@ import ViewModel from "./middleware/view-model/ViewModel";
 import storeViewModelCreator from "./middleware/view-model";
 import Collection from "./middleware/collection/Collection";
 import storeCollectionCreator from "./middleware/collection";
-export { Store, Model, storeModelCreator, ViewModel, storeViewModelCreator, Collection, storeCollectionCreator };
+import { Validator } from "./middleware/validator/Validator";
+import * as Validates from "./middleware/validator/decorate";
+export { Store, Model, storeModelCreator, ViewModel, storeViewModelCreator, Collection, storeCollectionCreator, Validator, Validates };

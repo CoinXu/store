@@ -1,6 +1,7 @@
-node_modules
+/node_modules
 .idea
 *.log*
 yarn.lock
-lib/*
+/lib/*
 .DS_store
+/@types/__test__

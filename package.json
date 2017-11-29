@@ -1,6 +1,6 @@
 {
   "name": "sugo-store",
-  "version": "0.2.1",
+  "version": "0.2.4",
   "description": "state manager",
   "author": "CoinXu<duanxian0605@gmail.com>",
   "repository": "https://github.com/CoinXu/store",
@@ -21,7 +21,7 @@
     "prepublishOnly": "npm run build && npm run test"
   },
   "main": "./lib/src",
-  "typings": "./@types",
+  "typings": "./@types/src",
   "license": "MIT",
   "devDependencies": {
     "typescript": "2.6.1",

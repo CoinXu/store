@@ -1,11 +1,13 @@
-node_modules
-src
+/node_modules
+/src
 .babelrc
 README.md
 webpack.config.js
 .gitignore
 yarn.*
+.idea
 *.log*
-lib/__test__
-@types/__test__
+__test__
+/lib/__test__
+/@types/__test__
 .DS_store
