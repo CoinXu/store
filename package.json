@@ -1,6 +1,6 @@
 {
   "name": "sugo-store",
-  "version": "0.1.23",
+  "version": "0.2.0",
   "description": "state manager",
   "author": "CoinXu<duanxian0605@gmail.com>",
   "repository": "https://github.com/CoinXu/store",
@@ -18,9 +18,9 @@
     "clean:test": "rm -rf ./lib/__test__/*",
     "build:test": "npm run clean:test && ./node_modules/.bin/tsc",
     "test": "npm run build:test && ./node_modules/.bin/mocha ./lib/__test__",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run build && npm run test"
   },
-  "main": "./lib",
+  "main": "./lib/src",
   "typings": "./@types",
   "license": "MIT",
   "devDependencies": {
