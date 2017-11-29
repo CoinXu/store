@@ -18,7 +18,7 @@
     "clean:test": "rm -rf ./lib/__test__/*",
     "build:test": "npm run clean:test && ./node_modules/.bin/tsc",
     "test": "npm run build:test && ./node_modules/.bin/mocha ./lib/__test__",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run test"
   },
   "main": "./lib",
   "typings": "./@types",
