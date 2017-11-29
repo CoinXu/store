@@ -10,7 +10,7 @@ export interface Action {
 }
 
 export interface Next<T> {
-  (state: Partial<T>): void
+  (state?: Partial<T>): void
 }
 
 export interface Middleware<T> {

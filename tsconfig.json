@@ -11,7 +11,9 @@
     "declarationDir": "./@types",
     "noUnusedParameters": false,
     "noUnusedLocals": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*",

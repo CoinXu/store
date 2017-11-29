@@ -3,7 +3,7 @@ export interface Action {
     payload?: any;
 }
 export interface Next<T> {
-    (state: Partial<T>): void;
+    (state?: Partial<T>): void;
 }
 export interface Middleware<T> {
     (action: Action, state: T, next: Next<T>): void;

@@ -48,7 +48,7 @@ export interface ValidatorDesc {
  * validator的key为target的属性名,value为ValidatorDesc数组
  */
 export interface TargetValidator {
-  target: object
+  target: any
   validator: { [key: string]: ValidatorDesc[] }
 }
 
@@ -66,13 +66,13 @@ export class ValidatorBuffer {
 
   /**
    * 添加缓存
-   * @param {Object} target
+   * @param {*} target
    * @param {string} key
    * @param {Validator} validator
    * @param {string} msg
    * @return {ValidatorBuffer}
    */
-  public add(target: object, key: string, validator: Validator, msg: string): ValidatorBuffer {
+  public add(target: any, key: string, validator: Validator, msg: string): ValidatorBuffer {
     let buf: TargetValidator = find<TargetValidator>(this.buffer, buf => buf.target === target)
 
     if (buf) {
@@ -92,18 +92,18 @@ export class ValidatorBuffer {
   }
 
   /**
-   * @param {Object} target
+   * @param {*} target
    * @return {Object<string, Array<ValidatorBuffer>>|null}
    */
-  public get(target: object): TargetValidator {
+  public get(target: any): TargetValidator {
     return find<TargetValidator>(this.buffer, buf => buf.target === target) || null
   }
 
   /**
-   * @param {Object} target
+   * @param {*} target
    * @return {ValidatorBuffer}
    */
-  public destroy(target: object): ValidatorBuffer {
+  public destroy(target: any): ValidatorBuffer {
     this.buffer = this.buffer.filter(buf => buf.target !== target)
     return this
   }
@@ -112,7 +112,7 @@ export class ValidatorBuffer {
 export const ValidatorDefaultBuffer = new ValidatorBuffer()
 
 export interface ValidatorDecorate {
-  (target: object, key: string, descriptor: any): any
+  (target: any, key: string, descriptor?: any): any
 }
 
 /**
@@ -131,7 +131,7 @@ export function decorate(validator: Validator, msg: string): ValidatorDecorate {
     return value === null || validator(value)
   }
 
-  return function (target: object, key: string, descriptor: any): any {
+  return function (target: any, key: string, descriptor: any): any {
     ValidatorDefaultBuffer.add(target, key, wrapper, msg)
     return descriptor
   }

@@ -10,7 +10,7 @@ export interface ValidatorDesc {
     validator: Validator;
 }
 export interface TargetValidator {
-    target: object;
+    target: any;
     validator: {
         [key: string]: ValidatorDesc[];
     };
@@ -18,12 +18,12 @@ export interface TargetValidator {
 export declare class ValidatorBuffer {
     private buffer;
     constructor();
-    add(target: object, key: string, validator: Validator, msg: string): ValidatorBuffer;
-    get(target: object): TargetValidator;
-    destroy(target: object): ValidatorBuffer;
+    add(target: any, key: string, validator: Validator, msg: string): ValidatorBuffer;
+    get(target: any): TargetValidator;
+    destroy(target: any): ValidatorBuffer;
 }
 export declare const ValidatorDefaultBuffer: ValidatorBuffer;
 export interface ValidatorDecorate {
-    (target: object, key: string, descriptor: any): any;
+    (target: any, key: string, descriptor?: any): any;
 }
 export declare function decorate(validator: Validator, msg: string): ValidatorDecorate;

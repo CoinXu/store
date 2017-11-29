@@ -28,7 +28,7 @@ export enum DataTypes {
  * 生成验证装饰器函数
  * @param {DataTypes} type
  * @param {string} [msg]
- * @return {ValidDecorate}
+ * @return {ValidatorDecorate}
  */
 export default function DataType(type: DataTypes, msg?: string): ValidatorDecorate {
   function validator(value: any) {

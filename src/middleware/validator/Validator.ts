@@ -6,6 +6,7 @@
 
 import { ValidatorDefaultBuffer, hasOwnProperty, template, ValidatorDesc, TargetValidator } from "./decorate/valid"
 import { assign } from "../../utils/utils"
+
 /**
  * 验证器基类,所有的验证器都必须继承该类
  */
@@ -27,6 +28,10 @@ export class Validator<T extends { [key: string]: any }> {
       }
       proto = proto.__proto__
     }
+  }
+
+  public validator(): {[key in keyof T]?: ValidatorDesc[]} {
+    return this.__validator__
   }
 
   /**
@@ -109,7 +114,7 @@ export class Validator<T extends { [key: string]: any }> {
    */
   set(valuesOrKey: Partial<T> | keyof T, valueOrUndef?: keyof T | any) {
     const values: Partial<T> = arguments.length === 2
-      ? { [valuesOrKey as keyof T]: valueOrUndef as any } as Partial<T>
+      ? (({ [valuesOrKey as keyof T]: valueOrUndef as any } as Partial<T>))
       : valuesOrKey as Partial<T>
     const message = this.valid(values)
 

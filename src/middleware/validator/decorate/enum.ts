@@ -10,7 +10,7 @@ import { keys, includes, map } from "../../../utils/utils"
 /**
  * @param {Object} enumData
  * @param {string} [msg]
- * @return {ValidDecorate}
+ * @return {ValidatorDecorate}
  */
 export default function Enum(enumData: object, msg?: string): ValidatorDecorate {
   const values: any[] = map(keys(enumData), key => (enumData as any)[key])

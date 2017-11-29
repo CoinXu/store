@@ -1,9 +1,13 @@
+import { ValidatorDesc } from "./decorate/valid";
 export declare class Validator<T extends {
     [key: string]: any;
 }> {
     private __message__;
     private __validator__;
     constructor();
+    validator(): {
+        [key in keyof T]?: ValidatorDesc[];
+    };
     validOne(key: keyof T, value: any): string | null;
     valid(values: Partial<T>): {
         [key: string]: string;
