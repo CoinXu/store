@@ -84,18 +84,7 @@ store.dispatch({
 上面的代码是Store最基本的示例，实际上Store提供了一些基础的中间件来更好的组织代的代码。
 比如`storeViewModelCreator`,`StoreValidatorCreator`等
 
-# Store
-+ Store.initialize        详细文档待补充
-+ Store.dispatch          详细文档待补充
-+ Store.use               详细文档待补充
-+ store.getState          详细文档待补充
-+ store.subscribe         详细文档待补充
-
-# Middleware
-+ storeModelCreator       详细文档待补充
-+ storeViewModelCreator   详细文档待补充
-+ storeValidatorCreator   详细文档待补充
-+ storeCollectionCreator  详细文档待补充
+## [Store](./docs/store.md)
 
 # Examples
 TODO

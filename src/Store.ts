@@ -110,7 +110,7 @@ export default class Store<T> {
   private dispose(action: Action, callback: Observer<T>): Store<T> {
     warning(isString(action.type), 'type of action must be a string')
 
-    compose(this.mw)(
+    compose<T>(this.mw)(
       action,
       this.state,
       (result: Partial<T>) => {
