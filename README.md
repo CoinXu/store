@@ -11,10 +11,10 @@ Store是一个JavaScript状态管理器,主要特性如下:
 
 # 为什么造轮子？
 [Redux](https://github.com/reactjs/redux)是一个很好的东西，但并不适用与一些特殊的场景。
-如果一个store上有多个reducer时，当一个action被派发时,redux会将action以`for in`的顺序分别传递给每个reducer。
+如果一个store上有多个reducer时，当一个action被派发时，redux会将action以`for in`的顺序分别传递给每个reducer。
 众所周知`for in`是无序的，这样的设计对A依赖于B这样的业务场景不太友好。
 
-当然也可以选择在某一个action中做更多的事情从而不用理会具体的执行顺序,但这样的设计破坏了action的**最小粒度**设计原则。
+当然也可以选择在某一个action中做更多的事情从而不用理会具体的执行顺序，但这样的设计破坏了action的**最小粒度**设计原则。
 通常将action的粒度设置得越小，越方便组合，可复用性，可维护性都会提到提升。
 
 [Store](https://github.com/CoinXu/store)设计方案不同于redux，
