@@ -30,7 +30,7 @@ export interface UserModel {
 }
 export default <ModelDescription<UserModel>> {
   name: 'User',
-  state: {id: null， name: null， age: null},
+  state: {id: null, name: null, age: null},
   scheduler: function(action: Action, state: UserModel, next: Next<any>) {
     if(action.type === "some action type") {
       // do sth...
@@ -39,7 +39,7 @@ export default <ModelDescription<UserModel>> {
   }
 }
 ```
-## 与Store关联
+## 在Store使用
 Model定义应该独立存在于一个JavaScript模块中，在业务模块中引用。
 Store一般存在于业务模块中，根据不同的业务模块实现不同的流程。
 换言之，Model是固定的，而Store是灵活的。
@@ -65,11 +65,11 @@ import User, {UserModel} from "./model-user.ts"
 class UserCenter extends Store<{User: UserModel}> {
   constructor() {
     supper()
-    storeModelCreator<UserModel>([User]， this)
+    storeModelCreator<UserModel>([User], this)
   }
 
   doSome() {
-    const state = this。state
+    const state = this.state
     // 此处可以直接使用User
     // 挂载在state上的key为User.name: "User"
     console.log(state.User.age)
@@ -101,7 +101,7 @@ export Actions = {
 }
 export default <ModelDescription<UserModel>> {
   name: 'User',
-  state: {id: null， name: null， age: null},
+  state: {id: null, name: null, age: null},
   scheduler: function(action: Action, state: UserModel, next: Next<any>) {
     const {type, payload} = action
     switch(type) {
@@ -130,7 +130,7 @@ class A extends Store<{User: User}> {
   }
   createUser(name, age) {
     this.dispatch({
-      type: Actions.Create，
+      type: Actions.Create,
       payload: { name, age }
     }, state => console.log(state.User))
   }
@@ -146,7 +146,7 @@ class A extends Store<{User: User}> {
   }
   destroyUser(id) {
     this.dispatch({
-      type: Actions.Destory，
+      type: Actions.Destory
       payload: { id }
     }, state => console.log(state.User))
   }
