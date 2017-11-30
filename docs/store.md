@@ -30,67 +30,74 @@ function(action: Action, state: any, next: Next<any>) {
 ```
 
 ## 方法
-#### `public constructor(state: T = {} as T)`
-构造器,初始state参数为可选
-```ts
-import { Store } from "store"
-interface State {
-  num: number
-}
-let store: Store<State>
-store = new Store<State>({num: 0})
-store = new Store<State>()
-```
++ `public constructor(state: T = {} as T)`
 
-#### `public initialize(action: Action = DefAction): Store<T>`
-初始化函数调用时,使用默认的或用户传入的action,将所有的中间件执行一次,得到state的初始值.
-```ts
-store.initialize()
-store.initialize({type: 'defined by user'})
-```
-
-#### `public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>`
-派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
-调用的依然是`store.signle`或`store.multiple`.
-```ts
-store.dispatch({type: 'action type'}, console.log)
-store.dispatch([{type: 'action a'}, {type: 'action b'}])
-```
-特别的:Store认为每个action派发之后,调用者都可以知道该action执行结果.
-以便即时处理当前流程产生的异常或决定下一步如何进行.
-所以给`dispatch`方法添加了`callback`参数.
-
-#### `protected single(action: Action, callback: Observer<T>): Store<T>`
-派发单个action
-```ts
-store.single({type: 'action type'}, console.log)
-```
-
-#### `protected multiple(actions: Action[], callback?: Observer<T>): Store<T>`
-派发多个action
-```ts
-store.multiple([{type: 'action a'}, {type: 'action b'}], console.log)
-```
-
-#### `public use(mw: Middleware<T>): Store<T>`
-添加中间件
-```ts
-store.use(function(action, state, next){
-  if( action.type === 'action type' ) {
-    next({num: state.num + 1})
+  构造器,初始state参数为可选
+  ```ts
+  import { Store } from "store"
+  interface State {
+    num: number
   }
-})
-```
+  let store: Store<State>
+  store = new Store<State>({num: 0})
+  store = new Store<State>()
+  ```
 
-#### `public getState(): T`
-获取当前state
-```ts
-const state: T = store.getState()
-console.log(state.num)
-```
++ `public initialize(action: Action = DefAction): Store<T>`
 
-#### `public subscribe(observer: Observer<T>): Store<T>`
-注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
-```ts
-store.subscribe(state => console.log(state))
-```
+  初始化函数调用时,使用默认的或用户传入的action,将所有的中间件执行一次,得到state的初始值.
+  ```ts
+  store.initialize()
+  store.initialize({type: 'defined by user'})
+  ```
+
++ `public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>`
+
+  派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
+  调用的依然是`store.signle`或`store.multiple`.
+  ```ts
+  store.dispatch({type: 'action type'}, console.log)
+  store.dispatch([{type: 'action a'}, {type: 'action b'}])
+  ```
+  特别的:Store认为每个action派发之后,调用者都可以知道该action执行结果.
+  以便即时处理当前流程产生的异常或决定下一步如何进行.
+  所以给`dispatch`方法添加了`callback`参数.
+
++ `protected single(action: Action, callback: Observer<T>): Store<T>`
+
+  派发单个action
+  ```ts
+  store.single({type: 'action type'}, console.log)
+  ```
+
++ `protected multiple(actions: Action[], callback?: Observer<T>): Store<T>`
+
+  派发多个action
+  ```ts
+  store.multiple([{type: 'action a'}, {type: 'action b'}], console.log)
+  ```
+
++ `public use(mw: Middleware<T>): Store<T>`
+
+  添加中间件
+  ```ts
+  store.use(function(action, state, next){
+    if( action.type === 'action type' ) {
+      next({num: state.num + 1})
+    }
+  })
+  ```
+
++ `public getState(): T`
+
+  获取当前state
+  ```ts
+  const state: T = store.getState()
+  console.log(state.num)
+  ```
+
++ `public subscribe(observer: Observer<T>): Store<T>`
+ 注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
+ ```ts
+ store.subscribe(state => console.log(state))
+ ```
