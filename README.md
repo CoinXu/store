@@ -18,11 +18,13 @@ Store是一个JavaScript状态管理器,主要特性如下:
 通常将action的粒度设置得越小，越方便组合，可复用性，可维护性都会提到提升。
 
 [Store](https://github.com/CoinXu/store)设计方案不同于redux，
-Store认为每个action都是有序或独立的，比如`A->B->C`或`A`,`B`,`C`，
-一旦业务确定，不太可能出现`C->A->B`这样乱序的触发顺序。
+Store认为:
+1. 业务流程是有序或独立的，比如`A->B->C`或`A`,`B`,`C`，一旦业务确定，不太可能出现`C->A->B`这样乱序的触发顺序。
+2. 在action遵从**最小粒度**设计原则的情况下，一定会出现一个业务流程需要多个action组合完成。
+   所以Store可以一次派发多个action. 如：`store.dispatch([{type: 'action a'}, {type: 'action b'}])`
+3. 可能需要知道当前派发的action执行结果，根据结果来执行下一步操作。所以为`dispatch`函数增加了`callback`参数。
 
-所以Store使用数组管理所有的[中间件](#middleware)，当一个行为发生的，依次通知这些中间件，所有中间件处理完成后，得到最终结果.
-执行到某一个中间件时,Store保证其前面的中间件已经执行完成,此时可以直接使用前面中间件产生的结果.
+综上，Store被设计为使用数组管理所有的[中间件](#middleware)，当一个行为发生的，依次通知这些中间件，所有中间件处理完成后，得到最终结果.执行到某一个中间件时,Store保证其前面的中间件已经执行完成,此时可以直接使用前面中间件产生的结果.
 
 假设有这样的业务流程:
 1. 使用`user_id`查询用户信息
@@ -88,8 +90,7 @@ store.dispatch({
 上面的代码是Store最基本的示例，实际上Store提供了一些基础的中间件来更好的组织代的代码。
 比如`storeViewModelCreator`,`StoreValidatorCreator`等
 
-## 详细文档
-+ [API](https://coinxu.github.io/store/docs/home.html)
+[详细文档](https://coinxu.github.io/store/docs/home.html)
 
 ## TODO
 + Example
