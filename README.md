@@ -55,7 +55,9 @@ store.use(function(action, state, next){
     switch (type) {
       // 查询用户数据
       case Action.initialize:
-        window.fetch(`/api/user/${payload}/info`).then(user => next({ user }))
+        window
+          .fetch(`/api/user/${payload}/info`)
+          .then(user => next({ user }))
         break
       default:
         next()
@@ -68,7 +70,9 @@ store.use(function(action, state, next){
   switch (type) {
     // 由于中间件是有序执行的，所以此时state.user已经获取到了,可以直接使用
     case Action.initialize:
-      window.fetch(`/api/group/${state.user.group_id}/info`).then(group => next({ group }))
+      window
+        .fetch(`/api/group/${state.user.group_id}/info`)
+        .then(group => next({ group }))
       break
     default:
       next()
@@ -84,10 +88,12 @@ store.dispatch({
 上面的代码是Store最基本的示例，实际上Store提供了一些基础的中间件来更好的组织代的代码。
 比如`storeViewModelCreator`,`StoreValidatorCreator`等
 
-## [Store](./docs/store.md)
+## 详细文档
++ [API](https://coinxu.github.io/store/)
 
-# Examples
-TODO
+## TODO
++ Example
++ English Docs
 
-# English Docs
-TODO
+## LICENSE
+MIT

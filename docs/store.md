@@ -21,7 +21,7 @@ export interface Middleware<T> {
 Store调用中间件是有序的，并且是同步的。只有当上一个中间件调用了传入的next参数时，才会执行下一个中间件。
 所以，无论如何，在你的中间件中都应该调用并且只调用一次next参数。一个简单的中间件定义：
 ```ts
-const middleware: Middleware<any> = function(action: Action, state: any, next: Next<any>) {
+function(action: Action, state: any, next: Next<any>) {
   if( action.type === "one action type") {
     // do something then call next method
     next({ props: "value" })
