@@ -97,7 +97,7 @@ function(action: Action, state: any, next: Next<any>) {
   ```
 
 + `public subscribe(observer: Observer<T>): Store<T>`
- 注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
- ```ts
- store.subscribe(state => console.log(state))
- ```
+  注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
+  ```ts
+  store.subscribe(state => console.log(state))
+  ```
