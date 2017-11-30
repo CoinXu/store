@@ -57,6 +57,10 @@ store.dispatch([{type: 'action a'}, {type: 'action b'}])
 派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
 调用的依然是`store.signle`或`store.multiple`.
 
+特别的:Store认为每个action派发之后,调用者都可以知道该action执行结果.
+以便即时处理当前流程产生的异常或决定下一步如何进行.
+所以给`dispatch`方法添加了`callback`参数.
+
 + `protected single(action: Action, callback: Observer<T>): Store<T>`
 ```ts
 store.single({type: 'action type'}, console.log)

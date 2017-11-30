@@ -16,9 +16,9 @@ const DefAction: Action = { type: '__INITIALIZE__ACTION__' }
  * 该类可观察。
  */
 export default class Store<T> {
-  private mw: Middleware<T>[]
-  private state: T
-  private observer: Observer<T>
+  protected mw: Middleware<T>[]
+  protected state: T
+  protected observer: Observer<T>
 
   /**
    * @param {T} state

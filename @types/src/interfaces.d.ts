@@ -6,7 +6,7 @@ export interface Next<T> {
     (state?: Partial<T>): void;
 }
 export interface Middleware<T> {
-    (action: Action, state: T, next: Next<T>): any;
+    (action: Action, state: T, next: Next<T>): void;
 }
 export interface MiddlewareCompose<T> {
     (action: Action, state: T, processor: (state: Partial<T>) => void, complete: (action: Action) => void): void;

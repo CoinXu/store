@@ -1,8 +1,8 @@
 import { Action, Middleware, Observer } from './interfaces';
 export default class Store<T> {
-    private mw;
-    private state;
-    private observer;
+    protected mw: Middleware<T>[];
+    protected state: T;
+    protected observer: Observer<T>;
     constructor(state?: T);
     initialize(action?: Action): Store<T>;
     dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>;

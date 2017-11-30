@@ -89,7 +89,7 @@ store.dispatch({
 比如`storeViewModelCreator`,`StoreValidatorCreator`等
 
 ## 详细文档
-+ [API](https://coinxu.github.io/store/docs/index.html)
++ [API](https://coinxu.github.io/store/docs/home.html)
 
 ## TODO
 + Example
