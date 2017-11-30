@@ -68,7 +68,7 @@ export default class Store<T> {
    * @private
    * @return {Store}
    */
-  protected single(action: Action, callback?: Observer<T>) {
+  protected single(action: Action, callback?: Observer<T>): Store<T> {
     return this.dispose(action, (state: T) => {
       this.observer(state)
       if (isFunction(callback)) callback(state)

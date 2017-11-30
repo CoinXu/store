@@ -4,7 +4,7 @@ Store提供了流程控制最核心的部份：中间件调用、派发行为、
 Store使用私有state对象来管理所有状态，state对象的变化是由依附在Store上的中间件完成的。
 当一个action派发时，Store会依次调用每个中间件，传入action、state及next参数。
 
-### 注
+**注**
 1. Store建议每个action都使用唯一的type属性来标识，尽管这不是必需的。
 2. 为了兼容大部份浏览器及更轻量，Store被设计为以callback的方式来控制流程，而没有使用更适合的Promise方案。
 
@@ -28,3 +28,65 @@ function(action: Action, state: any, next: Next<any>) {
   }
 }
 ```
+
+## 方法
++ `public constructor(state: T = {} as T)`
+```ts
+import { Store } from "store"
+interface State {
+  num: number
+}
+let store: Store<State>
+store = new Store<State>({num: 0})
+store = new Store<State>()
+```
+构造器,初始state参数为可选
+
++ `public initialize(action: Action = DefAction): Store<T>`
+```ts
+store.initialize()
+store.initialize({type: 'defined by user'})
+```
+初始化函数调用时,使用默认的或用户传入的action,将所有的中间件执行一次,得到state的初始值.
+
++ `public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>`
+```ts
+store.dispatch({type: 'action type'}, console.log)
+store.dispatch([{type: 'action a'}, {type: 'action b'}])
+```
+派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
+调用的依然是`store.signle`或`store.multiple`.
+
++ `protected single(action: Action, callback: Observer<T>): Store<T>`
+```ts
+store.single({type: 'action type'}, console.log)
+```
+派发单个action
+
++ `protected multiple(actions: Action[], callback?: Observer<T>): Store<T>`
+```ts
+store.multiple([{type: 'action a'}, {type: 'action b'}], console.log)
+```
+派发多个action
+
++ `public use(mw: Middleware<T>): Store<T>`
+```ts
+store.use(function(action, state, next){
+  if( action.type === 'action type' ) {
+    next({num: state.num + 1})
+  }
+})
+```
+添加中间件
+
++ 获取当前state: `public getState(): T`
+```ts
+const state: T = store.getState()
+console.log(state.num)
+``
+
++ 注册观察者: `public subscribe(observer: Observer<T>): Store<T>`
+```ts
+store.subscribe(state => console.log(state))
+```
+一个store只能注册一个观察者,后注册的覆盖之前注册的.
