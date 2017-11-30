@@ -59,7 +59,7 @@ function(action: Action, state: any, next: Next<any>) {
   store.dispatch({type: 'action type'}, console.log)
   store.dispatch([{type: 'action a'}, {type: 'action b'}])
   ```
-  特别的:Store认为每个action派发之后,调用者都可以知道该action执行结果.
+  **特别的:** Store认为每个action派发之后,调用者都可以知道该action执行结果.
   以便即时处理当前流程产生的异常或决定下一步如何进行.
   所以给`dispatch`方法添加了`callback`参数.
 
