@@ -31,7 +31,6 @@ function(action: Action, state: any, next: Next<any>) {
 
 ## 方法
 + `public constructor(state: T = {} as T)`
-
 ```ts
 import { Store } from "store"
 interface State {
@@ -44,7 +43,6 @@ store = new Store<State>()
 构造器,初始state参数为可选
 
 + `public initialize(action: Action = DefAction): Store<T>`
-
 ```ts
 store.initialize()
 store.initialize({type: 'defined by user'})
@@ -52,7 +50,6 @@ store.initialize({type: 'defined by user'})
 初始化函数调用时,使用默认的或用户传入的action,将所有的中间件执行一次,得到state的初始值.
 
 + `public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>`
-
 ```ts
 store.dispatch({type: 'action type'}, console.log)
 store.dispatch([{type: 'action a'}, {type: 'action b'}])
@@ -61,21 +58,18 @@ store.dispatch([{type: 'action a'}, {type: 'action b'}])
 调用的依然是`store.signle`或`store.multiple`.
 
 + `protected single(action: Action, callback: Observer<T>): Store<T>`
-
 ```ts
 store.single({type: 'action type'}, console.log)
 ```
 派发单个action
 
 + `protected multiple(actions: Action[], callback?: Observer<T>): Store<T>`
-
 ```ts
 store.multiple([{type: 'action a'}, {type: 'action b'}], console.log)
 ```
 派发多个action
 
 + `public use(mw: Middleware<T>): Store<T>`
-
 ```ts
 store.use(function(action, state, next){
   if( action.type === 'action type' ) {
@@ -86,15 +80,13 @@ store.use(function(action, state, next){
 添加中间件
 
 + 获取当前state: `public getState(): T`
-
 ```ts
 const state: T = store.getState()
 console.log(state.num)
-``
+```
 
-+ 注册观察者: `public subscribe(observer: Observer<T>): Store<T>`
-
++ `public subscribe(observer: Observer<T>): Store<T>`
 ```ts
 store.subscribe(state => console.log(state))
 ```
-一个store只能注册一个观察者,后注册的覆盖之前注册的.
+注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
