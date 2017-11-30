@@ -31,6 +31,7 @@ function(action: Action, state: any, next: Next<any>) {
 
 ## 方法
 + `public constructor(state: T = {} as T)`
+
   构造器,初始state参数为可选
   ```ts
   import { Store } from "store"
@@ -43,6 +44,7 @@ function(action: Action, state: any, next: Next<any>) {
   ```
 
 + `public initialize(action: Action = DefAction): Store<T>`
+
   初始化函数调用时,使用默认的或用户传入的action,将所有的中间件执行一次,得到state的初始值.
   ```ts
   store.initialize()
@@ -50,6 +52,7 @@ function(action: Action, state: any, next: Next<any>) {
   ```
 
 + `public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>`
+
   派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
   调用的依然是`store.signle`或`store.multiple`.
   ```ts
@@ -61,18 +64,21 @@ function(action: Action, state: any, next: Next<any>) {
   所以给`dispatch`方法添加了`callback`参数.
 
 + `protected single(action: Action, callback: Observer<T>): Store<T>`
+
   派发单个action
   ```ts
   store.single({type: 'action type'}, console.log)
   ```
 
 + `protected multiple(actions: Action[], callback?: Observer<T>): Store<T>`
+
   派发多个action
   ```ts
   store.multiple([{type: 'action a'}, {type: 'action b'}], console.log)
   ```
 
 + `public use(mw: Middleware<T>): Store<T>`
+
   添加中间件
   ```ts
   store.use(function(action, state, next){
@@ -83,14 +89,15 @@ function(action: Action, state: any, next: Next<any>) {
   ```
 
 + `public getState(): T`
-获取当前state
-```ts
-const state: T = store.getState()
-console.log(state.num)
-```
+
+  获取当前state
+  ```ts
+  const state: T = store.getState()
+  console.log(state.num)
+  ```
 
 + `public subscribe(observer: Observer<T>): Store<T>`
-注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
-```ts
-store.subscribe(state => console.log(state))
-```
+  注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
+  ```ts
+  store.subscribe(state => console.log(state))
+  ```
