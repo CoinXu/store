@@ -17,7 +17,7 @@ model定义后基本不会改变，除非业务本身发生了变化。
 一个Model由三个基本属性构成:
 + `name`       model名称，比如:User，Order等， name将会成为Model在`Store.state`上的key
 + `state`      model初始属性，比如`{id: null, name: null, age: null}`
-+ `scheduler`  model处理action的调度器。该属性用于与Store连接
++ `scheduler`  model处理action的调度器，该属性用于与Store连接
 
 ## 定义Model
 一个简单的Model定义:

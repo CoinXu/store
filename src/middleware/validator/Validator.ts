@@ -40,7 +40,7 @@ export class Validator<T extends { [key: string]: any }> {
    * @param {*} value
    * @return {?string}
    */
-  validOne(key: keyof T, value: any): string | null {
+  public validOne(key: keyof T, value: any): string | null {
     const validator: ValidatorDesc[] = this.__validator__[key]
 
     if (validator === void 0) {
@@ -69,7 +69,7 @@ export class Validator<T extends { [key: string]: any }> {
    * @param {Object} values
    * @return {?Object<string, string>}
    */
-  valid(values: Partial<T>): { [key: string]: string } | null {
+  public valid(values: Partial<T>): { [key: string]: string } | null {
     const message: { [key: string]: string } = {}
 
     let msg: string
@@ -90,7 +90,7 @@ export class Validator<T extends { [key: string]: any }> {
   /**
    * @return {?Object<string, string>}
    */
-  getValid(): {[key in keyof T]?: string} | null {
+  public getValid(): {[key in keyof T]?: string} | null {
     const result: {[key in keyof T]?: string} = {}
     const message = this.__message__
 
@@ -112,7 +112,7 @@ export class Validator<T extends { [key: string]: any }> {
    * @param {*} [valueOrUndef]
    * @return {?Object<string, string>}
    */
-  set(valuesOrKey: Partial<T> | keyof T, valueOrUndef?: keyof T | any) {
+  public set(valuesOrKey: Partial<T> | keyof T, valueOrUndef?: keyof T | any) {
     const values: Partial<T> = arguments.length === 2
       ? (({ [valuesOrKey as keyof T]: valueOrUndef as any } as Partial<T>))
       : valuesOrKey as Partial<T>
@@ -129,6 +129,7 @@ export class Validator<T extends { [key: string]: any }> {
 
     return message
   }
+
   /**
    * @param {*} ins
    * @return {boolean}
