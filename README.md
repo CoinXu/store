@@ -95,7 +95,8 @@ store.dispatch({
 + 浏览器：ie7+
 + nodejs: 所有版本
 
-[详细文档](https://coinxu.github.io/store/docs/home.html)
+## 详细文档
+https://coinxu.github.io/store/docs/home.html
 
 ## TODO
 + Example

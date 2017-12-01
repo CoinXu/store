@@ -101,7 +101,6 @@ export interface CollectionDesc<T> {
 
 ## Collection类接口说明
 + `public constructor(primaryKey: keyof T, mods: T[] = [])`
-
   构造器
   ```ts
   new Collection<User>("id")
@@ -109,14 +108,12 @@ export interface CollectionDesc<T> {
   ```
 
 + `public reset(mods: T[]): Collection<T>`
-
    重置所有属性，回到构造初始状态
    ```ts
    collect.reset([])
    ```
 
 + `public remove(keyOrMod: string | T): Collection<T>`
-
    删除记录，参数为primaryKey或记录本身
    ```ts
    // 删除id为one的记录
@@ -126,56 +123,48 @@ export interface CollectionDesc<T> {
    ```
 
 + `public update(primaryValue: string, props: Partial<T>): Collection<T>`
-
    更新单条记录
    ```ts
    collect.update("one", {name: "AA"})
    ```
 
 + `public add(mod: T): Collection<T>`
-
    新增记录
    ```ts
    collect.add({id: "third", {name: "C"}})
    ```
 
 + `public sort(compare: (a: T, b: T) => number): Collection<T>`
-
    排序已存的记录
    ```ts
    collect.sort((a, b) => a.id > b.id ? -1 : 1)
    ```
 
 + `public at(index: number): T | null`
-
    通过索获取记录
    ```ts
    collect.at(1)
    ```
 
 + `public last(): T`
-
    获取最后一个记录
    ```ts
    collect.last()
    ```
 
 + `public find(filter: Partial<T>): T | null`
-
    查找记录
    ```ts
    collect.find({name: "A"})
    ```
 
 + `public get(): T[]`
-
    返回所有的记录
    ```ts
    collect.get()
    ```
 
 + `public toJSON(): CollectionJson<T>`
-
    返回collection当前结构化状态
    ```ts
    interface CollectionJson<T> {
