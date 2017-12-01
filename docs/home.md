@@ -3,5 +3,5 @@
 + [Store流程控制基类](./store.md)
 + [Model](./model.md)
 + [ViewModel](./view-model.md)
-+ Collection
++ [Collection](./collection.md)
 + Validator

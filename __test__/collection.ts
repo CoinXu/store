@@ -12,10 +12,10 @@ import { CollectionDesc, CollectionScheduler, CollectionState } from '../src/mid
 
 interface Mod {
   name: string
-  id: number
+  id: string
 }
 
-function creator(name: string, id: number): Mod {
+function creator(name: string, id: string): Mod {
   return { name, id }
 }
 
@@ -24,15 +24,15 @@ describe('Collection method sample', function () {
   const col = new Collection<Mod>('id')
 
   it('Collection.add', function () {
-    col.add(creator('a', 0))
-    col.add(creator('b', 1))
+    col.add(creator('a', '0'))
+    col.add(creator('b', '1'))
 
     const mods = col.get()
     equal(mods.length, 2)
     equal(mods[0].name, 'a')
     equal(mods[1].name, 'b')
-    equal(mods[0].id, 0)
-    equal(mods[1].id, 1)
+    equal(mods[0].id, '0')
+    equal(mods[1].id, '1')
 
     const json = col.toJSON()
     equal(json.toCreate.length, 2)
@@ -41,8 +41,8 @@ describe('Collection method sample', function () {
   })
 
   it('Collection.update', function () {
-    col.update(0, { name: 'aa' })
-    const mod = col.find({ id: 0 })
+    col.update('0', { name: 'aa' })
+    const mod = col.find({ id: '0' })
     equal(mod.name, 'aa')
 
     const json = col.toJSON()
@@ -64,7 +64,7 @@ describe('Collection method sample', function () {
 
   it('Collection.sort', function () {
     col.sort(function (a: Mod, b: Mod) {
-      return b.id - a.id
+      return parseInt(b.id) - parseInt(a.id)
     })
 
     const mods = col.get()
@@ -82,8 +82,8 @@ describe('Collection method sample', function () {
   })
 
   it('Collection.find', function () {
-    equal(col.find({ id: 0 }).id, 0)
-    equal(col.find({ id: -1 }), null)
+    equal(col.find({ id: "0" }).id, 0)
+    equal(col.find({ id: "-1" }), null)
     equal(col.find({}), null)
   })
 
@@ -105,17 +105,17 @@ describe('Collection method sample', function () {
   })
 
   it('Collection.remove', function () {
-    col.remove(0)
+    col.remove("0")
     equal(col.get().length, 1)
   })
 })
 
 describe("Collection complex operate", function () {
   const def = [
-    creator('a', 0),
-    creator('b', 1),
-    creator('c', 2),
-    creator('d', 3)
+    creator('a', "0"),
+    creator('b', "1"),
+    creator('c', '2'),
+    creator('d', "3")
   ]
   const col = new Collection('id', def)
 
@@ -130,25 +130,25 @@ describe("Collection complex operate", function () {
 
   it('Collection.add Collection.remove Collection.update', function () {
     col.sort(function (a, b) {
-      return b.id - a.id
+      return parseInt(b.id) - parseInt(a.id)
     })
 
     // remove
     col.remove(col.at(0))
-    equal(col.find({ id: 3 }), null)
+    equal(col.find({ id: "3" }), null)
     equal(col.get().length, 3)
 
     // update
-    col.update(2, { name: 'cc' })
-    equal(col.find({ id: 2 }).name, 'cc')
+    col.update("2", { name: 'cc' })
+    equal(col.find({ id: "2" }).name, 'cc')
 
     // add
-    col.add({ name: 'e', id: 4 })
-    col.add({ name: 'f', id: 5 })
+    col.add({ name: 'e', id: "4" })
+    col.add({ name: 'f', id: "5" })
     equal(col.get().length, 5)
 
     // remove item that added
-    col.remove(5)
+    col.remove("5")
     equal(col.get().length, 4)
 
     const json = col.toJSON()
@@ -167,6 +167,7 @@ describe("Collection complex operate", function () {
 
 describe("storeCollectionCreator middleware", function () {
   interface User {
+    id: string
     name: string
     age: number
     message?: string

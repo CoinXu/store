@@ -10,7 +10,7 @@ export interface CollectionScheduler<T> {
 }
 export interface CollectionDesc<T> {
     name: string;
-    primaryKey: string;
+    primaryKey: keyof T;
     scheduler: CollectionScheduler<T>;
 }
 export default function <T>(desc: CollectionDesc<T>, store: Store<any>): Store<any>;

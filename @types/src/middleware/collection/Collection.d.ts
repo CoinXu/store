@@ -13,10 +13,10 @@ export default class Collection<T extends {
     private toUpdate;
     private toCreate;
     private cache;
-    constructor(primaryKey: string, mods?: T[]);
+    constructor(primaryKey: keyof T, mods?: T[]);
     reset(mods: T[]): Collection<T>;
-    remove(keyOrMod: string | number | T): Collection<T>;
-    update(primaryValue: string | number, props: Partial<T>): Collection<T>;
+    remove(keyOrMod: string | T): Collection<T>;
+    update(primaryValue: string, props: Partial<T>): Collection<T>;
     add(mod: T): Collection<T>;
     sort(compare: (a: T, b: T) => number): Collection<T>;
     at(index: number): T | null;
