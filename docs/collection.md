@@ -7,14 +7,15 @@
 2. 新添加一些用户，记为R
 3. 修改原有的用户信息，记为U
 4. 删除原有的用户信息，记为D
+
 编辑完成后，调用服务端接口同步变动。如果服务端接口设计为接收一个集合，自动对比原有记录，用`Array`来处理就够了。但从节省服务器运算能力方面来说，这样的接口不宜过多，该类计算完全可以由客户端来分担。
 客户端可以直接传给服务端类似下面的参数：
 ```json
 // /api/users/sync
 {
-  Delete: [{id: 'id-1'}],
-  Create: [{name: 'name-1'}, {name: 'name-2'}],
-  Update: [{id: 'id-2', name: 'name-2-new'}]
+  "Delete": [{"id": "id-1"}],
+  "Create": [{"name": "name-1"}, {"name": "name-2"}],
+  "Update": [{"id": "id-2", "name": "name-2-new"}]
 }
 ```
 服务端处理这样的数据将会非常方便与快速，由于数据结构清晰，日志也会非常易读。
@@ -50,7 +51,9 @@ export interface CollectionDesc<T> {
 + `scheduler`  调度器，用于与Store连接
 
 ## 示例
+
 1. 定义Collection
+
 ```ts
 // user-collect.ts
 export interface User {
@@ -81,6 +84,7 @@ export default CollectionDesc<User> {
 }
 ```
 2. 在Store中使用
+
 ```ts
 import {Store, storeCollectionCreator} from "store"
 import UserCollect, {User} from "./user-collect.ts"
@@ -99,6 +103,7 @@ store.dispatch(
 
 ## Collection类接口说明
 + `public constructor(primaryKey: keyof T, mods: T[] = [])`
+
 构造器
 ```ts
 new Collection<User>("id")
@@ -106,12 +111,14 @@ new Collection<User>("id", [{id: "one", name: "A"}])
 ```
 
 + `public reset(mods: T[]): Collection<T>`
+
 重置所有属性，回到构造初始状态
 ```ts
 collect.reset([])
 ```
 
 + `public remove(keyOrMod: string | T): Collection<T>`
+
 删除记录，参数为primaryKey或记录本身
 ```ts
 // 删除id为one的记录
@@ -120,48 +127,56 @@ collect.remove("one")
 collect.remove({name: "A"})
 ```
 + `public update(primaryValue: string, props: Partial<T>): Collection<T>`
+
 更新单条记录
 ```ts
 collect.update("one", {name: "AA"})
 ```
 
 + `public add(mod: T): Collection<T>`
+
 新增记录
 ```ts
 collect.add({id: "third", {name: "C"}})
 ```
 
 + `public sort(compare: (a: T, b: T) => number): Collection<T>`
+
 排序已存的记录
 ```ts
 collect.sort((a, b) => a.id > b.id ? -1 : 1)
 ```
 
 + `public at(index: number): T | null`
+
 通过索获取记录
 ```ts
 collect.at(1)
 ```
 
 + `public last(): T`
+
 获取最后一个记录
 ```ts
 collect.last()
 ```
 
 + `public find(filter: Partial<T>): T | null`
+
 查找记录
 ```ts
 collect.find({name: "A"})
 ```
 
 + `public get(): T[]`
+
 返回所有的记录
 ```ts
 collect.get()
 ```
 
 + `public toJSON(): CollectionJson<T>`
+
 返回collection当前结构化状态
 ```ts
 interface CollectionJson<T> {
