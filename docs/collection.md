@@ -53,140 +53,139 @@ export interface CollectionDesc<T> {
 ## 示例
 
 1. 定义Collection
+   ```ts
+   // user-collect.ts
+   export interface User {
+     id: string
+     name: string
+   }
 
-```ts
-// user-collect.ts
-export interface User {
-  id: string
-  name: string
-}
-
-export default CollectionDesc<User> {
-  name: "user",
-  primaryKey: "id",
-  scheduler: function (action, collection, next) {
-    const { type, payload } = action
-    switch (type) {
-      case 'ADD':
-        // 使用store
-        this.dispatch({ type: '', payload: '' })
-        collection.add(payload)
-        next()
-        break
-      case 'REMOVE':
-        collection.remove(payload.id)
-        next()
-        break
-      default:
-        next()
-    }
-  }
-}
-```
+   export default CollectionDesc<User> {
+     name: "user",
+     primaryKey: "id",
+     scheduler: function (action, collection, next) {
+       const { type, payload } = action
+       switch (type) {
+         case 'ADD':
+           // 使用store
+           this.dispatch({ type: '', payload: '' })
+           collection.add(payload)
+           next()
+           break
+         case 'REMOVE':
+           collection.remove(payload.id)
+           next()
+           break
+         default:
+           next()
+       }
+     }
+   }
+   ```
 2. 在Store中使用
+   ```ts
+   import {Store, storeCollectionCreator} from "store"
+   import UserCollect, {User} from "./user-collect.ts"
 
-```ts
-import {Store, storeCollectionCreator} from "store"
-import UserCollect, {User} from "./user-collect.ts"
-
-const store = new Store<{ user: CollectionState<User> }>()
-storeCollectionCreator(UserCollect, store)
-
-store.dispatch(
-  { type: 'ADD', payload: { name: "A", id: "one" } },
-  function (state) {
-    console.log(state.user.list.length)   // 1
-    console.log(state.user.list[0].name)  // A
-  }
-)
-```
+   const store = new Store<{ user: CollectionState<User> }>()
+   storeCollectionCreator(UserCollect, store)
+   
+   store.dispatch(
+     { type: 'ADD', payload: { name: "A", id: "one" } },
+     function (state) {
+       console.log(state.user.list.length)   // 1
+       console.log(state.user.list[0].name)  // A
+     }
+   )
+   ```
 
 ## Collection类接口说明
 + `public constructor(primaryKey: keyof T, mods: T[] = [])`
 
-构造器
-```ts
-new Collection<User>("id")
-new Collection<User>("id", [{id: "one", name: "A"}])
-```
+  构造器
+  ```ts
+  new Collection<User>("id")
+  new Collection<User>("id", [{id: "one", name: "A"}])
+  ```
 
 + `public reset(mods: T[]): Collection<T>`
 
-重置所有属性，回到构造初始状态
-```ts
-collect.reset([])
-```
+   重置所有属性，回到构造初始状态
+   ```ts
+   collect.reset([])
+   ```
 
 + `public remove(keyOrMod: string | T): Collection<T>`
 
-删除记录，参数为primaryKey或记录本身
-```ts
-// 删除id为one的记录
-collect.remove("one")
-// 删除所有name为A的记录
-collect.remove({name: "A"})
-```
+   删除记录，参数为primaryKey或记录本身
+   ```ts
+   // 删除id为one的记录
+   collect.remove("one")
+   // 删除所有name为A的记录
+   collect.remove({name: "A"})
+   ```
+
 + `public update(primaryValue: string, props: Partial<T>): Collection<T>`
 
-更新单条记录
-```ts
-collect.update("one", {name: "AA"})
-```
+   更新单条记录
+   ```ts
+   collect.update("one", {name: "AA"})
+   ```
 
 + `public add(mod: T): Collection<T>`
 
-新增记录
-```ts
-collect.add({id: "third", {name: "C"}})
-```
+   新增记录
+   ```ts
+   collect.add({id: "third", {name: "C"}})
+   ```
 
 + `public sort(compare: (a: T, b: T) => number): Collection<T>`
 
-排序已存的记录
-```ts
-collect.sort((a, b) => a.id > b.id ? -1 : 1)
-```
+   排序已存的记录
+   ```ts
+   collect.sort((a, b) => a.id > b.id ? -1 : 1)
+   ```
 
 + `public at(index: number): T | null`
 
-通过索获取记录
-```ts
-collect.at(1)
-```
+   通过索获取记录
+   ```ts
+   collect.at(1)
+   ```
 
 + `public last(): T`
 
-获取最后一个记录
-```ts
-collect.last()
-```
+   获取最后一个记录
+   ```ts
+   collect.last()
+   ```
 
 + `public find(filter: Partial<T>): T | null`
 
-查找记录
-```ts
-collect.find({name: "A"})
-```
+   查找记录
+   ```ts
+   collect.find({name: "A"})
+   ```
 
 + `public get(): T[]`
 
-返回所有的记录
-```ts
-collect.get()
-```
+   返回所有的记录
+   ```ts
+   collect.get()
+   ```
 
 + `public toJSON(): CollectionJson<T>`
 
-返回collection当前结构化状态
-```ts
-interface CollectionJson<T> {
-  models: T[]     // 所有记录
-  toDelete: T[]   // 相对于初始化时，已删除的记录
-  toUpdate: T[]   // 需要更新的记录
-  toCreate: T[]   // 需要创建的记录
-}
-collect.toJSON()
-```
+   返回collection当前结构化状态
+   ```ts
+   interface CollectionJson<T> {
+     models: T[]     // 所有记录
+     toDelete: T[]   // 相对于初始化时，已删除的记录
+     toUpdate: T[]   // 需要更新的记录
+     toCreate: T[]   // 需要创建的记录
+   }
+   collect.toJSON()
+   ```
 
 + `public toString(): string`
 
