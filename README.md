@@ -92,11 +92,11 @@ store.dispatch({
 
 ## 运行环境
 所有支持es3的环境。包括不限于：
-+ 浏览器：ie7+
++ 浏览器: ie7+
 + nodejs: 所有版本
 
 ## 详细文档
-https://coinxu.github.io/store/docs/home.html
+[https://coinxu.github.io/store/docs/home.html](https://coinxu.github.io/store/docs/home.html)
 
 ## TODO
 + Example
