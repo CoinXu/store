@@ -155,9 +155,7 @@ store.dispatch({ type: Action.upgrade, payload: { name: "A" } })
   验证传入参数是否为Validator实例。
 
 ## 目前可用验证器列表
-+ `@DataType(type: DataTypes, msg?: string): ValidatorDecorate`
-
-  数据类型验证
++ `@DataType(type: DataTypes, msg?: string): ValidatorDecorate` 数据类型验证
   ```ts
   // DataTypes可设类型
   export enum DataTypes {
@@ -184,9 +182,7 @@ store.dispatch({ type: Action.upgrade, payload: { name: "A" } })
   }
   ```
 
-+ `@Enum(enumData: Object, msg?: string): ValidatorDecorate`
-
-  枚举类型验证
++ `@Enum(enumData: Object, msg?: string): ValidatorDecorate` 枚举类型验证
   ```ts
   enum En { a, b }
   class D extends Validator<{ val: any }> {
@@ -194,41 +190,11 @@ store.dispatch({ type: Action.upgrade, payload: { name: "A" } })
     val: En = null
   }
   ```
-
-+ `@Pattern(reg: RegExp, msg?: string): ValidatorDecorate`
-
-  模式匹配
-  ```ts
-  class D extends Validator<{ val: any }> {
-    @Pattern(/\d/)
-    val: string = null
-  }
-  ```
-
-+ `@Required(msg?:string): ValidatorDecorate`
-
-  必填项
-
-+ `@MaxLen(length: number, msg?: string): ValidatorDecorate`
-
-  字符串最大长度
-
-+ `@MinLen(length: number, msg?: string): ValidatorDecorate`
-
-  字符串最小长度
-
-+ `@RangeLen(min: number, max: number, msg?: string): ValidatorDecorate`
-
-  字符串长度区间
-
-+ `@Max(num: number, msg?: string): ValidatorDecorate`
-
-  数值最大值
-
-+ `@Mix(num: number, msg?: string): ValidatorDecorate`
-
-  数值最小值
-
-+ `@Range(min: number, max: number, msg?: string): ValidatorDecorate`
-
-  数值区间
++ `@Pattern(reg: RegExp, msg?: string): ValidatorDecorate` 模式匹配
++ `@Required(msg?:string): ValidatorDecorate` 必填项
++ `@MaxLen(length: number, msg?: string): ValidatorDecorate` 字符串最大长度
++ `@MinLen(length: number, msg?: string): ValidatorDecorate` 字符串最小长度
++ `@RangeLen(min: number, max: number, msg?: string): ValidatorDecorate` 字符串长度区间
++ `@Max(num: number, msg?: string): ValidatorDecorate` 数值最大值
++ `@Mix(num: number, msg?: string): ValidatorDecorate` 数值最小值
++ `@Range(min: number, max: number, msg?: string): ValidatorDecorate` 数值区间
