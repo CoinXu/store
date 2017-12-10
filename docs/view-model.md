@@ -4,7 +4,7 @@ ViewModel与[Model](./model.md)唯一的区别就在于ViewModel需要与具体�
 而Model是绝对独立的，可以与任意的Store关联。之所以将单独拆分一个ViewModel，就是为了强制ViewModel与Model分离，
 从而提高Model的可维护性。
 
-在此处强调一下: **Store库存在的目标就是管理好Model**
+在此处强调一下: **Store库存在的目标之一就是管理好Model**
 
 从业务层面来说，ViewModel的可复用性远远低于Model，甚至是不可复用的，当然，可复用的组件的ViewModel不在此处讨论。
 
