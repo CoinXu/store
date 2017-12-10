@@ -19,9 +19,11 @@ import { Action, Middleware, MiddlewareCompose } from '../interfaces'
 export default function <T> (middlewares: Middleware<T>[]): MiddlewareCompose<T> {
   assert(isArray(middlewares), 'To composed must be an Array')
 
-  middlewares.forEach(function (mw: Middleware<T>) {
-    assert(isFunction(mw), 'Each item must be a function')
-  })
+  if (process.env.NODE_ENV === "development") {
+    middlewares.forEach(function (mw: Middleware<T>) {
+      assert(isFunction(mw), 'Each item must be a function')
+    })
+  }
 
   return function (action: Action,
     state: T,
@@ -33,7 +35,10 @@ export default function <T> (middlewares: Middleware<T>[]): MiddlewareCompose<T>
     dispatch(0)
 
     function dispatch (i: number) {
-      assert(i > index, 'next() called multiple times')
+      if (process.env.NODE_ENV === "development") {
+        assert(i > index, 'next() called multiple times')
+      }
+
       index = i
 
       if (i === middlewares.length) {

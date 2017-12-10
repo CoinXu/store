@@ -24,15 +24,19 @@ export interface StoreValidatorDesc<T> {
   map: ValidatorMap<Validator<T>, any>
 }
 
-export default function storeValidatorCreator<T>(desc: StoreValidatorDesc<T>, store: Store<any>): Store<any> {
-  assert(isObject(desc), 'store validator descriptor must be type of string')
+export default function storeValidatorCreator<T> (desc: StoreValidatorDesc<T>, store: Store<any>): Store<any> {
+  if (process.env.NODE_ENV === "development") {
+    assert(isObject(desc), 'store validator descriptor must be type of string')
+  }
 
   const { namespace, model, scheduler, map } = desc
 
-  assert(isString(namespace), 'desc.namespace must be type of string')
-  assert(isFunction(scheduler), 'desc.namespace must be type of function')
-  assert(isFunction(map), 'desc.map must be type of function')
-  assert(Validator.isValidator(model), 'desc.model must be instance of Validator class')
+  if (process.env.NODE_ENV === "development") {
+    assert(isString(namespace), 'desc.namespace must be type of string')
+    assert(isFunction(scheduler), 'desc.namespace must be type of function')
+    assert(isFunction(map), 'desc.map must be type of function')
+    assert(Validator.isValidator(model), 'desc.model must be instance of Validator class')
+  }
 
   store.use(function (action: Action, state: any, next: Next<any>) {
     scheduler(action, model, function () {

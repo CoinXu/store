@@ -9,9 +9,9 @@ import { isObject, assert, assign } from "../../utils/utils"
 import { Action, Next } from "../../interfaces"
 import Store from "../../Store"
 
-
 export interface CollectionState<T> {
   list: T[]
+
   [key: string]: any
 }
 
@@ -29,7 +29,7 @@ export interface CollectionDesc<T> {
  * @param {CollectionDesc} desc
  * @param {Store} store
  */
-export default function <T>(desc: CollectionDesc<T>, store: Store<any>): Store<any> {
+export default function <T> (desc: CollectionDesc<T>, store: Store<any>): Store<any> {
   const collection: Collection<T> = new Collection<T>(desc.primaryKey)
   const state: CollectionState<T> = { list: collection.get() }
 
@@ -38,7 +38,10 @@ export default function <T>(desc: CollectionDesc<T>, store: Store<any>): Store<a
       state.list = collection.get()
 
       if (isObject(props)) {
-        assert(props.list === void 0, 'Props can not have a key which named [list]')
+        if (process.env.NODE_ENV === "development") {
+          assert(props.list === void 0, 'Props can not have a key which named [list]')
+        }
+
         assign(state, props)
       }
 

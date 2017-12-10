@@ -58,12 +58,13 @@ export default class Model<T> {
    * @param {ModelDescription} desc
    * @constructor
    */
-  public constructor(desc: ModelDescription<T>) {
+  public constructor (desc: ModelDescription<T>) {
     const { name, scheduler, state } = desc
-
-    assert(isString(name), 'name must be a string')
-    assert(isFunction(scheduler), 'scheduler must be a function')
-    assert(isPureObject(state), 'state must be a pure object')
+    if (process.env.NODE_ENV === "development") {
+      assert(isString(name), 'name must be a string')
+      assert(isFunction(scheduler), 'scheduler must be a function')
+      assert(isPureObject(state), 'state must be a pure object')
+    }
 
     this.name = name
     this.scheduler = scheduler
@@ -87,7 +88,7 @@ export default class Model<T> {
    * @return {Model}
    */
 
-  public receiver(action: Action, storeState: any, next: Next<any>): Model<T> {
+  public receiver (action: Action, storeState: any, next: Next<any>): Model<T> {
     const done = (state: Partial<T>) => this.done(state, next)
     const state: any = this.scheduler.call(this, this.state, action, done)
 
@@ -104,8 +105,10 @@ export default class Model<T> {
    * @param {Next} next
    * @return {Model}
    */
-  public done(state: Partial<T>, next: Next<any>): Model<T> {
-    assert(isPureObject(state), 'state must be a pure object');
+  public done (state: Partial<T>, next: Next<any>): Model<T> {
+    if (process.env.NODE_ENV === "development") {
+      assert(isPureObject(state), 'state must be a pure object');
+    }
 
     assign(this.state, state)
     next({ [this.name]: { ...this.state as any } })
@@ -118,7 +121,7 @@ export default class Model<T> {
    * @param ins
    * @return {boolean}
    */
-  public static isModel<T>(ins: any): ins is Model<T> {
+  public static isModel<T> (ins: any): ins is Model<T> {
     return ins instanceof Model
   }
 }

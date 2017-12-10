@@ -141,8 +141,8 @@ export function includes(arr: any[], value: any): boolean {
   return false
 }
 
-export function map(arr: any[], iterator: (v: any, i?: number, a?: any[]) => any): any[] {
-  const result: any[] = []
+export function map<T>(arr: any[], iterator: (v: any, i?: number, a?: any[]) => T): T[] {
+  const result: T[] = []
   for (let i = 0, len: number = arr.length; i < len; i++) {
     result.push(iterator(arr[i], i, arr))
   }

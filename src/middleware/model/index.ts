@@ -7,6 +7,7 @@
 import Model, { ModelDescription } from "./Model"
 import { Action, Next } from "../../interfaces"
 import Store from "../../Store"
+import { map } from "../../utils/utils"
 
 /**
  * <h2>管理`model`的中间件</h2>
@@ -15,17 +16,16 @@ import Store from "../../Store"
  * @param {Store} store
  * @return {Store}
  */
-function storeModelCreator<T>(
-  mods: Array<Model<T> | ModelDescription<T>>,
-  store: Store<any>
-): Store<any> {
-  mods
-    .map(m => Model.isModel<T>(m) ? m : new Model<T>(m))
-    .map((mod: Model<T>) => {
-      store.use((action: Action, state: any, next: Next<any>) => {
-        mod.receiver(action, state, next)
-      })
+function storeModelCreator<T> (mods: Array<Model<T> | ModelDescription<T>>,
+  store: Store<any>): Store<any> {
+  const models = map<Model<T>>(mods, m => Model.isModel<T>(m) ? m : new Model<T>(m))
+
+  map(models, function (mod: Model<T>) {
+    store.use(function (action: Action, state: any, next: Next<any>) {
+      mod.receiver(action, state, next)
     })
+  })
+
   return store
 }
 

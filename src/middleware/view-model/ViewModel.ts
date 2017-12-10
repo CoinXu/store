@@ -4,7 +4,7 @@
  * @description
  */
 
-import Model, { ModelDescription, ModelScheduler } from "../model/Model"
+import Model from "../model/Model"
 import Store from "../../Store"
 import { Action } from "../../interfaces"
 
@@ -31,10 +31,10 @@ export default class ViewModel<T> extends Model<T> {
   protected scheduler: ViewModelScheduler<T>
 
   /**
-   * @param {ViewModelDescription} desc 
-   * @param {Store} store 
+   * @param {ViewModelDescription} desc
+   * @param {Store} store
    */
-  public constructor(desc: ViewModelDescription<T>, store: Store<any>) {
+  public constructor (desc: ViewModelDescription<T>, store: Store<any>) {
     super(desc)
     this.store = store
   }
@@ -44,7 +44,7 @@ export default class ViewModel<T> extends Model<T> {
    * @param ins
    * @return {boolean}
    */
-  public static isViewModel<T>(ins: any): ins is ViewModel<T> {
+  public static isViewModel<T> (ins: any): ins is ViewModel<T> {
     return ins instanceof ViewModel
   }
 }

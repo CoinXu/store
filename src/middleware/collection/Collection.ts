@@ -13,7 +13,8 @@ export interface CollectionJson<T> {
 }
 
 let counter = 0
-function generate(): string {
+
+function generate (): string {
   return "STORE_COLLECTION_PRIMARY_KEY_" + counter++
 }
 
@@ -30,8 +31,10 @@ export default class Collection<T extends { [key: string]: any }> {
   // 初始时保存的model，与_models作对比，确定应该添加、删除或更新
   private cache: Partial<T>
 
-  public constructor(primaryKey: keyof T, mods: T[] = []) {
-    assert(!isString(primaryKey) || !!primaryKey, 'Primary key must be a string and required')
+  public constructor (primaryKey: keyof T, mods: T[] = []) {
+    if (process.env.NODE_ENV === "development") {
+      assert(!isString(primaryKey) || !!primaryKey, 'Primary key must be a string and required')
+    }
     this.primaryKey = primaryKey
     this.reset(mods)
   }
@@ -41,13 +44,18 @@ export default class Collection<T extends { [key: string]: any }> {
    * @param {Array<T>} mods
    * @return {Collection<T>}
    */
-  public reset(mods: T[]): Collection<T> {
-    assert(isArray(mods), 'Models must be a Array')
+  public reset (mods: T[]): Collection<T> {
+    if (process.env.NODE_ENV === "development") {
+      assert(isArray(mods), 'Models must be a Array')
+    }
+
     const map: Partial<T> = {}
     const primaryKey: string = this.primaryKey
 
     mods.forEach(mod => {
-      assert(isObject(mod), 'Each model muse be a object')
+      if (process.env.NODE_ENV === "development") {
+        assert(isObject(mod), 'Each model muse be a object')
+      }
       map[mod[primaryKey]] = mod
     })
 
@@ -60,13 +68,12 @@ export default class Collection<T extends { [key: string]: any }> {
     return this
   }
 
-
   /**
    * 移除model，可传primaryKey和model本身
    * @param {string|Object} keyOrMod
    * @return {Collection}
    */
-  public remove(keyOrMod: string | T): Collection<T> {
+  public remove (keyOrMod: string | T): Collection<T> {
     const notPrimaryKey: boolean = isObject<T>(keyOrMod)
     const primaryKey: string = isObject<T>(keyOrMod) ? keyOrMod[this.primaryKey] : keyOrMod
     const PrimaryKey: string = this.primaryKey
@@ -84,9 +91,11 @@ export default class Collection<T extends { [key: string]: any }> {
    * @param {Partial<T>} props
    * @return {Collection<T>}
    */
-  public update(primaryValue: string, props: Partial<T>): Collection<T> {
-    assert(isString(primaryValue) || isNumber(primaryValue), 'Primary value must be String or Number instance')
-    assert(isObject(props), 'Props must be a Object')
+  public update (primaryValue: string, props: Partial<T>): Collection<T> {
+    if (process.env.NODE_ENV === "development") {
+      assert(isString(primaryValue) || isNumber(primaryValue), 'Primary value must be String or Number instance')
+      assert(isObject(props), 'Props must be a Object')
+    }
 
     this.models = this.models.map(m => m[this.primaryKey] === primaryValue ? { ...m as object, ...props as object } as T : m)
 
@@ -96,14 +105,16 @@ export default class Collection<T extends { [key: string]: any }> {
     }
     return this
   }
+
   /**
    * 添加model
    * @param {T} mod
    * @return {Collection<T>}
    */
-  public add(mod: T): Collection<T> {
-    assert(isObject(mod), 'Model must be a Object')
-
+  public add (mod: T): Collection<T> {
+    if (process.env.NODE_ENV === "development") {
+      assert(isObject(mod), 'Model must be a Object')
+    }
     if (mod[this.primaryKey] === void 0) {
       mod[this.primaryKey] = generate()
     }
@@ -118,8 +129,11 @@ export default class Collection<T extends { [key: string]: any }> {
    * @param {Function} compare
    * @return {Collection<T>}
    */
-  public sort(compare: (a: T, b: T) => number): Collection<T> {
-    assert(isFunction(compare), 'Compare must be a Function instance')
+  public sort (compare: (a: T, b: T) => number): Collection<T> {
+    if (process.env.NODE_ENV === "development") {
+      assert(isFunction(compare), 'Compare must be a Function instance')
+    }
+
     this.models = this.models.sort(compare)
     return this
   }
@@ -129,7 +143,7 @@ export default class Collection<T extends { [key: string]: any }> {
    * @param {number} index
    * @return {T|null}
    */
-  public at(index: number): T | null {
+  public at (index: number): T | null {
     return this.models[index] || null
   }
 
@@ -137,7 +151,7 @@ export default class Collection<T extends { [key: string]: any }> {
    * 获取最后一个model
    * @return {T}
    */
-  public last(): T {
+  public last (): T {
     return this.models[this.models.length - 1]
   }
 
@@ -146,7 +160,7 @@ export default class Collection<T extends { [key: string]: any }> {
    * @param {Partial<T>} filter
    * @return {T|null}
    */
-  public find(filter: Partial<T>): T | null {
+  public find (filter: Partial<T>): T | null {
     assert(isObject(filter), 'Filter must be a Object')
 
     const FilterKeys = keys(filter)
@@ -163,7 +177,7 @@ export default class Collection<T extends { [key: string]: any }> {
    * 返回所有model
    * @return {T[]}
    */
-  public get(): T[] {
+  public get (): T[] {
     return this.models.slice()
   }
 
@@ -171,7 +185,7 @@ export default class Collection<T extends { [key: string]: any }> {
    * 将所有的model分为三类:toDelete\toUpdate\toCreate并返回
    * @return {{models: Array.<Object>, toDelete: Array, toUpdate: Array, toCreate: Array}}
    */
-  public toJSON(): CollectionJson<T> {
+  public toJSON (): CollectionJson<T> {
     const toDelete: T[] = []
     const toUpdate: T[] = []
     const toCreate: T[] = []
@@ -214,7 +228,7 @@ export default class Collection<T extends { [key: string]: any }> {
   /**
    * @return {string}
    */
-  public toString(): string {
+  public toString (): string {
     return '[object StoreCollection]'
   }
 }
