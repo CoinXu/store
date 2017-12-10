@@ -9,14 +9,14 @@ Store是一个JavaScript状态管理器,主要特性如下:
 + Collection相关操作
 + Validator
 
-# Store致力于解决两个问题：
+# Store致力于解决的问题
 ### 流程控制
 Store认为:
 
-1. 业务流程是有序或独立的，比如`A->B->C`或`A|B|C`，一旦业务确定，不太可能出现`C->A->B`这样乱序的触发顺序。
-2. 在action遵从**最小粒度**设计原则的情况下，一定会出现一个业务流程需要多个action组合完成。
++ 业务流程是有序或独立的，比如`A->B->C`或`A|B|C`，一旦业务确定，不太可能出现`C->A->B`这样乱序的触发顺序。
++ 在action遵从**最小粒度**设计原则的情况下，一定会出现一个业务流程需要多个action组合完成。
    所以Store可以一次派发多个action. 如：`store.dispatch([{type: 'action a'}, {type: 'action b'}])`
-3. 可能需要知道当前派发的action执行结果，根据结果来执行下一步操作。所以为`dispatch`函数增加了`callback`参数。
++ 可能需要知道当前派发的action执行结果，根据结果来执行下一步操作。所以为`dispatch`函数增加了`callback`参数。
 
 ### 重拾在mvvm框架大规模普及下遗失的model
 由于MVVM可以极方便的将model映射到view，所以很多项目中并没有model的存在，而是将接口数据转换后直接写入到view model。
