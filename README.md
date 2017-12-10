@@ -18,9 +18,9 @@ Store认为:
    所以Store可以一次派发多个action. 如：`store.dispatch([{type: 'action a'}, {type: 'action b'}])`
 3. 可能需要知道当前派发的action执行结果，根据结果来执行下一步操作。所以为`dispatch`函数增加了`callback`参数。
 
-### 重拾在MVVM框架大规模普及下遗失的model
+### 重拾在mvvm框架大规模普及下遗失的model
 由于MVVM可以极方便的将model映射到view，所以很多项目中并没有model的存在，而是将接口数据转换后直接写入到view model。
-在小的项目这样写没有问题，但在大一些项目中，model数以百计，接口数以千计，如果还是以接口->view model这样的数据管理方式，
+但在大一些项目中，model数以百计，接口数以千计，如果还是以接口->view model这样的数据管理方式，
 将会造成灾难性的后果，抛开代码量增加、同一逻辑多次实现的问题不谈，如果某一接口或model发生了不兼容更新，对维护而言将会造成灾难性的后果。
 所以Store强烈建议将model及相关接口单独抽离，以实现复用与统一维护。
 
