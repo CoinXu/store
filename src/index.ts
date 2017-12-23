@@ -14,6 +14,7 @@ import storeCollectionCreator from "./middleware/collection"
 
 import { Validator } from "./middleware/validator/Validator"
 import * as Validates from "./middleware/validator/decorate"
+import storeValidatorCreator from "./middleware/validator"
 
 export {
   Store,
@@ -25,5 +26,6 @@ export {
   storeCollectionCreator,
 
   Validator,
-  Validates
+  Validates,
+  storeValidatorCreator
 }
