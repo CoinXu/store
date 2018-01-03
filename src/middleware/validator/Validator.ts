@@ -67,24 +67,17 @@ export class Validator<T extends { [key: string]: any }> {
   /**
    * 验证一个object上所有字段
    * @param {Object} values
-   * @return {?Object<string, string>}
+   * @return {Object<string, string>}
    */
-  public valid(values: Partial<T>): { [key: string]: string } | null {
+  public valid(values: Partial<T>): { [key: string]: string } {
     const message: { [key: string]: string } = {}
-
-    let msg: string
-    let has: boolean = false
 
     for (let propKey in values) {
       if (!hasOwnProperty.call(values, propKey)) continue
-      msg = this.validOne(propKey, values[propKey])
-      if (msg !== null) {
-        has = true
-        message[propKey] = msg
-      }
+      message[propKey] = this.validOne(propKey, values[propKey])
     }
 
-    return has ? message : null
+    return message
   }
 
   /**
@@ -119,11 +112,16 @@ export class Validator<T extends { [key: string]: any }> {
     const message = this.valid(values)
 
     // 保存检测状态
-    this.__message__ = message === null ? {} as any : message
+    if (message !== null) {
+      this.__message__ = {
+        ...(this.__message__ as any),
+        ...message
+      }
+    }
 
     for (let propKey in values) {
       if (!hasOwnProperty.call(values, propKey)) continue
-      if (message && hasOwnProperty.call(message, propKey)) continue
+      if (message[propKey] !== null) continue
       (this as { [key: string]: any })[propKey] = values[propKey]
     }
 

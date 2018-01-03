@@ -11,7 +11,7 @@ export declare class Validator<T extends {
     validOne(key: keyof T, value: any): string | null;
     valid(values: Partial<T>): {
         [key: string]: string;
-    } | null;
+    };
     getValid(): {
         [key in keyof T]?: string;
     } | null;
