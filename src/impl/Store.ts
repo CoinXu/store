@@ -105,14 +105,15 @@ export class Store<T extends StateSignature> extends AbstractStore<T> {
       warning(isString(action.type), 'type of action must be a string')
     }
 
+    const thiz: Store<T> = this
     combiner<T>(this.mw)(action,
-      this.state,
-      (result: Partial<T>) => {
-        assign(this.state, result)
+      thiz.state,
+      function (result: Partial<T>) {
+        assign(thiz.state, result)
       },
-      () => {
+      function () {
         if (isFunction<DispatchCallback<T>>(callback)) {
-          callback(this.state)
+          callback(thiz.state)
         }
       })
 

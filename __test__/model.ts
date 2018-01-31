@@ -4,7 +4,8 @@
  * @description
  */
 
-import { Store, storeModelCreator } from "../src"
+import { Store } from "../src/impl/Store"
+import storeModelCreator from "../src/build-in/model/impl"
 import { equal } from "assert"
 import { Action, Next } from "../src/interfaces"
 
