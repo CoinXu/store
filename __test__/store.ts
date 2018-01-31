@@ -5,7 +5,7 @@
  */
 
 import "mocha"
-import { Store } from "../src"
+import { Store } from "../src/impl/Store"
 import { equal } from "assert"
 import { Action, Next, Middleware } from "../src/interfaces"
 
@@ -105,7 +105,9 @@ describe('Store class', function () {
     store.use(function (action, state, next) {
       switch (action.type) {
         case actions.first:
-          return setTimeout(function () { next({ count: state.count + 1 }) }, 100)
+          return setTimeout(function () {
+            next({ count: state.count + 1 })
+          }, 100)
         default:
           return next({})
       }
@@ -114,7 +116,9 @@ describe('Store class', function () {
     store.use(function (action, state, next) {
       switch (action.type) {
         case actions.second:
-          return setTimeout(function () { next({ count: state.count + 1 }) }, 100)
+          return setTimeout(function () {
+            next({ count: state.count + 1 })
+          }, 100)
         default:
           return next({})
       }
@@ -123,7 +127,9 @@ describe('Store class', function () {
     store.use(function (action, state, next) {
       switch (action.type) {
         case actions.third:
-          return setTimeout(function () { next({ count: state.count + 1 }) }, 100)
+          return setTimeout(function () {
+            next({ count: state.count + 1 })
+          }, 100)
         default:
           return next({})
       }
