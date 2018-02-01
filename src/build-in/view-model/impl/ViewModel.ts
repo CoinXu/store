@@ -1,14 +1,13 @@
 /**
  * @author coinxu<duanxian0605@gmail.com>
- * @date   31/01/2018
+ * @date   01/02/2018
  * @description
  */
-
 import { Model } from "../../model/impl/Model"
 import { ViewModel as ViewModelInter } from "../inter/ViewModel"
 import { Scheduler } from "../inter/Scheduler"
 import { Description } from "../inter/Description"
-import { Store } from "../../../impl/Store"
+import { Store } from "../../../core/impl/Store"
 
 /**
  *

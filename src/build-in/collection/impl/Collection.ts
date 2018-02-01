@@ -4,11 +4,11 @@
  * @description
  */
 
-import { assert, isFunction, isNumber, isString, isArray, isObject } from "../../../impl/utils"
-import { keys, every, find } from "../../../impl/compatible"
+import { assert, isFunction, isNumber, isString, isArray, isObject } from "../../../core/impl/utils"
+import { keys, every, find } from "../../../core/impl/compatible"
 import { CollectionJSON } from "../inter/CollectionJSON"
 import { Collection as CollectionInter } from "../inter/Collection"
-import { StateSignature } from "../../../inter/StateSignature"
+import { StateSignature } from "../../../core/inter/StateSignature"
 
 let counter = 0
 

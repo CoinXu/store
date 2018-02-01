@@ -5,9 +5,8 @@
  */
 
 import { equal } from "assert"
-import { DataType, DataTypes } from "../../src/middleware/validator/decorate"
-import { Validator } from "../../src/middleware/validator/Validator"
-
+import { DataType, DataTypes } from "../../src/build-in/validator/decorate"
+import { Validator } from "../../src/build-in/validator/impl/Validator"
 
 describe('Validator.DataType', function () {
 

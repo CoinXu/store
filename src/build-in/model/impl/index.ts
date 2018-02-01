@@ -6,12 +6,12 @@
 
 import { Model } from "./Model"
 import { Description } from "../inter/Description"
-import { Action } from "../../../inter/Action"
-import { NextCallback } from "../../../inter/NextCallback"
-import { Middleware } from "../../../inter/Middleware"
-import { StateSignature } from "../../../inter/StateSignature"
-import { Store } from "../../../impl/Store"
-import { map } from "../../../impl/compatible"
+import { Action } from "../../../core/inter/Action"
+import { NextCallback } from "../../../core/inter/NextCallback"
+import { Middleware } from "../../../core/inter/Middleware"
+import { StateSignature } from "../../../core/inter/StateSignature"
+import { Store } from "../../../core/impl/Store"
+import { map } from "../../../core/impl/compatible"
 
 export type CreatorArg<T> = Model<T> | Description<T>
 

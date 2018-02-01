@@ -5,9 +5,9 @@
  */
 
 import { equal, ok } from "assert"
-import Store from "../src/Store"
-import storeValidatorCreator from "../src/middleware/validator"
-import { Validator } from "../src/middleware/validator/Validator"
+import { Store } from "../src/core/impl/Store"
+import storeValidatorCreator from "../src/build-in/validator/impl"
+import { Validator } from "../src/build-in/validator/impl/Validator"
 import {
   DataType,
   DataTypes,
@@ -23,8 +23,9 @@ import {
   Max,
   Min,
   Range
-} from "../src/middleware/validator/decorate"
-import { Action, Next } from "../src/interfaces";
+} from "../src/build-in/validator/decorate"
+import { Action } from "../src/core/inter/Action"
+import { NextCallback } from "../src/core/inter/NextCallback"
 
 /** --------------------- Define User --------------------- */
 enum Gender {
@@ -161,7 +162,7 @@ describe('storeValidatorCreator', function () {
    * @param {User} model
    * @param {Function} done
    */
-  function scheduler(action: Action, model: User, done: Next<any>) {
+  function scheduler(action: Action, model: User, done: NextCallback<any>) {
     const { type, payload } = action
     switch (type) {
       case Action.upgrade:

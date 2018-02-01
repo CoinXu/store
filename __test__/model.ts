@@ -4,10 +4,11 @@
  * @description
  */
 
-import { Store } from "../src/impl/Store"
-import storeModelCreator from "../src/build-in/model/impl"
 import { equal } from "assert"
-import { Action, Next } from "../src/interfaces"
+import { Store } from "../src/core/impl/Store"
+import storeModelCreator from "../src/build-in/model/impl"
+import { Action } from "../src/core/inter/Action"
+import { NextCallback } from "../src/core/inter/NextCallback"
 
 interface TestModel {
   count: number
@@ -23,7 +24,7 @@ const Actions = {
 }
 
 const actions = {
-  add: function (state: TestModel, done: Next<TestModel>): void {
+  add: function (state: TestModel, done: NextCallback<TestModel>): void {
     setTimeout(function () {
       done({ count: state.count + 1 })
     }, 200)
@@ -32,7 +33,7 @@ const actions = {
 const mod = {
   name: 'mod',
   state: { ...Def },
-  scheduler: function (state: TestModel, action: Action, done: Next<TestModel>): any {
+  scheduler: function (state: TestModel, action: Action, done: NextCallback<TestModel>): any {
     switch (action.type) {
       case Actions.add:
         return actions.add(state, done)

@@ -1,15 +1,15 @@
 /**
  * @author coinxu<duanxian0605@gmail.com>
- * @date   26/11/2017
+ * @date   01/02/2018
  * @description
  */
 import { ViewModel } from "./ViewModel"
 import { Description } from "../inter/Description"
-import { Store } from "../../../impl/Store"
-import { Action } from "../../../inter/Action"
-import { NextCallback } from "../../../inter/NextCallback"
-import { Middleware } from "../../../inter/Middleware"
-import { map } from "../../../impl/compatible"
+import { Store } from "../../../core/impl/Store"
+import { Action } from "../../../core/inter/Action"
+import { NextCallback } from "../../../core/inter/NextCallback"
+import { Middleware } from "../../../core/inter/Middleware"
+import { map } from "../../../core/impl/compatible"
 
 export type CreatorArg<T, U> = ViewModel<T, U> | Description<T>
 

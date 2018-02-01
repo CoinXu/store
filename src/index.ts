@@ -4,17 +4,17 @@
  * @description
  */
 
-import Store from "./Store"
-import Model from "./middleware/model/Model"
-import storeModelCreator from "./middleware/model"
-import ViewModel from "./middleware/view-model/ViewModel"
-import storeViewModelCreator from "./middleware/view-model"
-import Collection from "./middleware/collection/Collection"
-import storeCollectionCreator from "./middleware/collection"
+import {Store} from "./core/impl/Store"
+import {Model} from "./build-in/model/impl/Model"
+import storeModelCreator from "./build-in/model/impl"
+import {ViewModel} from "./build-in/view-model/impl/ViewModel"
+import storeViewModelCreator from "./build-in/view-model/impl"
+import {Collection} from "./build-in/collection/impl/Collection"
+import storeCollectionCreator from "./build-in/collection/impl"
 
-import { Validator } from "./middleware/validator/Validator"
-import * as Validates from "./middleware/validator/decorate"
-import storeValidatorCreator from "./middleware/validator"
+import { Validator } from "./build-in/validator/impl/Validator"
+import storeValidatorCreator from "./build-in/validator/impl"
+import * as Validates from "./build-in/validator/decorate"
 
 export {
   Store,

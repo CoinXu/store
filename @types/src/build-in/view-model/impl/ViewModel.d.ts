@@ -2,7 +2,7 @@ import { Model } from "../../model/impl/Model";
 import { ViewModel as ViewModelInter } from "../inter/ViewModel";
 import { Scheduler } from "../inter/Scheduler";
 import { Description } from "../inter/Description";
-import { Store } from "../../../impl/Store";
+import { Store } from "../../../core/impl/Store";
 export declare class ViewModel<T, U> extends Model<T> implements ViewModelInter<T> {
     store: Store<U>;
     scheduler: Scheduler<T>;

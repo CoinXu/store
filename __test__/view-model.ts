@@ -4,12 +4,10 @@
  * @description
  */
 
-// import { Store, storeViewModelCreator } from '../src'
-// import { Action, Next } from '../src/interfaces'
 import { equal } from 'assert'
-import { Store } from "../src/impl/Store"
-import { Action } from "../src/inter/Action"
-import { NextCallback as Next } from "../src/inter/NextCallback"
+import { Store } from "../src/core/impl/Store"
+import { Action } from "../src/core/inter/Action"
+import { NextCallback as Next } from "../src/core/inter/NextCallback"
 import storeViewModelCreator from "../src/build-in/view-model/impl"
 
 const Action = {

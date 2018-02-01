@@ -3,18 +3,15 @@
  * @date   27/11/2017
  * @description
  */
-// import { Store, storeCollectionCreator, Collection } from '../src'
-// import { CollectionDesc, CollectionScheduler, CollectionState } from '../src/middleware/collection'
-// import { Action } from "../src/interfaces"
-import { equal } from 'assert'
 import "mocha"
+import { equal } from 'assert'
 import storeCollectionCreator from "../src/build-in/collection/impl"
 import { Collection } from "../src/build-in/collection/impl/Collection"
 import { CollectionState } from "../src/build-in/collection/inter/CollectionState"
 import { Scheduler as  CollectionScheduler } from "../src/build-in/collection/inter/Scheduler"
 import { Description as  CollectionDesc } from "../src/build-in/collection/inter/Description"
-import { Action } from "../src/inter/Action"
-import { Store } from "../src/impl/Store"
+import { Action } from "../src/core/inter/Action"
+import { Store } from "../src/core/impl/Store"
 
 interface Mod {
   name: string

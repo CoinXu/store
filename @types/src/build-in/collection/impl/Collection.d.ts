@@ -1,6 +1,6 @@
 import { CollectionJSON } from "../inter/CollectionJSON";
 import { Collection as CollectionInter } from "../inter/Collection";
-import { StateSignature } from "../../../inter/StateSignature";
+import { StateSignature } from "../../../core/inter/StateSignature";
 export declare class Collection<T extends StateSignature> implements CollectionInter<T> {
     private primaryKey;
     private models;

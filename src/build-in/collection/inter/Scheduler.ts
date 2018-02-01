@@ -3,8 +3,8 @@
  * @date   31/01/2018
  * @description
  */
-import { Store } from "../../../impl/Store"
-import { Action } from "../../../inter/Action"
+import { Store } from "../../../core/impl/Store"
+import { Action } from "../../../core/inter/Action"
 import { Collection } from "./Collection"
 import { CollectionState } from "./CollectionState"
 

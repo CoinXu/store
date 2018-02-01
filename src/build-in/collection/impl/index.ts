@@ -7,12 +7,12 @@
 import { Collection } from "./Collection"
 import { Description } from "../inter/Description"
 import { CollectionState } from "../inter/CollectionState"
-import { Store } from "../../../impl/Store"
-import { Action } from "../../../inter/Action"
-import { NextCallback } from "../../../inter/NextCallback"
-import { Middleware } from "../../../inter/Middleware"
-import { assert, isObject } from "../../../impl/utils"
-import { assign } from "../../../impl/compatible"
+import { Store } from "../../../core/impl/Store"
+import { Action } from "../../../core/inter/Action"
+import { NextCallback } from "../../../core/inter/NextCallback"
+import { Middleware } from "../../../core/inter/Middleware"
+import { assert, isObject } from "../../../core/impl/utils"
+import { assign } from "../../../core/impl/compatible"
 
 export default function <T>(description: Description<T>, store: Store<any>): Store<any> {
 

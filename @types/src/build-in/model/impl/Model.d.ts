@@ -1,9 +1,9 @@
 import { Description } from "../inter/Description";
 import { Model as ModelInter } from "../inter/Model";
 import { Scheduler } from "../inter/Scheduler";
-import { NextCallback } from "../../../inter/NextCallback";
-import { Action } from "../../../inter/Action";
-import { StateSignature } from "../../../inter/StateSignature";
+import { NextCallback } from "../../../core/inter/NextCallback";
+import { Action } from "../../../core/inter/Action";
+import { StateSignature } from "../../../core/inter/StateSignature";
 export declare class Model<T> implements ModelInter<T> {
     name: string;
     state: T;

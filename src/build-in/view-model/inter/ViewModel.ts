@@ -1,9 +1,9 @@
 /**
  * @author coinxu<duanxian0605@gmail.com>
- * @date   31/01/2018
+ * @date   01/02/2018
  * @description
  */
-import { Store } from "../../../impl/Store"
+import { Store } from "../../../core/impl/Store"
 import { Model } from "../../model/inter/Model"
 
 export interface ViewModel<T> extends Model<T> {
