@@ -4,4 +4,5 @@
 yarn.lock
 /lib/*
 .DS_store
-/@types/__test__
+__test_lib__
+*.map

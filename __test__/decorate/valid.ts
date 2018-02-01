@@ -4,7 +4,7 @@
  * @description Validator基类测试用例
  */
 
-import { ok, equal } from "assert"
+import { equal } from "assert"
 import {
   Enum,
   Pattern,
@@ -17,8 +17,9 @@ import {
   Max,
   Min,
   Range
-} from "../../src/middleware/validator/decorate"
-import { Validator } from "../../src/middleware/validator/Validator"
+} from "../../src/build-in/validator/decorate"
+
+import { Validator } from "../../src/build-in/validator/impl/Validator"
 
 describe('Validator.valid', function () {
 

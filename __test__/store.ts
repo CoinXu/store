@@ -5,26 +5,28 @@
  */
 
 import "mocha"
-import { Store } from "../src"
+import { Store } from "../src/core/impl/Store"
 import { equal } from "assert"
-import { Action, Next, Middleware } from "../src/interfaces"
+import { Action } from "../src/core/inter/Action"
+import { NextCallback } from "../src/core/inter/NextCallback"
+import { Middleware } from "../src/core/inter/Middleware"
 
 describe('Store class', function () {
   interface TestState {
     count: number
   }
 
-  const mw1: Middleware<TestState> = function (action: Action, state: TestState, next: Next<TestState>) {
+  const mw1: Middleware<TestState> = function (action: Action, state: TestState, next: NextCallback<TestState>) {
     setTimeout(function () {
       next({ count: state.count + 1 })
     }, 200)
   }
 
-  const mw2: Middleware<TestState> = function (action: Action, state: TestState, next: Next<TestState>) {
+  const mw2: Middleware<TestState> = function (action: Action, state: TestState, next: NextCallback<TestState>) {
     next({ count: state.count + 1 })
   }
 
-  const mw3: Middleware<TestState> = function (action: Action, state: TestState, next: Next<TestState>) {
+  const mw3: Middleware<TestState> = function (action: Action, state: TestState, next: NextCallback<TestState>) {
     setTimeout(function () {
       next({ count: state.count + 1 })
     }, 200)
@@ -105,7 +107,9 @@ describe('Store class', function () {
     store.use(function (action, state, next) {
       switch (action.type) {
         case actions.first:
-          return setTimeout(function () { next({ count: state.count + 1 }) }, 100)
+          return setTimeout(function () {
+            next({ count: state.count + 1 })
+          }, 100)
         default:
           return next({})
       }
@@ -114,7 +118,9 @@ describe('Store class', function () {
     store.use(function (action, state, next) {
       switch (action.type) {
         case actions.second:
-          return setTimeout(function () { next({ count: state.count + 1 }) }, 100)
+          return setTimeout(function () {
+            next({ count: state.count + 1 })
+          }, 100)
         default:
           return next({})
       }
@@ -123,7 +129,9 @@ describe('Store class', function () {
     store.use(function (action, state, next) {
       switch (action.type) {
         case actions.third:
-          return setTimeout(function () { next({ count: state.count + 1 }) }, 100)
+          return setTimeout(function () {
+            next({ count: state.count + 1 })
+          }, 100)
         default:
           return next({})
       }
