@@ -4,9 +4,13 @@
  * @description
  */
 
-import { Store, storeViewModelCreator } from '../src'
+// import { Store, storeViewModelCreator } from '../src'
+// import { Action, Next } from '../src/interfaces'
 import { equal } from 'assert'
-import { Action, Next } from '../src/interfaces'
+import { Store } from "../src/impl/Store"
+import { Action } from "../src/inter/Action"
+import { NextCallback as Next } from "../src/inter/NextCallback"
+import storeViewModelCreator from "../src/build-in/view-model/impl"
 
 const Action = {
   add: 'add',
@@ -45,10 +49,11 @@ describe('storeViewModelCreator middleware', function () {
   interface VM {
     vm: State
   }
+
   const store = new Store<VM>()
   storeViewModelCreator<State, VM>([vm], store)
   store.initialize()
-  
+
   let counter = 0
   it('View model can dispatch anytime', function (done) {
     store.subscribe(({ vm: { count } }) => {

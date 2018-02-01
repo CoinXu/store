@@ -11,7 +11,8 @@ import { Store } from "../../../impl/Store"
 import { Action } from "../../../inter/Action"
 import { NextCallback } from "../../../inter/NextCallback"
 import { Middleware } from "../../../inter/Middleware"
-import { assert, assign, isObject } from "../../../utils/utils";
+import { assert, isObject } from "../../../impl/utils"
+import { assign } from "../../../impl/compatible"
 
 export default function <T>(description: Description<T>, store: Store<any>): Store<any> {
 

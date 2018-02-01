@@ -3,7 +3,6 @@
  * @date   31/01/2018
  * @description
  */
-
 import { Description } from "../inter/Description"
 import { Model as ModelInter } from "../inter/Model"
 import { Scheduler } from "../inter/Scheduler"
@@ -16,8 +15,8 @@ import { assign } from "../../../impl/compatible"
 
 export class Model<T> implements ModelInter<T> {
   public name: string
-  public scheduler: Scheduler<T>
   public state: T
+  public scheduler: Scheduler<T>
 
   /**
    * @param {Description<T>} description

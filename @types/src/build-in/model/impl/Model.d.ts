@@ -6,8 +6,8 @@ import { Action } from "../../../inter/Action";
 import { StateSignature } from "../../../inter/StateSignature";
 export declare class Model<T> implements ModelInter<T> {
     name: string;
-    scheduler: Scheduler<T>;
     state: T;
+    scheduler: Scheduler<T>;
     constructor(description: Description<T>);
     receiver(action: Action, storeState: any, next: NextCallback<StateSignature>): Model<T>;
     done(state: Partial<T>, next: NextCallback<StateSignature>): Model<T>;
