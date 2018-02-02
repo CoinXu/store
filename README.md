@@ -34,6 +34,16 @@ Store使用[中间件](https://coinxu.github.io/store/docs/store.html#中间件)
 npm install sugo-store
 ```
 
+# 测试
+```bash
+// fetch codes to local
+git clone https://github.com/CoinXu/store.git
+// install dependencies
+npm install
+// run all test case
+npm run test
+```
+
 # 示例
 假设有这样的业务流程:
 
