@@ -2,10 +2,10 @@
 [![npm version](https://badge.fury.io/js/sugo-store.svg)](https://badge.fury.io/js/sugo-store)
 
 # 概述
-Store是一个JavaScript状态管理器,主要特性如下:
-+ 任意组合多个action,实现业务流程控制
-+ Model独立,高可复用,通常一个Model只用定义一次,可在整个项目中使用
-+ 单独的ViewModel,与Model完全隔离
+Store是一个JavaScript状态管理器，主要特性如下:
++ 任意组合多个action，实现业务流程控制
++ Model独立，高可复用，通常一个Model只用定义一次，可在整个项目中使用
++ 单独的ViewModel，与Model完全隔离
 + Collection相关操作
 + Validator
 
@@ -15,7 +15,7 @@ Store认为:
 
 + 业务流程是有序或独立的，比如`A->B->C`或`A|B|C`，一旦业务确定，不太可能出现`C->A->B`这样乱序的触发顺序。
 + 在action遵从**最小粒度**设计原则的情况下，一定会出现一个业务流程需要多个action组合完成。
-   所以Store可以一次派发多个action. 如：`store.dispatch([{type: 'action a'}, {type: 'action b'}])`
+  所以Store可以一次派发多个action，如：`store.dispatch([{type: 'action a'}， {type: 'action b'}])`
 + 可能需要知道当前派发的action执行结果，根据结果来执行下一步操作。所以为`dispatch`函数增加了`callback`参数。
 
 ### 重拾在mvvm框架大规模普及下遗失的model
@@ -26,7 +26,7 @@ Store认为:
 
 # 设计概要
 Store使用[中间件](https://coinxu.github.io/store/docs/store.html#中间件)的设计模式；
-使用数组管理所有的中间件，当一个行为发生的，__依次__通知这些中间件，所有中间件处理完成后，将结果传入`subscribe`。
+使用数组管理所有的中间件，当一个行为发生的，**依次**通知这些中间件，所有中间件处理完成后，将结果传入`subscriber`。
 执行到某一个中间件时，Store保证其前面的中间件已经执行完成，此时可以直接使用前面中间件产生的结果。
 
 # 安装
@@ -62,8 +62,8 @@ const store = new Store<State>()
 enum Action = { initialize = 'INITIALIZE' }
 
 // 1. 定义user相关中间件
-store.use(function(action, state, next){
-    const { type, payload } = action
+store.use(function(action， state， next){
+    const { type， payload } = action
     switch (type) {
       // 查询用户数据
       case Action.initialize:
@@ -77,10 +77,10 @@ store.use(function(action, state, next){
 })
 
 // 2. 定义用户组中间件
-store.use(function(action, state, next){
-  const { type, payload } = action
+store.use(function(action， state， next){
+  const { type， payload } = action
   switch (type) {
-    // 由于中间件是有序执行的，所以此时state.user已经获取到了,可以直接使用
+    // 由于中间件是有序执行的，所以此时state.user已经获取到了，可以直接使用
     case Action.initialize:
       window
         .fetch(`/api/group/${state.user.group_id}/info`)
@@ -96,12 +96,12 @@ store.subscribe(state => console.log(state))
 
 // 派发初始化action
 store.dispatch({
-  type: Action.initialize,
+  type: Action.initialize，
   payload: 'user_record_id'
-}, state => console.log(state.user, state.group))
+}， state => console.log(state.user， state.group))
 ```
 上面的代码是Store最基本的示例，实际上Store提供了一些基础的中间件来更好的组织代的代码。
-比如`storeViewModelCreator`,`StoreValidatorCreator`等
+比如`storeViewModelCreator`，`StoreValidatorCreator`等
 
 ## 运行环境
 所有支持es3的环境。包括不限于：
