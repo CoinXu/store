@@ -127,7 +127,7 @@ export function some<T>(arr: T[], iterator: (v: T, i?: number, a?: T[]) => boole
 }
 
 /**
- * @param {any[]} arr
+ * @param {*[]} arr
  * @param value
  * @returns {boolean}
  */

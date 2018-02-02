@@ -15,13 +15,13 @@ Store使用私有state对象来管理所有状态，state对象的变化是由�
 所以Store中间件定义为：
 ```ts
 export interface Middleware<T> {
-  (action: Action, state: T, next: Next<T>): void
+  (action: Action, state: T, next: NextCallback<T>): void
 }
 ```
 Store调用中间件是有序的，并且是同步的。只有当上一个中间件调用了传入的next参数时，才会执行下一个中间件。
 所以，无论如何，在你的中间件中都应该调用并且只调用一次next参数。一个简单的中间件定义：
 ```ts
-function(action: Action, state: any, next: Next<any>) {
+function(action: Action, state: any, next: NextCallback<any>) {
   if( action.type === "one action type") {
     // do something then call next method
     next({ props: "value" })
@@ -34,12 +34,13 @@ function(action: Action, state: any, next: Next<any>) {
 
   构造器,初始state参数为可选
   ```ts
-  import { Store } from "store"
+  import { Store } from "sugo-store"
   interface State {
     num: number
   }
   let store: Store<State>
   store = new Store<State>({num: 0})
+  // or
   store = new Store<State>()
   ```
 
@@ -51,7 +52,7 @@ function(action: Action, state: any, next: Next<any>) {
   store.initialize({type: 'defined by user'})
   ```
 
-+ `public dispatch(actionOrActions: Action | Action[], callback?: Observer<T>): Store<T>`
++ `public dispatch(actionOrActions: Action | Action[], callback?: DispatchCallback<T>): Store<T>`
 
   派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
   调用的依然是`store.signle`或`store.multiple`.
@@ -63,18 +64,18 @@ function(action: Action, state: any, next: Next<any>) {
   以便即时处理当前流程产生的异常或决定下一步如何进行.
   所以给`dispatch`方法添加了`callback`参数.
 
-+ `protected single(action: Action, callback: Observer<T>): Store<T>`
++ `protected one(action: Action, callback: DispatchCallback<T>): Store<T>`
 
   派发单个action
   ```ts
-  store.single({type: 'action type'}, console.log)
+  store.one({type: 'action type'}, console.log)
   ```
 
-+ `protected multiple(actions: Action[], callback?: Observer<T>): Store<T>`
++ `protected group(actions: Action[], callback?: DispatchCallback<T>): Store<T>`
 
   派发多个action
   ```ts
-  store.multiple([{type: 'action a'}, {type: 'action b'}], console.log)
+  store.group([{type: 'action a'}, {type: 'action b'}], console.log)
   ```
 
 + `public use(mw: Middleware<T>): Store<T>`
@@ -96,7 +97,7 @@ function(action: Action, state: any, next: Next<any>) {
   console.log(state.num)
   ```
 
-+ `public subscribe(observer: Observer<T>): Store<T>`
++ `public subscribe(observer: DispatchCallback<T>): Store<T>`
 
   注册观察者.一个store只能注册一个观察者,后注册的覆盖之前注册的.
   ```ts
