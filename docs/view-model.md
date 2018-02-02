@@ -30,7 +30,7 @@ const Def: UserList = {
 export default <ViewModelDescription<UserList>> {
   name: 'vm',
   state: { ...Def },
-  scheduler: function(action: Action, state: UserList, next: Next<UserList>) {
+  scheduler: function(action: Action, state: UserList, next: NextCallback<UserList>) {
     if(action.type === "some action type") {
       // 此处可以拿到store，而Model则不可以，注意此处的区别
       this.store.dispatch({type: "other action"})

@@ -83,7 +83,7 @@ export interface CollectionDesc<T> {
    ```
 2. 在Store中使用
    ```ts
-   import {Store, storeCollectionCreator} from "store"
+   import {Store, storeCollectionCreator} from "sugo-store"
    import UserCollect, {User} from "./user-collect.ts"
 
    const store = new Store<{ user: CollectionState<User> }>()

@@ -1,9 +1,9 @@
 ## Validator 验证器
 
-随着Store在项目中使用范围增加，我们发现原有[Model](./model.md)的设计使用起来还
-差了一点东西，那就是输入验证。
+随着Store在项目中使用范围增加，我们发现原有[Model](./model.md)的设计使用起来还差了一点东西，那就是输入验证。
 
-一般的工作流程是将验证放在view或ViewModel层，之后再赋值给Model。从功能实现上来说，这没有什么问题。我们从工程角度思考之后，觉得验证就应该放在Model，即使是在前端，也应该放在Model。
+一般的工作流程是将验证放在view或ViewModel层，之后再赋值给Model。从功能实现上来说，这没有什么问题；
+但我们从工程角度思考之后，觉得验证就应该放在Model，即使是在前端，也应该放在Model。
 
 在Model验证实现了验证功能随着Model一起，变得可复用与可维护。
 视图层只管往Model层写入，如果Model层验证失败，则返回错误信息，视图层收到信息后进行处理。
@@ -24,7 +24,7 @@ Validator使用es7装饰器特性定义，所以你需要搭建es7转es3、es5�
 
 下面是一个简单的示例：
 ```ts
-import {Validator, Validates} from "store"
+import {Validator, Validates} from "sugo-store"
 const {DateType, DateTypes, Required, Pattern, Range} = Validates
 
 interface UserModel {
@@ -75,15 +75,15 @@ user.valid({level: 11})     // {level: Must be of type number that greater than 
 + `map`         调用后得到Validator传递到`store.state[namespace]`上的值
 
 ```ts
-interface UserStore extends UserModel {
+interface UserState extends UserModel {
   message?: any
 }
 
-const store = new Store<{ User: UserStore }>()
+const store = new Store<{ User: UserState }>()
 storeValidatorCreator({
   namespace: 'User',
   model: new User(),
-  scheduler(action: Action, model: User, done: Next<any>) {
+  scheduler(action: Action, model: User, done: NextCallback<any>) {
     const { type, payload } = action
     switch (type) {
       case "upgrade":
@@ -113,35 +113,35 @@ store.dispatch({ type: Action.upgrade, payload: { name: "A" } })
 
 + `public constructor()`
 
-+ `public validator(): {[key in keyof T]?: ValidatorDesc[]}`
++ `public validator(): ObjectKeysReMapPartial<T, Descriptor[]>`
 
   获取所有的验证器
   ```ts
   validator.validator() // {name: [function, function, ...]}
   ```
 
-+ `public validOne(key: keyof T, value: any): string | null`
++ `public validOne(key: keyof T, value: any): string`
 
   验证单个key-value。如果一个key有多个验证器，会依次调用验证器，如果遇到验证失败，则不再继续验证。
   ```ts
   validator.validOne("name" , "")   // return string
   ```
 
-+ `public valid(values: Partial<T>): { [key: string]: string } | null`
++ `public valid(values: Partial<T>): ObjectKeysReMapPartial<T, string>`
 
   验证多个key-value，返回错误消息的map
   ```ts
   validator.valid({name: "", id: ""}) // {name:string, id: string}
   ```
 
-+ `public getValid(): {[key in keyof T]?: string} | null`
++ `public getValid(): ObjectKeysReMapPartial<T, string>`
 
   获取缓存的错误信息
   ```ts
   validator.getValid()   // {name:string, id:string} or null
   ```
 
-+ `public set(valuesOrKey: Partial<T> | keyof T, valueOrUndef?: keyof T | any)`
++ `public set(valuesOrKey: Partial<T> | keyof T, valueOrUndef?: keyof T | any): ObjectKeysReMapPartial<T, string>`
 
   赋值，调用验证器验证值，更新缓存的错误信息并返回验证信息
   ```ts

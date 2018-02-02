@@ -24,9 +24,15 @@ Store认为:
 将会造成灾难性的后果，抛开代码量增加、同一逻辑多次实现的问题不谈，如果某一接口或model发生了不兼容更新，对维护而言将会造成灾难性的后果。
 所以Store强烈建议将model及相关接口单独抽离，以实现复用与统一维护。
 
-基于以上考虑，Store使用[中间件](https://coinxu.github.io/store/docs/store.html#中间件)的设计模式处理业务流程，
-使用数组管理所有的中间件，当一个行为发生的，依次通知这些中间件，所有中间件处理完成后，得到最终结果。
+# 设计概要
+Store使用[中间件](https://coinxu.github.io/store/docs/store.html#中间件)的设计模式；
+使用数组管理所有的中间件，当一个行为发生的，__依次__通知这些中间件，所有中间件处理完成后，将结果传入`subscribe`。
 执行到某一个中间件时，Store保证其前面的中间件已经执行完成，此时可以直接使用前面中间件产生的结果。
+
+# 安装
+```bash
+npm install sugo-store
+```
 
 # 示例
 假设有这样的业务流程:
@@ -36,7 +42,7 @@ Store认为:
 
 ```ts
 // typescript
-import { Store } from 'strore'
+import { Store } from 'sugo-store'
 
 interface User {
   id: string
@@ -84,6 +90,9 @@ store.use(function(action, state, next){
       next()
   }
 })
+
+// observer
+store.subscribe(state => console.log(state))
 
 // 派发初始化action
 store.dispatch({

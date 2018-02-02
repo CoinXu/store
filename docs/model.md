@@ -3,16 +3,15 @@
   大部份代码可能只抽离了一份接口路由文件，之后就是随便调用了，并没有思考Model更重要的处理。
   包括不限于：与接口的关联与解耦、接口异常处理、接口返回值结构是否统一、写入验证(包括用户输入、接口参数、入库这三处验证)。
 
-**Store库存在的目标之一就是管理好Model**
+__Store库存在的目标之一就是管理好Model__
 
-以下是Store对Modoel管理的一些实践与总结，也许并不具有普适性，权作探讨。
+以下是Store对Model管理的一些实践与总结，也许并不具有普适性，权作探讨。
 
-Model管理来自接口层的数据，一般而言与服务器表或者业务模块一一对应。
-Model粒度在业务层面做到最小，以便在使用时随意组合使用。
+1. Model管理来自接口层的数据，一般而言与服务器表或者业务模块一一对应。
+2. Model粒度在业务层面做到最小，以便在使用时随意组合使用。
 
-之所以将model单独定义，是因为大多数业务下，model都是可以复用的。
-比如一个业务系统下的用户模块，涉及到用户相关的操作，可以定义为一个model。
-model定义后基本不会改变，除非业务本身发生了变化。
+之所以将Model单独定义，是因为大多数业务下，Model都是可以复用的。
+比如一个业务系统下的用户模块，涉及到用户相关的操作，可以定义为一个Model。Model定义后基本不会改变，除非业务本身发生了变化。
 
 一个Model由三个基本属性构成:
 + `name`       model名称，比如:User，Order等， name将会成为Model在`Store.state`上的key
@@ -31,7 +30,7 @@ export interface UserModel {
 export default <ModelDescription<UserModel>> {
   name: 'User',
   state: {id: null, name: null, age: null},
-  scheduler: function(action: Action, state: UserModel, next: Next<any>) {
+  scheduler: function(action: Action, state: UserModel, next: NextCallback<any>) {
     if(action.type === "some action type") {
       // do sth...
       next()
@@ -49,7 +48,7 @@ Store一般存在于业务模块中，根据不同的业务模块实现不同的
 ```ts
 storeModelCreator<T>(
   mods: Array<Model<T> | ModelDescription<T>>,
-  store:Store<any>
+  store: Store<any>
 ): Store<any>
 ```
 `storeModelCreator`接收两个参数，`mods`与`store`，两个参数都是必须的。
@@ -59,7 +58,7 @@ storeModelCreator<T>(
 
 假设在用户中心模块需要使用UserModel:
 ```ts
-import {Store, storeModelCreator} from "store"
+import {Store, storeModelCreator} from "sugo-store"
 import User, {UserModel} from "./model-user.ts"
 
 class UserCenter extends Store<{User: UserModel}> {
@@ -102,7 +101,7 @@ export Actions = {
 export default <ModelDescription<UserModel>> {
   name: 'User',
   state: {id: null, name: null, age: null},
-  scheduler: function(action: Action, state: UserModel, next: Next<any>) {
+  scheduler: function(action: Action, state: UserModel, next: NextCallback<any>) {
     const {type, payload} = action
     switch(type) {
       case Actions.Create:
@@ -121,7 +120,7 @@ export default <ModelDescription<UserModel>> {
 此后，在不同的业务模块中就可以使用上面定义的Model来处理。
 ```ts
 // a.ts
-import {Store, storeModelCreator} from "store"
+import {Store, storeModelCreator} from "sugo-store"
 import {Actions, User}, UserModel from "./model-user.ts"
 class A extends Store<{User: User}> {
   constructor() {
@@ -137,7 +136,7 @@ class A extends Store<{User: User}> {
 }
 
 // b.ts
-import {Store, storeModelCreator} from "store"
+import {Store, storeModelCreator} from "sugo-store"
 import {Actions, User}, UserModel from "./model-user.ts"
 class A extends Store<{User: User}> {
   constructor() {
