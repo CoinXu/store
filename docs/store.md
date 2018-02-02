@@ -55,7 +55,7 @@ function(action: Action, state: any, next: NextCallback<any>) {
 + `public dispatch(actionOrActions: Action | Action[], callback?: DispatchCallback<T>): Store<T>`
 
   派发action对外统一接口.dispatch函数只是判断传入的action是单个还是多个,
-  调用的依然是`store.signle`或`store.multiple`.
+  调用的依然是`store.one`或`store.group`.
   ```ts
   store.dispatch({type: 'action type'}, console.log)
   store.dispatch([{type: 'action a'}, {type: 'action b'}])
