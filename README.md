@@ -36,11 +36,8 @@ npm install sugo-store
 
 # 测试
 ```bash
-// fetch codes to local
 git clone https://github.com/CoinXu/store.git
-// install dependencies
 npm install
-// run all test case
 npm run test
 ```
 
