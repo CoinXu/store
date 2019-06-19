@@ -6,3 +6,4 @@ yarn.lock
 .DS_store
 __test_lib__
 *.map
+.*
