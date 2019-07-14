@@ -2,7 +2,6 @@
 .idea
 *.log*
 yarn.lock
-/lib/*
 .DS_store
 __test_lib__
 *.map
