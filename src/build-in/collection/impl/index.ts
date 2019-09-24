@@ -19,8 +19,9 @@ export default function<T, U = any>(
   store: Store<any>
 ): Store<any> {
   const collection: Collection<T> = new Collection<T>(description.primaryKey);
-  const state: CollectionState<T> = {
-    list: collection.get()
+  const state: CollectionState<T, U> = {
+    list: collection.get(),
+    ...(<any>description.state || {}),
   };
 
   store.use(<Middleware<any>>(
