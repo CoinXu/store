@@ -24,10 +24,7 @@
 ```ts
 // collection默认对Store开放集合中所有的数据
 // 挂载在名为list的key上
-export interface CollectionState<T> {
-  list: T[]
-  [key: string]: any
-}
+ type CollectionState<T, U = any> = { list: T[] } & U;
 
 // 集合调度器，运行作用域为Store，可以在scheduler中通过`this`获取到store实例
 export interface CollectionScheduler<T> {

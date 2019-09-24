@@ -4,7 +4,4 @@
  * @description
  */
 
-export interface CollectionState<T> {
-  list: T[]
-  [key: string]: any
-}
+export type CollectionState<T, U = any> = { list: T[] } & U;
