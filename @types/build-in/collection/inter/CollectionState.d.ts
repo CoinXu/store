@@ -1,4 +1,3 @@
-export interface CollectionState<T> {
+export declare type CollectionState<T, U = any> = {
     list: T[];
-    [key: string]: any;
-}
+} & U;
