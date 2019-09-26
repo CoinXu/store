@@ -53,4 +53,12 @@ export abstract class AbstractStore<T extends StateSignature> {
    * @returns {AbstractStore<T extends StateSignature>}
    */
   public abstract subscribe(observer: StoreObserver<T>): AbstractStore<T>
+
+  /**
+   * 取消一个观察者
+   *
+   * @param {StoreObserver<T extends StateSignature>} observer
+   * @returns {AbstractStore<T extends StateSignature>}
+   */
+  public abstract unsubscribe(observer: StoreObserver<T>): AbstractStore<T>
 }

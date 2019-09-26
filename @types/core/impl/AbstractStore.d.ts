@@ -9,4 +9,5 @@ export declare abstract class AbstractStore<T extends StateSignature> {
     abstract use(mw: Middleware<T>): AbstractStore<T>;
     abstract getState(): T;
     abstract subscribe(observer: StoreObserver<T>): AbstractStore<T>;
+    abstract unsubscribe(observer: StoreObserver<T>): AbstractStore<T>;
 }

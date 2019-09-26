@@ -66,9 +66,10 @@ describe('storeModelCreator middleware', function () {
 
   it('Invoke add of actions when dispatch the add action', function (done) {
 
-    store.subscribe(function (state: TestModelStoreState) {
+    store.subscribe(function observer(state: TestModelStoreState) {
       equal(state.mod.count, 1)
       done()
+      store.unsubscribe(observer)
     })
 
     store.dispatch({ type: Actions.add })
@@ -76,9 +77,10 @@ describe('storeModelCreator middleware', function () {
 
   it('Invoke reduce of actions when dispatch the reduce action', function (done) {
 
-    store.subscribe(function (state: TestModelStoreState) {
+    store.subscribe(function observer(state: TestModelStoreState) {
       equal(state.mod.count, 0)
       done()
+      store.unsubscribe(observer)
     })
 
     store.dispatch({ type: Actions.reduce })

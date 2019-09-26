@@ -21,7 +21,7 @@ export class Store<T extends StateSignature> extends AbstractStore<T> {
 
   protected mw: Middleware<T>[]
   protected state: T
-  protected observer: StoreObserver<T>
+  protected observer: StoreObserver<T>[]
 
   /**
    * 初始化时可不传state
@@ -31,7 +31,7 @@ export class Store<T extends StateSignature> extends AbstractStore<T> {
     super()
     this.mw = []
     this.state = assign({}, state)
-    this.observer = null
+    this.observer = []
   }
 
   /** =====================================================
@@ -87,8 +87,23 @@ export class Store<T extends StateSignature> extends AbstractStore<T> {
       assert(isFunction<StoreObserver<T>>(observer), 'observer must be a function')
     }
 
-    this.observer = observer
+    this.observer.push(observer)
     return this
+  }
+
+  public unsubscribe(observer: StoreObserver<T>): Store<T> {
+    if (process.env.NODE_ENV === "development") {
+      assert(isFunction<StoreObserver<T>>(observer), 'observer must be a function')
+    }
+
+    this.observer = this.observer.filter(ob => ob !== observer);
+    return this
+  }
+
+  private _emit(state: T): void {
+    for (const observer of this.observer) {
+      observer(state);
+    }
   }
 
   /**
@@ -131,9 +146,7 @@ export class Store<T extends StateSignature> extends AbstractStore<T> {
     const thiz: Store<T> = this
 
     return this._dispatch(action, function (state: T) {
-      if (thiz.observer !== null) {
-        thiz.observer(state)
-      }
+      thiz._emit(state)
 
       if (isFunction(callback)) {
         callback(state)
@@ -166,9 +179,7 @@ export class Store<T extends StateSignature> extends AbstractStore<T> {
     })
 
     combiner(mws)(null, null, noop, function () {
-      if (thiz.observer !== null) {
-        thiz.observer(thiz.state)
-      }
+      thiz._emit(thiz.state)
 
       if (isFunction<DispatchCallback<T>>(callback)) {
         callback(thiz.state)
