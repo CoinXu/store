@@ -7,7 +7,7 @@ export declare enum DataTypes {
     PRIM_UNDEF = "Undefined",
     PRIM_SYMBOL = "Symbol",
     OBJ_O = "Object",
-    OBJ_A = "Array",
+    OBJ_A = "Array"
 }
 export default function DataType(type: DataTypes, msg?: string): ValidatorDecorate;
 export { DataType };

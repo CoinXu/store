@@ -15,8 +15,8 @@ export declare class Store<T extends StateSignature> extends AbstractStore<T> {
     getState(): T;
     subscribe(observer: StoreObserver<T>): Store<T>;
     unsubscribe(observer: StoreObserver<T>): Store<T>;
-    private _emit(state);
-    private _dispatch(action, callback?);
+    private _emit;
+    private _dispatch;
     protected one(action: Action, callback?: DispatchCallback<T>): Store<T>;
     protected group(actions: Action[], callback?: DispatchCallback<T>): Store<T>;
 }

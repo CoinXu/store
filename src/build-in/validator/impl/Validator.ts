@@ -95,9 +95,8 @@ export class Validator<T extends StateSignature> implements ValidatorInter<T> {
     const message = this.__message__
 
     let has: boolean
-    let propKey: string
 
-    for (propKey in message) {
+    for (const propKey in message) {
       if (!hasOwnProperty.call(message, propKey) || message[propKey] === null) continue
       has = true
       result[propKey] = message[propKey]

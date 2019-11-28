@@ -164,7 +164,7 @@ export function keys(obj: { [key: string]: any }): string[] {
   }
 
   const results: string[] = []
-  for (let propKey in obj) {
+  for (const propKey in obj as any) {
     if (obj.hasOwnProperty(propKey)) {
       results.push(propKey)
     }
