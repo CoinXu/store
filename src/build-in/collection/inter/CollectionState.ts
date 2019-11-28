@@ -4,4 +4,4 @@
  * @description
  */
 
-export type CollectionState<T, U = any> = { list: T[] } & U;
+export type CollectionState<T, U = Omit<any, "list">> = { list: T[] } & U;
